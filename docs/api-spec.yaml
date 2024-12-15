@@ -1,0 +1,213 @@
+openapi: 3.0.0
+info:
+  title: Crypto Advisor API
+  version: 1.0.0
+servers:
+  - url: https://api.yourdomain.com
+paths:
+  /api/user/register/:
+    post:
+      summary: Register a new user account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistrationRequest'
+      responses:
+        '201':
+          description: User registered successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegistrationResponse'
+        '400':
+          description: Validation error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/user/login/:
+    post:
+      summary: Authenticate a user and provide an authentication token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginRequest'
+      responses:
+        '200':
+          description: User authenticated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLoginResponse'
+        '401':
+          description: Authentication failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/user/logout/:
+    post:
+      summary: Log out the user and invalidate the authentication token.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User logged out successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutResponse'
+        '401':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/user/message/:
+    post:
+      summary: Process a user message and return a response.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserMessageRequest'
+      responses:
+        '200':
+          description: Successful response containing message and data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserMessageResponse'
+        '429':
+          description: Query limit exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserRegistrationRequest:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    UserRegistrationResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+    UserLoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    UserLoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+    LogoutResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    UserMessageRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    UserMessageResponse:
+      type: object
+      properties:
+        response:
+          type: string
+        data:
+          type: object
+          properties:
+            graphs:
+              type: array
+              items:
+                $ref: '#/components/schemas/GraphData'
+            additional_info:
+              type: object
+              additionalProperties: true
+    GraphData:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - line
+            - bar
+            - pie
+        data:
+          type: array
+          items:
+            type: number
+        labels:
+          type: array
+          items:
+            type: string
+        title:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string

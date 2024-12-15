@@ -41,8 +41,10 @@ media/
 .DS_Store
 
 # Virtual Environment
+backend/inblock/
 venv/
 ENV/
+
 
 # From frontend/.gitignore
 # Logs
