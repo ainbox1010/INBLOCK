@@ -7,8 +7,13 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import (
     UserLoginRequestSerializer, 
     UserRegistrationSerializer,
-    UserLoginResponseSerializer
+    UserLoginResponseSerializer,
+    ForgotPasswordSerializer,
+    ResetPasswordSerializer
 )
+from django.core.mail import send_mail
+from django.conf import settings
+from .models import PasswordResetToken
 
 User = get_user_model()
 
@@ -53,6 +58,76 @@ class UserLoginView(APIView):
                 {"error": {"code": "invalid_credentials", "message": "Invalid credentials"}},
                 status=status.HTTP_401_UNAUTHORIZED
             )
+        return Response(
+            {"error": {"code": "validation_error", "message": serializer.errors}},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+class ForgotPasswordView(APIView):
+    def post(self, request):
+        serializer = ForgotPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            try:
+                user = User.objects.get(email=email)
+                # Create reset token
+                reset_token = PasswordResetToken.objects.create(user=user)
+                
+                # Send email
+                reset_url = f"{settings.FRONTEND_URL}/reset-password/{reset_token.token}"
+                send_mail(
+                    'Password Reset Request',
+                    f'Click the following link to reset your password: {reset_url}',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [email],
+                    fail_silently=False,
+                )
+                
+                return Response(
+                    {"message": "Password reset email sent successfully"},
+                    status=status.HTTP_200_OK
+                )
+            except User.DoesNotExist:
+                # For security, don't reveal that the email doesn't exist
+                return Response(
+                    {"message": "Password reset email sent successfully"},
+                    status=status.HTTP_200_OK
+                )
+                
+        return Response(
+            {"error": {"code": "validation_error", "message": serializer.errors}},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+class ResetPasswordView(APIView):
+    def post(self, request):
+        serializer = ResetPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                token_obj = PasswordResetToken.objects.get(
+                    token=serializer.validated_data['token'],
+                    is_used=False
+                )
+                
+                # Update password
+                user = token_obj.user
+                user.set_password(serializer.validated_data['new_password'])
+                user.save()
+                
+                # Mark token as used
+                token_obj.is_used = True
+                token_obj.save()
+                
+                return Response(
+                    {"message": "Password reset successful"},
+                    status=status.HTTP_200_OK
+                )
+            except PasswordResetToken.DoesNotExist:
+                return Response(
+                    {"error": {"code": "invalid_token", "message": "Invalid or expired token"}},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+                
         return Response(
             {"error": {"code": "validation_error", "message": serializer.errors}},
             status=status.HTTP_400_BAD_REQUEST

@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import UserLoginView, UserRegisterView  # Assuming you've already implemented UserRegisterView
+from .views import UserRegisterView, UserLoginView, ForgotPasswordView, ResetPasswordView
 
 urlpatterns = [
-    path('login/', UserLoginView.as_view(), name='user-login'),
-    # You can also add the register endpoint here:
-    path('register/', UserRegisterView.as_view(), name='user-register'),
+    path('register/', UserRegisterView.as_view(), name='register'),
+    path('login/', UserLoginView.as_view(), name='login'),
+    path('forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
+    path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
 ]
