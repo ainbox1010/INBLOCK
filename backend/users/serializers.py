@@ -2,6 +2,7 @@
 
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 
 User = get_user_model()
 
@@ -14,22 +15,24 @@ class UserLoginResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'token']
+        fields = ['id', 'email', 'token']
 
-class UserRegistrationSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True)
-    email = serializers.EmailField(required=True)
-    password = serializers.CharField(write_only=True, required=True)
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    password_confirm = serializers.CharField(write_only=True)
 
-    def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError("Email already exists")
-        return value
+    class Meta:
+        model = User
+        fields = ['email', 'password', 'password_confirm']
 
-    def validate_username(self, value):
-        if User.objects.filter(username=value).exists():
-            raise serializers.ValidationError("Username already exists")
-        return value
+    def validate(self, data):
+        if data['password'] != data['password_confirm']:
+            raise ValidationError("Passwords don't match")
+        return data
+
+    def create(self, validated_data):
+        validated_data.pop('password_confirm')
+        return User.objects.create_user(**validated_data)
 
 class ForgotPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -43,4 +46,8 @@ class ResetPasswordSerializer(serializers.Serializer):
         if data['new_password'] != data['confirm_password']:
             raise serializers.ValidationError("Passwords don't match")
         return data
+
+class UserLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
 

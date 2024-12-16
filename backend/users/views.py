@@ -9,7 +9,8 @@ from .serializers import (
     UserRegistrationSerializer,
     UserLoginResponseSerializer,
     ForgotPasswordSerializer,
-    ResetPasswordSerializer
+    ResetPasswordSerializer,
+    UserLoginSerializer
 )
 from django.core.mail import send_mail
 from django.conf import settings
@@ -132,3 +133,52 @@ class ResetPasswordView(APIView):
             {"error": {"code": "validation_error", "message": serializer.errors}},
             status=status.HTTP_400_BAD_REQUEST
         )
+
+class RegisterView(APIView):
+    def post(self, request):
+        serializer = UserRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            refresh = RefreshToken.for_user(user)
+            
+            return Response({
+                'user': {
+                    'email': user.email,
+                    'id': user.id
+                },
+                'tokens': {
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                }
+            }, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class LoginView(APIView):
+    def post(self, request):
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = authenticate(
+                email=serializer.validated_data['email'],
+                password=serializer.validated_data['password']
+            )
+            
+            if user:
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    'user': {
+                        'email': user.email,
+                        'id': user.id
+                    },
+                    'tokens': {
+                        'refresh': str(refresh),
+                        'access': str(refresh.access_token),
+                    }
+                })
+            
+            return Response(
+                {'error': 'Invalid credentials'}, 
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
