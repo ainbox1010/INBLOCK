@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'api',
     'users',
     'rest_framework_simplejwt',
+    'chat',
 ]
 
 
@@ -161,3 +162,10 @@ DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
 
 # Frontend URL for password reset
 FRONTEND_URL = os.getenv('FRONTEND_URL')
+
+# Add to your existing settings
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+
+# Add these settings
+CORS_ALLOW_ALL_ORIGINS = True  # For development only
+CORS_ALLOW_CREDENTIALS = True

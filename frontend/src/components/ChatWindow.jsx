@@ -63,7 +63,7 @@ export default function ChatWindow() {
           <div className="h-3 w-3 rounded-full bg-green-500"></div>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="text-sm font-medium text-gray-400">AI Assistant</span>
+          <span className="text-sm font-medium text-gray-400">AI Agent SUPERMEME</span>
         </div>
       </div>
       

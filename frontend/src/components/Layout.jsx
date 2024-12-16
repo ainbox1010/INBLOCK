@@ -2,7 +2,6 @@ import { Fragment } from 'react'
 import { Disclosure, Menu } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
-import logo from '../assets/images/logo.svg'
 
 const navigation = [
   { name: 'Features', href: '/features' },
@@ -10,6 +9,16 @@ const navigation = [
   { name: 'Roadmap', href: '/roadmap' },
   { name: 'FAQ', href: '/faq' },
 ]
+
+// Add custom CSS for the pulsing animation
+const pulsingEyeStyles = {
+  '@keyframes slowPulse': {
+    '0%': { backgroundColor: '#991b1b' },   // darker red
+    '50%': { backgroundColor: '#dc2626' },  // brighter red
+    '100%': { backgroundColor: '#991b1b' }  // back to darker red
+  },
+  animation: 'slowPulse 3s ease-in-out infinite'
+}
 
 export default function Layout({ children }) {
   return (
@@ -22,11 +31,14 @@ export default function Layout({ children }) {
                 <div className="flex">
                   <div className="flex flex-shrink-0 items-center">
                     <Link to="/" className="flex items-center space-x-2">
-                      <img
-                        className="h-10 w-10"
-                        src={logo}
-                        alt="InBlock AI"
-                      />
+                      <div className="relative h-10 w-10 flex items-center justify-center">
+                        <div 
+                          className="h-6 w-6 rounded-full bg-red-700"
+                          style={pulsingEyeStyles}
+                        >
+                          <div className="absolute inset-1 rounded-full bg-red-900 opacity-75"></div>
+                        </div>
+                      </div>
                       <span className="text-xl font-bold text-white tracking-wider">
                         INBLOCK
                       </span>

@@ -4,7 +4,7 @@ import ChatWindow from '../components/ChatWindow'
 
 export default function LandingPage() {
   return (
-    <div className="relative overflow-hidden bg-gray-900 p-4" style={{minHeight: '100vh', backgroundColor: '#111827'}}>
+    <div className="relative overflow-hidden bg-gray-900 p-4" style={{backgroundColor: '#111827'}}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="lg:grid lg:grid-cols-12 lg:gap-8">
           <div className="sm:text-center md:mx-auto lg:col-span-6 lg:text-left">
@@ -35,8 +35,30 @@ export default function LandingPage() {
                   READ ROADMAP
                 </Link>
               </div>
+              
+              <motion.div 
+                className="mt-8 relative rounded-lg overflow-hidden shadow-2xl border border-gray-700"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-auto"
+                >
+                  <source 
+                    src="https://inblock.ai/wp-content/themes/inblock/images/hero.mp4" 
+                    type="video/mp4" 
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </motion.div>
             </motion.div>
           </div>
+          
           <div className="mt-16 sm:mt-24 lg:col-span-6 lg:mt-0">
             <ChatWindow />
           </div>
