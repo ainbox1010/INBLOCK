@@ -43,7 +43,7 @@ export default function Layout({ children }) {
                       {item.name}
                     </Link>
                   ))}
-                  <button className="ml-4 rounded-md bg-gold-500 px-4 py-2 text-sm font-bold text-gold-400 hover:bg-gray-800 shadow-xl border-2 border-gold-400 transition-all duration-200">
+                  <button className="ml-4 rounded-md bg-gray-800 px-4 py-2 text-sm font-bold text-white hover:bg-gray-700 shadow-xl border border-gray-700 transition-all duration-200">
                     SIGN IN
                   </button>
                 </div>

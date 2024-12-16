@@ -24,13 +24,13 @@ export default function LandingPage() {
               </p>
               <div className="relative mt-8 flex gap-4 sm:justify-center lg:justify-start">
                 <button 
-                  className="relative z-10 rounded-md bg-gold-500 px-8 py-3 text-base font-bold text-gold-400 hover:bg-gray-800 shadow-xl border-2 border-gold-400 w-44 transition-all duration-200"
+                  className="relative z-10 rounded-md bg-gray-800 px-8 py-3 text-base font-bold text-white hover:bg-gray-700 shadow-xl border border-gray-700 w-44 transition-all duration-200"
                 >
                   JOIN WHITELIST
                 </button>
                 <Link 
                   to="/roadmap"
-                  className="relative z-10 rounded-md bg-transparent px-8 py-3 text-base font-bold text-gold-400 hover:bg-gray-800 shadow-xl border-2 border-gold-400 w-44 transition-all duration-200 text-center inline-flex items-center justify-center"
+                  className="relative z-10 rounded-md bg-gray-800 px-8 py-3 text-base font-bold text-white hover:bg-gray-700 shadow-xl border border-gray-700 w-44 transition-all duration-200 text-center inline-flex items-center justify-center"
                 >
                   READ ROADMAP
                 </Link>
