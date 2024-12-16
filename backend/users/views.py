@@ -138,21 +138,38 @@ class RegisterView(APIView):
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.save()
-            refresh = RefreshToken.for_user(user)
-            
-            return Response({
-                'user': {
-                    'email': user.email,
-                    'id': user.id
-                },
-                'tokens': {
-                    'refresh': str(refresh),
-                    'access': str(refresh.access_token),
-                }
-            }, status=status.HTTP_201_CREATED)
+            try:
+                user = serializer.save()
+                refresh = RefreshToken.for_user(user)
+                
+                return Response({
+                    'user': {
+                        'email': user.email,
+                        'id': user.id
+                    },
+                    'tokens': {
+                        'refresh': str(refresh),
+                        'access': str(refresh.access_token),
+                    }
+                }, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response(
+                    {'error': str(e)},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # Make error messages more specific
+        errors = serializer.errors
+        if 'email' in errors and 'unique' in str(errors['email'][0]).lower():
+            return Response(
+                {'error': 'This email is already registered'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        return Response(
+            {'error': serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 class LoginView(APIView):
     def post(self, request):
