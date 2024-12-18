@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import ChatWindow from '../components/ChatWindow'
+import DemoChatWindow from '../components/DemoChatWindow'
 
 export default function LandingPage() {
   return (
@@ -61,7 +61,7 @@ export default function LandingPage() {
           </div>
           
           <div className="mt-16 sm:mt-24 lg:col-span-6 lg:mt-0">
-            <ChatWindow />
+            <DemoChatWindow />
           </div>
         </div>
       </div>
