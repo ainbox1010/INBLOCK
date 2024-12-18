@@ -22,6 +22,7 @@ InBlock AI is a web application designed to assist crypto traders and investors.
 - Staff users: Unlimited queries
 - Query count reset every 24 hours
 - Conversation history for authenticated users
+- Preserve demo conversation when user signs up/in
 
 ### User Management
 - User roles (anonymous, authenticated, staff)
@@ -71,7 +72,7 @@ src/
 │   ├── RegisterPage.jsx (User registration)
 │   └── ChatPage.jsx (Full chat access for auth users)
 ├── utils/
-│   └── axios.js (API communication with token handling)
+│   ���── axios.js (API communication with token handling)
 └── App.jsx (Route management)
 ```
 
