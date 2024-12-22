@@ -7,29 +7,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        gold: {
-          50: '#FDFBEA',
-          100: '#FBF6D9',
-          200: '#F7EDB3',
-          300: '#F3E48D',
-          400: '#EFDB67',
-          500: '#EBD241',
-          600: '#D4BC3B',
-          700: '#A89230',
-          800: '#7C6B24',
-          900: '#504518'
+        primary: {
+          900: '#0F0F1A',
+          800: '#1A1A2F',
+          700: '#252543',
         },
-        carbon: {
-          50: '#F7F7F7',
-          100: '#E3E3E3',
-          200: '#C8C8C8',
-          300: '#A4A4A4',
-          400: '#808080',
-          500: '#666666',
-          600: '#515151',
-          700: '#434343',
-          800: '#383838',
-          900: '#313131'
+        accent: {
+          purple: '#8B5CF6',
+          pink: '#EC4899',
+          blue: '#3B82F6',
+        }
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-mesh': 'url("/mesh-gradient.png")',
+      },
+      animation: {
+        'glow': 'glow 2s ease-in-out infinite alternate',
+        'float': 'float 6s ease-in-out infinite',
+      },
+      keyframes: {
+        glow: {
+          '0%': { boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)' },
+          '100%': { boxShadow: '0 0 40px rgba(236, 72, 153, 0.5)' }
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-20px)' }
         }
       }
     },

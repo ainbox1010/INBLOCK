@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Layout from './components/Layout'
 import LandingPage from './pages/LandingPage'
 import PricingPage from './pages/PricingPage'
@@ -9,23 +9,50 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import ChatPage from './pages/ChatPage'
 
-function App() {
-  return (
-    <Router>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/pricing" element={<PricingPage />} />
-          <Route path="/features" element={<FeaturesPage />} />
-          <Route path="/roadmap" element={<RoadmapPage />} />
-          <Route path="/faq" element={<FAQPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/chat" element={<ChatPage />} />
-        </Routes>
-      </Layout>
-    </Router>
-  )
-}
+console.log('Creating router with Layout:', Layout);
 
-export default App
+const router = createBrowserRouter([
+    {
+        path: '/',
+        element: <Layout />,
+        children: [
+            {
+                index: true,
+                element: <LandingPage />
+            },
+            {
+                path: '/pricing',
+                element: <PricingPage />
+            },
+            {
+                path: '/features',
+                element: <FeaturesPage />
+            },
+            {
+                path: '/roadmap',
+                element: <RoadmapPage />
+            },
+            {
+                path: '/faq',
+                element: <FAQPage />
+            },
+            {
+                path: '/login',
+                element: <LoginPage />
+            },
+            {
+                path: '/register',
+                element: <RegisterPage />
+            },
+            {
+                path: '/chat',
+                element: <ChatPage />
+            }
+        ]
+    }
+])
+
+export default function App() {
+    console.log('App rendering');
+    return <RouterProvider router={router} />
+}
