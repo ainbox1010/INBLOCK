@@ -8,6 +8,11 @@ const navigation = [
   { name: 'Pricing', href: '/pricing' },
   { name: 'Roadmap', href: '/roadmap' },
   { name: 'FAQ', href: '/faq' },
+  { 
+    name: 'Design', 
+    href: '/design',
+    className: 'text-accent-purple'
+  }
 ]
 
 // Add custom CSS for the pulsing animation

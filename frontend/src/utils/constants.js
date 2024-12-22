@@ -10,8 +10,8 @@ export const API_ENDPOINTS = {
 
 export const LANDING_VARIANTS = {
     MINIMAL: 'minimal',
+    MODERN: 'modern',
     FEATURE: 'feature',
     CRYPTO: 'crypto',
-    ENTERPRISE: 'enterprise',
-    MODERN: 'modern'
+    ENTERPRISE: 'enterprise'
 }; 

@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { LandingVariantProvider } from './contexts/LandingVariantContext'
 import Layout from './components/Layout'
 import LandingPage from './pages/LandingPage'
 import PricingPage from './pages/PricingPage'
@@ -8,8 +9,7 @@ import FAQPage from './pages/FAQPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import ChatPage from './pages/ChatPage'
-
-console.log('Creating router with Layout:', Layout);
+import DesignShowcase from './pages/DesignShowcase'
 
 const router = createBrowserRouter([
     {
@@ -47,12 +47,19 @@ const router = createBrowserRouter([
             {
                 path: '/chat',
                 element: <ChatPage />
+            },
+            {
+                path: '/design',
+                element: <DesignShowcase />
             }
         ]
     }
 ])
 
 export default function App() {
-    console.log('App rendering');
-    return <RouterProvider router={router} />
+    return (
+        <LandingVariantProvider>
+            <RouterProvider router={router} />
+        </LandingVariantProvider>
+    )
 }
