@@ -2,6 +2,7 @@ import { Fragment } from 'react'
 import { Disclosure, Menu } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link, useNavigate } from 'react-router-dom'
+import CyborgBlockLogo from './brand/logos/CyborgBlockLogo'
 
 const navigation = [
   { name: 'Features', href: '/features' },
@@ -53,14 +54,7 @@ export default function Navbar() {
               <div className="flex">
                 <div className="flex flex-shrink-0 items-center">
                   <Link to="/" className="flex items-center space-x-2">
-                    <div className="relative h-10 w-10 flex items-center justify-center">
-                      <div 
-                        className="h-6 w-6 rounded-full bg-red-700"
-                        style={pulsingEyeStyles}
-                      >
-                        <div className="absolute inset-1 rounded-full bg-red-900 opacity-75"></div>
-                      </div>
-                    </div>
+                    <CyborgBlockLogo className="h-10 w-10" />
                     <span className="text-xl font-bold text-white tracking-wider">
                       INBLOCK
                     </span>

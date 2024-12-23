@@ -5,6 +5,10 @@ import QuantumBlockLogo from '../brand/logos/QuantumBlockLogo'
 import DataFlowLogo from '../brand/logos/DataFlowLogo'
 import AgentNetworkLogo from '../brand/logos/AgentNetworkLogo'
 import CryptoAIBrainLogo from '../brand/logos/CryptoAIBrainLogo'
+import CompositeBlockLogo from '../brand/logos/CompositeBlockLogo'
+import ServiceMeshLogo from '../brand/logos/ServiceMeshLogo'
+import UnifiedBlockLogo from '../brand/logos/UnifiedBlockLogo'
+import CyborgBlockLogo from '../brand/logos/CyborgBlockLogo'
 
 const logos = [
     {
@@ -71,6 +75,50 @@ const logos = [
             "Neural pathways",
             "Blockchain integration",
             "Organic + geometric fusion"
+        ]
+    },
+    {
+        name: "Composite Block",
+        description: "Layered services forming a unified block",
+        component: CompositeBlockLogo,
+        features: [
+            "Service layer visualization",
+            "Interconnected components",
+            "Hierarchical structure",
+            "Dynamic assembly animation"
+        ]
+    },
+    {
+        name: "Service Mesh",
+        description: "Interconnected services within block structure",
+        component: ServiceMeshLogo,
+        features: [
+            "Service node network",
+            "Central hub coordination",
+            "Dynamic connections",
+            "Modular architecture"
+        ]
+    },
+    {
+        name: "Unified Block",
+        description: "Services converging into cohesive block",
+        component: UnifiedBlockLogo,
+        features: [
+            "Converging elements",
+            "Integration visualization",
+            "Core block stability",
+            "Service unification"
+        ]
+    },
+    {
+        name: "Cyborg Block",
+        description: "AI agent visualized as cybernetic face within block structure",
+        component: CyborgBlockLogo,
+        features: [
+            "Cybernetic face integration",
+            "Animated eye tracking",
+            "Circuit pattern details",
+            "Energy flow visualization"
         ]
     }
 ]
