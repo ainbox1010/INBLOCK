@@ -5,130 +5,117 @@ import { Link, useNavigate } from 'react-router-dom'
 import CyborgBlockLogo from './brand/logos/CyborgBlockLogo'
 
 const navigation = [
-  { name: 'Features', href: '/features' },
-  { name: 'Pricing', href: '/pricing' },
-  { name: 'Roadmap', href: '/roadmap' },
-  { name: 'FAQ', href: '/faq' },
-  { 
-    name: 'Design', 
-    href: '/design',
-    className: 'text-accent-purple'
-  }
+    { name: 'Features', href: '/features' },
+    { name: 'Pricing', href: '/pricing' },
+    { name: 'Roadmap', href: '/roadmap' },
+    { name: 'FAQ', href: '/faq' },
+    { 
+        name: 'Design', 
+        href: '/design',
+        className: 'text-accent-purple hover:text-accent-pink'
+    }
 ]
 
-// Add custom CSS for the pulsing animation
-const pulsingEyeStyles = {
-  '@keyframes slowPulse': {
-    '0%': { backgroundColor: '#991b1b' },
-    '50%': { backgroundColor: '#dc2626' },
-    '100%': { backgroundColor: '#991b1b' }
-  },
-  animation: 'slowPulse 3s ease-in-out infinite'
-}
-
 export default function Navbar() {
-  console.log('Navbar component rendering');
-  const navigate = useNavigate();
-  const isAuthenticated = !!localStorage.getItem('accessToken');
+    const navigate = useNavigate();
+    const isAuthenticated = !!localStorage.getItem('accessToken');
 
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
-    navigate('/');
-  };
+    const handleLogout = () => {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+        navigate('/');
+    };
 
-  const authNavigation = isAuthenticated 
-    ? [
-        { name: 'Chat', href: '/chat' },  // Chat first
-        ...navigation  // Then the rest of the navigation items
-      ]
-    : navigation;
+    const authNavigation = isAuthenticated 
+        ? [{ name: 'Chat', href: '/chat' }, ...navigation]
+        : navigation;
 
-  return (
-    <Disclosure as="nav" className="bg-gray-900">
-      {({ open }) => (
-        <>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex h-16 justify-between">
-              <div className="flex">
-                <div className="flex flex-shrink-0 items-center">
-                  <Link to="/" className="flex items-center space-x-2">
-                    <CyborgBlockLogo className="h-10 w-10" />
-                    <span className="text-xl font-bold text-white tracking-wider">
-                      INBLOCK
-                    </span>
-                  </Link>
-                </div>
-              </div>
-              <div className="hidden sm:ml-6 sm:flex sm:items-center">
-                {authNavigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className="px-3 py-2 text-sm font-medium text-gray-300 hover:text-white"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-                {isAuthenticated ? (
-                  <button
-                    onClick={handleLogout}
-                    className="ml-4 rounded-md bg-gray-800 px-4 py-2 text-sm font-bold text-white hover:bg-gray-700 shadow-xl border border-gray-700 transition-all duration-200"
-                  >
-                    SIGN OUT
-                  </button>
-                ) : (
-                  <Link
-                    to="/login"
-                    className="ml-4 rounded-md bg-gray-800 px-4 py-2 text-sm font-bold text-white hover:bg-gray-700 shadow-xl border border-gray-700 transition-all duration-200"
-                  >
-                    SIGN IN
-                  </Link>
-                )}
-              </div>
-              <div className="flex items-center sm:hidden">
-                <Disclosure.Button className="text-gray-400 hover:text-white">
-                  <span className="sr-only">Open main menu</span>
-                  {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-                  ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-                  )}
-                </Disclosure.Button>
-              </div>
-            </div>
-          </div>
-          <Disclosure.Panel className="sm:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2">
-              {authNavigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white"
-                >
-                  {item.name}
-                </Link>
-              ))}
-              {isAuthenticated ? (
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left px-3 py-2 text-base font-medium text-gray-300 hover:text-white"
-                >
-                  Sign Out
-                </button>
-              ) : (
-                <Link
-                  to="/login"
-                  className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white"
-                >
-                  Sign In
-                </Link>
-              )}
-            </div>
-          </Disclosure.Panel>
-        </>
-      )}
-    </Disclosure>
-  )
+    return (
+        <Disclosure as="nav" className="bg-primary-900/80 backdrop-blur-sm border-b border-gray-800">
+            {({ open }) => (
+                <>
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <div className="flex h-16 justify-between">
+                            <div className="flex">
+                                <div className="flex flex-shrink-0 items-center">
+                                    <Link to="/" className="flex items-center space-x-3 group">
+                                        <CyborgBlockLogo className="h-10 w-10" />
+                                        <span className="text-xl font-bold text-white tracking-wider group-hover:text-accent-purple transition-colors">
+                                            INBLOCK
+                                        </span>
+                                    </Link>
+                                </div>
+                            </div>
+                            <div className="hidden sm:ml-6 sm:flex sm:items-center">
+                                {authNavigation.map((item) => (
+                                    <Link
+                                        key={item.name}
+                                        to={item.href}
+                                        className={`px-3 py-2 text-sm font-medium text-gray-300 hover:text-accent-pink transition-colors ${item.className || ''}`}
+                                    >
+                                        {item.name}
+                                    </Link>
+                                ))}
+                                {isAuthenticated ? (
+                                    <button
+                                        onClick={handleLogout}
+                                        className="ml-4 rounded-lg bg-accent-purple/10 px-4 py-2 text-sm font-bold text-accent-purple hover:bg-accent-purple/20 border border-accent-purple/20 transition-all duration-200"
+                                    >
+                                        SIGN OUT
+                                    </button>
+                                ) : (
+                                    <Link
+                                        to="/login"
+                                        className="ml-4 rounded-lg bg-accent-purple px-4 py-2 text-sm font-bold text-white hover:bg-accent-pink shadow-lg shadow-accent-purple/20 transition-all duration-200"
+                                    >
+                                        SIGN IN
+                                    </Link>
+                                )}
+                            </div>
+                            <div className="flex items-center sm:hidden">
+                                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-accent-purple/10 hover:text-accent-purple">
+                                    <span className="sr-only">Open main menu</span>
+                                    {open ? (
+                                        <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                                    ) : (
+                                        <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                                    )}
+                                </Disclosure.Button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <Disclosure.Panel className="sm:hidden">
+                        <div className="space-y-1 px-2 pb-3 pt-2">
+                            {authNavigation.map((item) => (
+                                <Link
+                                    key={item.name}
+                                    to={item.href}
+                                    className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-accent-pink transition-colors"
+                                >
+                                    {item.name}
+                                </Link>
+                            ))}
+                            {isAuthenticated ? (
+                                <button
+                                    onClick={handleLogout}
+                                    className="mt-4 w-full rounded-lg bg-accent-purple/10 px-4 py-2 text-sm font-bold text-accent-purple hover:bg-accent-purple/20 border border-accent-purple/20"
+                                >
+                                    SIGN OUT
+                                </button>
+                            ) : (
+                                <Link
+                                    to="/login"
+                                    className="mt-4 block w-full rounded-lg bg-accent-purple px-4 py-2 text-center text-sm font-bold text-white hover:bg-accent-pink shadow-lg shadow-accent-purple/20"
+                                >
+                                    SIGN IN
+                                </Link>
+                            )}
+                        </div>
+                    </Disclosure.Panel>
+                </>
+            )}
+        </Disclosure>
+    )
 } 
