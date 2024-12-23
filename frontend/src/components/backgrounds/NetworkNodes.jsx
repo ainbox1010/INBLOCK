@@ -1,176 +1,164 @@
-import { useEffect, useRef, useState } from 'react';
-import * as THREE from 'three';
+import { useEffect, useRef, useState } from 'react'
+import * as THREE from 'three'
+import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer'
+import CyborgBlockLogo from '../brand/logos/CyborgBlockLogo'
+import { createRoot } from 'react-dom/client'
 
 export default function NetworkNodes() {
-    const mountRef = useRef(null);
-    const [error, setError] = useState(null);
+    const mountRef = useRef(null)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         try {
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color('#0F0F1A');
+            // Scene setup
+            const scene = new THREE.Scene()
+            scene.background = new THREE.Color('#0F0F1A')
 
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+            
+            // Create both WebGL and CSS3D renderers
             const renderer = new THREE.WebGLRenderer({ 
                 antialias: true,
-                powerPreference: "high-performance" 
-            });
+                powerPreference: "high-performance",
+                alpha: true
+            })
+            const cssRenderer = new CSS3DRenderer()
 
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            mountRef.current?.appendChild(renderer.domElement);
+            renderer.setSize(window.innerWidth, window.innerHeight)
+            cssRenderer.setSize(window.innerWidth, window.innerHeight)
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+            
+            mountRef.current?.appendChild(renderer.domElement)
+            cssRenderer.domElement.style.position = 'absolute'
+            cssRenderer.domElement.style.top = '0'
+            mountRef.current?.appendChild(cssRenderer.domElement)
 
             // Create particles
-            const particlesGeometry = new THREE.BufferGeometry();
-            const particlesCount = 200;
-            const posArray = new Float32Array(particlesCount * 3);
-            const scales = new Float32Array(particlesCount);
+            const particlesCount = 50
+            const particles = []
+            const particleObjects = new THREE.Group()
+            const velocities = []
+            const roots = [] // Store React roots
 
-            // Create random positions and scales
-            for(let i = 0; i < particlesCount * 3; i += 3) {
-                posArray[i] = (Math.random() - 0.5) * 50;      // x
-                posArray[i + 1] = (Math.random() - 0.5) * 50;  // y
-                posArray[i + 2] = (Math.random() - 0.5) * 50;  // z
-                scales[i/3] = Math.random();
+            for(let i = 0; i < particlesCount; i++) {
+                // Create container for logo
+                const div = document.createElement('div')
+                div.style.width = '32px'
+                div.style.height = '32px'
+                
+                // Create React root and render logo
+                const root = createRoot(div)
+                root.render(<CyborgBlockLogo className="w-8 h-8 opacity-20" />)
+                roots.push(root) // Store root for cleanup
+                
+                // Create CSS3D object
+                const object = new CSS3DObject(div)
+                object.position.x = (Math.random() - 0.5) * 1000
+                object.position.y = (Math.random() - 0.5) * 1000
+                object.position.z = (Math.random() - 0.5) * 1000
+                
+                velocities.push({
+                    x: (Math.random() - 0.5) * 0.5,
+                    y: (Math.random() - 0.5) * 0.5,
+                    z: (Math.random() - 0.5) * 0.5
+                })
+                
+                particles.push(object)
+                particleObjects.add(object)
             }
 
-            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-            particlesGeometry.setAttribute('scale', new THREE.BufferAttribute(scales, 1));
-
-            // Custom shader material for particles
-            const particlesMaterial = new THREE.ShaderMaterial({
-                uniforms: {
-                    time: { value: 0 },
-                    color1: { value: new THREE.Color('#8B5CF6') },
-                    color2: { value: new THREE.Color('#EC4899') }
-                },
-                vertexShader: `
-                    attribute float scale;
-                    uniform float time;
-                    varying vec3 vColor;
-                    
-                    void main() {
-                        vec3 pos = position;
-                        pos.y += sin(time + position.x) * 0.5;
-                        pos.x += cos(time + position.y) * 0.5;
-                        
-                        vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-                        gl_PointSize = scale * 8.0 * (300.0 / -mvPosition.z);
-                        gl_Position = projectionMatrix * mvPosition;
-                        
-                        vColor = mix(vec3(0.545, 0.361, 0.965), vec3(0.925, 0.286, 0.6), scale);
-                    }
-                `,
-                fragmentShader: `
-                    varying vec3 vColor;
-                    
-                    void main() {
-                        float strength = distance(gl_PointCoord, vec2(0.5));
-                        strength = 1.0 - strength;
-                        strength = pow(strength, 3.0);
-                        
-                        vec3 color = vColor;
-                        gl_FragColor = vec4(color, strength);
-                    }
-                `,
-                transparent: true,
-                blending: THREE.AdditiveBlending,
-                depthWrite: false
-            });
-
-            const particles = new THREE.Points(particlesGeometry, particlesMaterial);
-            scene.add(particles);
+            scene.add(particleObjects)
 
             // Add lines between nearby particles
             const linesMaterial = new THREE.LineBasicMaterial({
                 color: 0x8B5CF6,
                 transparent: true,
                 opacity: 0.1
-            });
+            })
 
-            const linesGeometry = new THREE.BufferGeometry();
-            const lines = new THREE.LineSegments(linesGeometry, linesMaterial);
-            scene.add(lines);
+            const linesGeometry = new THREE.BufferGeometry()
+            const lines = new THREE.LineSegments(linesGeometry, linesMaterial)
+            scene.add(lines)
 
-            camera.position.z = 30;
+            camera.position.z = 500
 
-            // Animation
+            // Updated Animation
             const animate = () => {
-                requestAnimationFrame(animate);
+                requestAnimationFrame(animate)
 
-                const time = Date.now() * 0.001;
-                particlesMaterial.uniforms.time.value = time * 0.5;
+                // Update particle positions
+                particles.forEach((particle, i) => {
+                    particle.position.x += velocities[i].x
+                    particle.position.y += velocities[i].y
+                    particle.position.z += velocities[i].z
+
+                    // Bounce off boundaries
+                    const bounds = 500
+                    if (Math.abs(particle.position.x) > bounds) velocities[i].x *= -1
+                    if (Math.abs(particle.position.y) > bounds) velocities[i].y *= -1
+                    if (Math.abs(particle.position.z) > bounds) velocities[i].z *= -1
+                })
 
                 // Update lines between nearby particles
-                const positions = particles.geometry.attributes.position.array;
-                const linePositions = [];
-
-                for(let i = 0; i < positions.length; i += 3) {
-                    const x1 = positions[i];
-                    const y1 = positions[i + 1];
-                    const z1 = positions[i + 2];
-
-                    for(let j = i + 3; j < positions.length; j += 3) {
-                        const x2 = positions[j];
-                        const y2 = positions[j + 1];
-                        const z2 = positions[j + 2];
-
-                        const distance = Math.sqrt(
-                            Math.pow(x2 - x1, 2) +
-                            Math.pow(y2 - y1, 2) +
-                            Math.pow(z2 - z1, 2)
-                        );
-
-                        if(distance < 10) {
-                            linePositions.push(x1, y1, z1);
-                            linePositions.push(x2, y2, z2);
+                const linePositions = []
+                particles.forEach((particle, i) => {
+                    particles.slice(i + 1).forEach(other => {
+                        const distance = particle.position.distanceTo(other.position)
+                        if(distance < 300) {
+                            linePositions.push(
+                                particle.position.x, particle.position.y, particle.position.z,
+                                other.position.x, other.position.y, other.position.z
+                            )
                         }
-                    }
-                }
+                    })
+                })
 
                 linesGeometry.setAttribute(
                     'position',
                     new THREE.Float32BufferAttribute(linePositions, 3)
-                );
+                )
 
-                particles.rotation.y = time * 0.1;
-                lines.rotation.y = time * 0.1;
+                renderer.render(scene, camera)
+                cssRenderer.render(scene, camera)
+            }
 
-                renderer.render(scene, camera);
-            };
+            animate()
 
-            animate();
-
+            // Handle window resize
             const handleResize = () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            };
+                camera.aspect = window.innerWidth / window.innerHeight
+                camera.updateProjectionMatrix()
+                renderer.setSize(window.innerWidth, window.innerHeight)
+                cssRenderer.setSize(window.innerWidth, window.innerHeight)
+            }
 
-            window.addEventListener('resize', handleResize);
+            window.addEventListener('resize', handleResize)
 
             return () => {
-                window.removeEventListener('resize', handleResize);
-                mountRef.current?.removeChild(renderer.domElement);
-                particlesGeometry.dispose();
-                particlesMaterial.dispose();
-                linesGeometry.dispose();
-                linesMaterial.dispose();
-            };
+                window.removeEventListener('resize', handleResize)
+                // Cleanup React roots
+                roots.forEach(root => root.unmount())
+                mountRef.current?.removeChild(renderer.domElement)
+                mountRef.current?.removeChild(cssRenderer.domElement)
+                scene.remove(particleObjects)
+                scene.remove(lines)
+                linesGeometry.dispose()
+                linesMaterial.dispose()
+            }
         } catch (err) {
-            console.error('Three.js error:', err);
-            setError(err.message);
+            console.error('Three.js error:', err)
+            setError(err.message)
         }
-    }, []);
+    }, [])
 
     if (error) {
-        return <div className="text-red-500">Error initializing 3D background: {error}</div>;
+        return <div className="text-red-500">Error initializing 3D background: {error}</div>
     }
 
     return (
         <div 
             ref={mountRef} 
-            style={{ 
+            style={{
                 position: 'fixed',
                 top: 0,
                 left: 0,
@@ -180,5 +168,5 @@ export default function NetworkNodes() {
                 pointerEvents: 'none'
             }}
         />
-    );
+    )
 } 

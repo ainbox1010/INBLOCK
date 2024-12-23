@@ -72,7 +72,7 @@ src/
 │   ├── RegisterPage.jsx (User registration)
 │   └── ChatPage.jsx (Full chat access for auth users)
 ├── utils/
-│   ���── axios.js (API communication with token handling)
+│   └── axios.js (API communication with token handling)
 └── App.jsx (Route management)
 ```
 
@@ -113,3 +113,29 @@ vector-file-source/
 ├── dev.md (Development documentation)
 └── README.md (Project overview)
 ```
+
+# Development Notes
+
+## Security Considerations
+
+### Demo Chat Query Limiting
+Current implementation stores the query count in localStorage, which has several security implications:
+
+- Users can reset their count by clearing localStorage
+- Count can be manually edited through browser dev tools
+- Each browser/device gets a separate count
+- No server-side validation
+
+TODO: Future implementation should:
+- Track query counts per IP/session on backend
+- Implement proper rate limiting middleware
+- Remove reliance on client-side storage for critical limitations
+
+## Environment Setup
+...
+
+## API Integration
+...
+
+## Component Structure
+...
