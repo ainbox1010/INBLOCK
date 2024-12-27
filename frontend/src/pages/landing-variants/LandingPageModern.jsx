@@ -53,10 +53,53 @@ export default function LandingPageModern() {
                                         Your AI Agent for Crypto
                                     </span>
                                 </h1>
-                                
-                                <p className="mt-6 text-lg text-gray-300 max-w-2xl">
-                                    Revolutionizing crypto trading with AI-powered insights and automated strategies.
-                                </p>
+
+                                <h2 className="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-accent-purple to-accent-pink mb-4">
+                                    Start Your Journey:
+                                </h2>
+
+                                <ul className="mt-6 space-y-4 text-lg text-gray-300 max-w-2xl">
+                                    <li className="flex items-start">
+                                        <span className="text-accent-purple mr-2">•</span>
+                                        <span>
+                                            <strong className="text-transparent bg-clip-text bg-gradient-to-r from-accent-purple to-accent-pink">
+                                                Learn the Basics:
+                                            </strong>
+                                            {' '}
+                                            Understand crypto trading fundamentals with patient, beginner-friendly guidance.
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="text-accent-purple mr-2">•</span>
+                                        <span>
+                                            <strong className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-purple">
+                                                Get Expert Advice:
+                                            </strong>
+                                            {' '}
+                                            Receive AI-driven insights on the best coins and tokens to invest in.
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="text-accent-purple mr-2">•</span>
+                                        <span>
+                                            <strong className="text-transparent bg-clip-text bg-gradient-to-r from-accent-purple to-accent-pink">
+                                                Automate Your Trades:
+                                            </strong>
+                                            {' '}
+                                            When you're ready, let our advanced trading bots handle transactions seamlessly.
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="text-accent-purple mr-2">•</span>
+                                        <span>
+                                            <strong className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-purple">
+                                                Start building your own AI Agents:
+                                            </strong>
+                                            {' '}
+                                            Create and customize your own AI-powered trading strategies.
+                                        </span>
+                                    </li>
+                                </ul>
 
                                 {/* Price Display */}
                                 <div className="mt-8 p-4 rounded-lg bg-primary-800/50 border border-accent-purple/20 inline-block">
