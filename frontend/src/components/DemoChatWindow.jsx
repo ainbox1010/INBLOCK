@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import CyborgBlockLogo from './brand/logos/CyborgBlockLogo'
+import config from '../config/env'
 
 const DEMO_MESSAGES = [
     {
@@ -62,7 +63,7 @@ export default function DemoChatWindow() {
             setMessages(prev => [...prev, userMessage]);
             setInput('');
 
-            const response = await axios.post('http://localhost:8000/api/chat/', {
+            const response = await axios.post(`${config.apiUrl}/api/chat/`, {
                 message: input,
                 model: 'gpt-3.5-turbo',
                 temperature: 0

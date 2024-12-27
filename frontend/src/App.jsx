@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import ChatPage from './pages/ChatPage'
 import DesignShowcase from './pages/DesignShowcase'
+import { ThemeProvider } from './contexts/ThemeContext'
 
 const router = createBrowserRouter([
     {
@@ -58,8 +59,10 @@ const router = createBrowserRouter([
 
 export default function App() {
     return (
-        <LandingVariantProvider>
-            <RouterProvider router={router} />
-        </LandingVariantProvider>
+        <ThemeProvider>
+            <LandingVariantProvider>
+                <RouterProvider router={router} />
+            </LandingVariantProvider>
+        </ThemeProvider>
     )
 }
