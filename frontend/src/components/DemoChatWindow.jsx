@@ -8,7 +8,7 @@ import config from '../config/env'
 const DEMO_MESSAGES = [
     {
         role: 'assistant',
-        content: 'Hello! I am InBlock AI assistant. I can help you with crypto market analysis, trading strategies, and blockchain insights. What would you like to know?'
+        content: 'Hello! I am InBlock AI Agent. I can help you with getting familiar with crypto basics, crypto market analysis, trading strategies, and blockchain insights. What would you like to know?'
     }
 ];
 
@@ -89,24 +89,19 @@ export default function DemoChatWindow() {
     };
 
     return (
-        <div className="bg-primary-900/50 backdrop-blur-sm border border-gray-800 rounded-xl overflow-hidden shadow-2xl">
-            {/* Chat Header */}
-            <div className="p-4 border-b border-gray-800 bg-primary-800/50">
+        <div className="rounded-xl overflow-hidden bg-primary-900/50 backdrop-blur-sm border border-gray-800">
+            {/* Header */}
+            <div className="p-4 border-b border-gray-800">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                        <CyborgBlockLogo className="h-8 w-8" />
-                        <div>
-                            <h3 className="font-bold text-white">InBlock AI Assistant</h3>
-                            <p className="text-xs text-gray-400">Demo Version</p>
-                        </div>
+                    <div className="flex items-center">
+                        <div className="w-3 h-3 rounded-full bg-accent-purple mr-2 animate-pulse" />
+                        <h3 className="font-semibold text-white">
+                            InBlock AI Agent
+                        </h3>
                     </div>
-                    <span className={`text-sm font-medium ${
-                        queriesLeft === 0 
-                            ? 'text-red-400 animate-pulse font-bold'
-                            : 'text-gray-400'
-                    }`}>
-                        {queriesLeft > 0 ? queriesLeft : 0} queries left
-                    </span>
+                    <div className="text-sm text-gray-400">
+                        Demo ({queriesLeft} queries left)
+                    </div>
                 </div>
             </div>
 
