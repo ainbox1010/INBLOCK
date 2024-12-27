@@ -1,11 +1,44 @@
-import { motion } from 'framer-motion';
+import { motion, useAnimationControls } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import DemoChatWindow from '../../components/DemoChatWindow';
 import WaveTerrain from '../../components/backgrounds/WaveTerrain';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useEffect } from 'react';
 
 export default function LandingPageModern() {
     const theme = useTheme();
+    const controls1 = useAnimationControls();
+    const controls2 = useAnimationControls();
+    const controls3 = useAnimationControls();
+    const controls4 = useAnimationControls();
+
+    useEffect(() => {
+        const sequence = async () => {
+            while (true) {  // Infinite loop
+                // First bullet
+                await controls1.start({ opacity: 1 });
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                await controls1.start({ opacity: 0.5 });
+                
+                // Second bullet
+                await controls2.start({ opacity: 1 });
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                await controls2.start({ opacity: 0.5 });
+                
+                // Third bullet
+                await controls3.start({ opacity: 1 });
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                await controls3.start({ opacity: 0.5 });
+                
+                // Fourth bullet
+                await controls4.start({ opacity: 1 });
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                await controls4.start({ opacity: 0.5 });
+            }
+        };
+
+        sequence();
+    }, []);
 
     return (
         <>
@@ -59,46 +92,66 @@ export default function LandingPageModern() {
                                 </h2>
 
                                 <ul className="mt-6 space-y-4 text-lg text-gray-300 max-w-2xl">
-                                    <li className="flex items-start">
-                                        <span className="text-accent-purple mr-2">•</span>
+                                    <motion.li 
+                                        animate={controls1}
+                                        initial={{ opacity: 0.5 }}
+                                        transition={{ duration: 0.5 }}
+                                        className="flex items-start"
+                                    >
+                                        <span className="text-gray-300 mr-2">•</span>
                                         <span>
-                                            <strong className="text-transparent bg-clip-text bg-gradient-to-r from-accent-purple to-accent-pink">
+                                            <strong className="text-gray-300">
                                                 Learn the Basics:
                                             </strong>
                                             {' '}
                                             Understand crypto trading fundamentals with patient, beginner-friendly guidance.
                                         </span>
-                                    </li>
-                                    <li className="flex items-start">
-                                        <span className="text-accent-purple mr-2">•</span>
+                                    </motion.li>
+                                    <motion.li 
+                                        animate={controls2}
+                                        initial={{ opacity: 0.5 }}
+                                        transition={{ duration: 0.5 }}
+                                        className="flex items-start"
+                                    >
+                                        <span className="text-gray-300 mr-2">•</span>
                                         <span>
-                                            <strong className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-purple">
+                                            <strong className="text-gray-300">
                                                 Get Expert Advice:
                                             </strong>
                                             {' '}
                                             Receive AI-driven insights on the best coins and tokens to invest in.
                                         </span>
-                                    </li>
-                                    <li className="flex items-start">
-                                        <span className="text-accent-purple mr-2">•</span>
+                                    </motion.li>
+                                    <motion.li 
+                                        animate={controls3}
+                                        initial={{ opacity: 0.5 }}
+                                        transition={{ duration: 0.5 }}
+                                        className="flex items-start"
+                                    >
+                                        <span className="text-gray-300 mr-2">•</span>
                                         <span>
-                                            <strong className="text-transparent bg-clip-text bg-gradient-to-r from-accent-purple to-accent-pink">
+                                            <strong className="text-gray-300">
                                                 Automate Your Trades:
                                             </strong>
                                             {' '}
                                             When you're ready, let our advanced trading bots handle transactions seamlessly.
                                         </span>
-                                    </li>
-                                    <li className="flex items-start">
-                                        <span className="text-accent-purple mr-2">•</span>
+                                    </motion.li>
+                                    <motion.li 
+                                        animate={controls4}
+                                        initial={{ opacity: 0.5 }}
+                                        transition={{ duration: 0.5 }}
+                                        className="flex items-start"
+                                    >
+                                        <span className="text-gray-300 mr-2">•</span>
                                         <span>
-                                            <strong className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-purple">
+                                            <strong className="text-gray-300">
                                                 Start building your own AI Agents:
                                             </strong>
                                             {' '}
                                             Create and customize your own AI-powered trading strategies.
                                         </span>
-                                    </li>
+                                    </motion.li>
                                 </ul>
 
                                 {/* Price Display */}
