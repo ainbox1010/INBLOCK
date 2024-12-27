@@ -146,7 +146,7 @@ export default function DemoChatWindow() {
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="Ask about market analysis, trading strategies..."
+                            placeholder="Ask about crypto basics, analysis, trading strategies..."
                             className="flex-1 bg-gray-800/50 text-white rounded-lg px-4 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-accent-purple focus:border-transparent placeholder-gray-500"
                             disabled={isLoading}
                         />
