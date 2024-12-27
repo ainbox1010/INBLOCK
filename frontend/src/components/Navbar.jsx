@@ -6,14 +6,10 @@ import CyborgBlockLogo from './brand/logos/CyborgBlockLogo'
 
 const navigation = [
     { name: 'Features', href: '/features' },
-    { name: 'Pricing', href: '/pricing' },
+    { name: 'Protocol', href: '/protocol' },
     { name: 'Roadmap', href: '/roadmap' },
-    { name: 'FAQ', href: '/faq' },
-    { 
-        name: 'Design', 
-        href: '/design',
-        className: 'text-accent-purple hover:text-accent-pink'
-    }
+    { name: 'Tokenomics', href: '/tokenomics' },
+    { name: 'Blog', href: '/blog' }
 ]
 
 export default function Navbar() {
