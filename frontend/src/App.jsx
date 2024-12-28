@@ -12,6 +12,7 @@ import ProtocolPage from './pages/ProtocolPage'
 import { ThemeProvider } from './contexts/ThemeContext'
 import BlogPage from './pages/BlogPage'
 import TokenomicsPage from './pages/TokenomicsPage'
+import DemoChatWindow from './components/DemoChatWindow'
 
 const router = createBrowserRouter([
     {
@@ -57,6 +58,12 @@ const router = createBrowserRouter([
             {
                 path: '/tokenomics',
                 element: <TokenomicsPage />
+            },
+            {
+                path: '/demo-chat',
+                element: <div className="container mx-auto px-4 py-20">
+                    <DemoChatWindow />
+                </div>
             }
         ]
     }

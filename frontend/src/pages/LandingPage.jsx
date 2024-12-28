@@ -22,7 +22,7 @@ export default function LandingPage() {
     return (
         <>
             <VariantComponent />
-            <VariantSwitcher />
+            {/* <VariantSwitcher /> */}
         </>
     );
 }
