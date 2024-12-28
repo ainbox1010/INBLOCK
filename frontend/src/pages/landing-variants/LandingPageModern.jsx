@@ -176,10 +176,10 @@ export default function LandingPageModern() {
                                         CONNECT WALLET
                                     </Link>
                                     <Link 
-                                        to="/whitepaper"
+                                        to="/features"
                                         className="px-8 py-3 text-base font-semibold rounded-lg bg-primary-800 text-white hover:bg-primary-700 transition-all duration-200 border border-accent-purple/20"
                                     >
-                                        READ WHITEPAPER
+                                        FEATURES
                                     </Link>
                                 </div>
                             </motion.div>
