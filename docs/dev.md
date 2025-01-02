@@ -139,3 +139,58 @@ TODO: Future implementation should:
 
 ## Component Structure
 ...
+
+## Deployment Configuration
+
+### Frontend (Vercel)
+- Deploy from `frontend` directory using `vercel --public`
+- Configure environment variables in Vercel dashboard
+- Public access setup through Security settings
+
+### Backend Stack
+Recommended configuration:
+- Railway.app for Django hosting
+- PostgreSQL on Railway for database
+- Pinecone for vector storage
+
+### Database Configuration
+Update `settings.py` for PostgreSQL:
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('PGDATABASE'),
+        'USER': os.getenv('PGUSER'),
+        'PASSWORD': os.getenv('PGPASSWORD'),
+        'HOST': os.getenv('PGHOST'),
+        'PORT': os.getenv('PGPORT'),
+    }
+}
+```
+
+### Railway.app Setup
+Required additions to `requirements.txt`:
+```
+psycopg2-binary
+gunicorn
+whitenoise
+```
+
+Create `Procfile` in backend directory:
+```
+web: gunicorn config.wsgi --log-file -
+```
+
+### Service Limits
+- Railway: 500 hours runtime, 1GB PostgreSQL database
+- Vercel: Generous free tier with public deployment option
+- Pinecone: Vector storage limits vary by plan
+
+### Vector Store Integration
+Vector operations should be handled within the backend structure:
+```
+backend/
+└── vector_store/
+    ├── pinecone_utils.py
+    └── embeddings.py
+```
