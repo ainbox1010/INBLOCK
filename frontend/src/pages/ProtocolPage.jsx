@@ -3,24 +3,18 @@ import ReactFlow, { Background, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import PageLayout from '../layouts/PageLayout';
 import { useState } from 'react';
-import { getNodesForView } from '../utils/protocol/nodes';
-import { getEdgesForView } from '../utils/protocol/edges';
-
-// We'll create these components next
+import { nodes } from '../utils/protocol/nodes';
+import { edges } from '../utils/protocol/edges';
 import ComponentNode from '../components/protocol/ComponentNode';
 import DetailPanel from '../components/protocol/DetailPanel';
-import ViewControls from '../components/protocol/ViewControls';
+
+// Define node types
+const nodeTypes = {
+    custom: ComponentNode  // This maps 'custom' type to our ComponentNode
+};
 
 export default function ProtocolPage() {
-    const [selectedView, setSelectedView] = useState('overview'); // 'overview', 'detailed', 'timeline'
     const [selectedNode, setSelectedNode] = useState(null);
-
-    // We'll define these in separate files
-    const nodes = getNodesForView(selectedView);
-    const edges = getEdgesForView(selectedView);
-
-    console.log('Nodes:', nodes);
-    console.log('Edges:', edges);
 
     return (
         <PageLayout>
@@ -31,18 +25,13 @@ export default function ProtocolPage() {
                     transition={{ duration: 0.8 }}
                     className="h-[800px] relative bg-transparent"
                 >
-                    <ViewControls 
-                        selectedView={selectedView} 
-                        onViewChange={setSelectedView}
-                    />
-                    
                     <ReactFlow
                         nodes={nodes}
                         edges={edges}
-                        nodeTypes={{ custom: ComponentNode }}
+                        nodeTypes={nodeTypes}  // Use the defined nodeTypes
                         onNodeClick={(_, node) => setSelectedNode(node)}
                         fitView
-                        className="bg-transparent"
+                        className="bg-transparent react-flow-no-attribution"
                     >
                         <Background 
                             color="#ffffff10"

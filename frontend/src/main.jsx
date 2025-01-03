@@ -1,13 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css'
 import App from './App.jsx'
-import { LandingVariantProvider } from './contexts/LandingVariantContext'
+import './index.css'
+import 'reactflow/dist/style.css'
+
+// Add this CSS after the ReactFlow styles
+import './styles/reactflow-overrides.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <LandingVariantProvider>
-      <App />
-    </LandingVariantProvider>
+    <App />
   </React.StrictMode>,
 )
