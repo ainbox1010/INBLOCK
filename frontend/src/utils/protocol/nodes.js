@@ -4,19 +4,43 @@ export const nodes = [
         type: 'custom',
         position: { x: 100, y: 100 },
         data: { 
-            label: 'Test Node 1',
-            type: 'default',
-            color: 'green'
+            label: 'User query',
+            type: 'oval',
+            color: 'purple',
+            connections: ['right']
         }
     },
     {
         id: '2',
         type: 'custom',
-        position: { x: 300, y: 100 },
+        position: { x: 400, y: 100 },
         data: { 
-            label: 'Test Node 2',
-            type: 'default',
-            color: 'purple'
+            label: 'Short term memory',
+            type: 'database',
+            color: 'purple',
+            connections: ['left', 'right']
+        }
+    },
+    {
+        id: '3',
+        type: 'custom',
+        position: { x: 250, y: 250 },
+        data: { 
+            label: 'Preprocessing',
+            type: 'process',
+            color: 'green',
+            connections: ['left', 'right', 'top', 'bottom']
+        }
+    },
+    {
+        id: '4',
+        type: 'custom',
+        position: { x: 250, y: 400 },
+        data: { 
+            label: '',
+            type: 'intersection',
+            color: 'purple',
+            connections: ['left', 'right', 'top', 'bottom']
         }
     }
 ];
