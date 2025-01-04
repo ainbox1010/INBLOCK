@@ -90,8 +90,8 @@ export default function LandingPageModern() {
                                         InBlock
                                     </span>
                                     <br />
-                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-purple">
-                                        Your AI Agent for Crypto
+                                    <span className="text-4xl text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-purple">
+                                        Your AI Agent Swarm for Crypto
                                     </span>
                                 </h1>
 
@@ -112,7 +112,7 @@ export default function LandingPageModern() {
                                                 Learn the Basics:
                                             </strong>
                                             {' '}
-                                            Understand crypto trading fundamentals with patient, beginner-friendly guidance.
+                                            Understand crypto trading fundamentals with patient, beginner-friendly Agent guidance.
                                         </span>
                                     </motion.li>
                                     <motion.li 
@@ -127,7 +127,7 @@ export default function LandingPageModern() {
                                                 Get Expert Advice:
                                             </strong>
                                             {' '}
-                                            Receive AI-driven insights on the best coins and tokens to invest in.
+                                            Receive AI-driven insights on the best narratives and tokens to invest in.
                                         </span>
                                     </motion.li>
                                     <motion.li 
@@ -142,7 +142,7 @@ export default function LandingPageModern() {
                                                 Automate Your Trades:
                                             </strong>
                                             {' '}
-                                            When you're ready, let our advanced trading bots handle transactions seamlessly.
+                                            When you're ready, let our advanced trading Agents execute complex, on-chain transactions seamlessly on your behalf.
                                         </span>
                                     </motion.li>
                                     <motion.li 
@@ -157,7 +157,7 @@ export default function LandingPageModern() {
                                                 Start building your own AI Agents:
                                             </strong>
                                             {' '}
-                                            Create and customize your own AI-powered trading strategies.
+                                            Create and customize your own sentient AI-powered trading partner, with agent templates focused on each crypto sub-vertical, and-out-of the box X.com and Telegram integrations.
                                         </span>
                                     </motion.li>
                                 </ul>
@@ -181,7 +181,7 @@ export default function LandingPageModern() {
                                         to="/register"
                                         className="px-8 py-3 text-base font-semibold rounded-lg bg-gradient-to-r from-accent-purple to-accent-pink text-white hover:opacity-90 transition-all duration-200 shadow-lg shadow-accent-purple/25"
                                     >
-                                        CONNECT WALLET
+                                        JOIN PRESALE
                                     </Link>
                                     <Link 
                                         to="/features"
