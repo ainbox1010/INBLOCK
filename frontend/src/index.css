@@ -36,3 +36,42 @@ canvas {
   height: 100%;
   z-index: -1;
 }
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+  color: #D1D5DB;
+  font-size: 0.875rem;
+}
+
+.marquee-container {
+    position: relative;
+    width: 100%;
+    height: 24px;
+    overflow: hidden;
+}
+
+.marquee-content {
+    display: inline-flex;
+    position: absolute;
+    white-space: nowrap;
+    will-change: transform;
+    animation: marquee 30s linear infinite;
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}

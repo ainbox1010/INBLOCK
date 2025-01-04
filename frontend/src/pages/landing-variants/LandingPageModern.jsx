@@ -55,10 +55,18 @@ export default function LandingPageModern() {
                     animate={{ y: 0 }}
                     className="w-full bg-gradient-to-r from-accent-purple/10 via-accent-pink/10 to-accent-blue/10 border-b border-accent-purple/20"
                 >
-                    <div className="max-w-7xl mx-auto py-2 px-4">
-                        <p className="text-sm text-center text-gray-300">
-                            🚀 InBlock AI Agent Presale is NOW LIVE! Be part of the future—claim your discounted tokens and exclusive access to revolutionary AI-blockchain technology. ⚡️ Don't wait, join the innovation!
-                        </p>
+                    <div className="max-w-7xl mx-auto py-1 px-4">
+                        <div className="marquee-container">
+                            <div className="marquee-content">
+                                {/* Just two copies for seamless loop */}
+                                <span className="text-sm text-gray-300 mx-4">
+                                    InBlock AI Presale is NOW OPEN! 🚀 Secure your discounted tokens and gain exclusive early access to cutting-edge AI-blockchain technology. 🌐 Don't miss out—be a part of the future of innovation today!
+                                </span>
+                                <span className="text-sm text-gray-300 mx-4">
+                                    InBlock AI Presale is NOW OPEN! 🚀 Secure your discounted tokens and gain exclusive early access to cutting-edge AI-blockchain technology. 🌐 Don't miss out—be a part of the future of innovation today!
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </motion.div>
 
