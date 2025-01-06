@@ -1,130 +1,100 @@
 import { motion } from 'framer-motion';
-import { ChatBubbleLeftRightIcon, ChartBarIcon, CpuChipIcon, BoltIcon, RocketLaunchIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
-import PageLayout from '../layouts/PageLayout';
+import { 
+    BeakerIcon as BrainIcon,
+    ChartBarIcon, 
+    ShareIcon, 
+    CubeIcon as CubeTransparentIcon 
+} from '@heroicons/react/24/outline';
 
 const features = [
     {
-        name: 'AI-Powered Trading Assistant',
-        description: 'Get real-time trading insights and recommendations from our advanced AI models trained on vast amounts of market data.',
-        icon: CpuChipIcon,
-        color: 'blue'
+        title: "AI Agent for Comprehensive Analysis",
+        description: "Our AI Agents analyze extensive crypto market data to generate detailed reports, forecasts, and trend insights, offering actionable intelligence on market movements.",
+        icon: BrainIcon
     },
     {
-        name: 'Market Analysis',
-        description: 'Advanced technical analysis tools and market indicators to help you make informed trading decisions.',
-        icon: ChartBarIcon,
-        color: 'green'
+        title: "AI Trading Agent & Wallet Management",
+        description: "Beginning with a focus on AI tokens (like Virtuals and ai16z) before expanding to other verticals in crypto, InBlock's AI Agents uncover and execute profitable trading opportunities by monitoring social sentiment, wallet activity, price trends, and other key metrics.",
+        icon: ChartBarIcon
     },
     {
-        name: 'Smart Alerts',
-        description: 'Customizable alerts powered by AI to notify you of potential trading opportunities and market movements.',
-        icon: BoltIcon,
-        color: 'yellow'
-    },
-    {
-        name: 'Portfolio Management',
-        description: 'Track and manage your crypto portfolio with advanced analytics and performance metrics.',
-        icon: RocketLaunchIcon,
-        color: 'purple'
-    },
-    {
-        name: 'Risk Management',
-        description: 'Built-in risk management tools to help you protect your investments and optimize your trading strategy.',
-        icon: ShieldCheckIcon,
-        color: 'red'
-    },
-    {
-        name: 'AI Chat Support',
-        description: '24/7 AI-powered chat support to answer your questions and provide guidance on trading strategies.',
-        icon: ChatBubbleLeftRightIcon,
-        color: 'indigo'
+        title: "Autonomous Social Sharing",
+        description: "Seamlessly integrated with social platforms like X.com and Telegram, our AI Agents autonomously post insights, signals and curated market analysis, engaging followers with timely and relevant content.",
+        icon: ShareIcon,
+        links: [
+            {
+                name: "X.com",
+                url: "https://x.com/InBlockAI"
+            },
+            {
+                name: "Telegram",
+                url: "https://web.telegram.org/a/#-1001901930536"
+            }
+        ]
     }
 ];
 
-const colorClasses = {
-    blue: 'bg-gold-900/20 text-gold-400',
-    green: 'bg-green-900/20 text-green-300',
-    purple: 'bg-purple-900/20 text-purple-300',
-    yellow: 'bg-gold-600/20 text-gold-300',
-    red: 'bg-red-900/20 text-red-300',
-    indigo: 'bg-gold-800/20 text-gold-300'
-};
-
 export default function FeaturesPage() {
     return (
-        <PageLayout>
-            <div className="container mx-auto px-4 py-20">
-                <div className="mx-auto max-w-4xl text-center">
+        <div className="container mx-auto px-4 py-20">
+            {/* Main Features Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                {features.map((feature, index) => (
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
+                        key={index}
+                        whileHover={{ scale: 1.02 }}
+                        className="p-6 rounded-lg bg-primary-800/50 border border-accent-purple/20 hover:border-accent-pink/40 transition-colors"
                     >
-                        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent-purple to-accent-pink mb-6">
-                            Powerful Features for Smart Trading
-                        </h1>
-                        <p className="mt-6 text-lg leading-8 text-gray-300">
-                            Our AI-powered platform provides you with the tools and insights you need to trade with confidence
+                        <feature.icon className="w-12 h-12 text-accent-purple mb-4" />
+                        <h3 className="text-xl font-semibold text-white mb-3">
+                            {feature.title}
+                        </h3>
+                        <p className="text-gray-300 mb-4">
+                            {feature.description}
                         </p>
+                        {feature.links && (
+                            <div className="flex gap-4 mt-4">
+                                {feature.links.map((link, i) => (
+                                    <a
+                                        key={i}
+                                        href={link.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-accent-purple hover:text-accent-pink flex items-center"
+                                    >
+                                        {link.name}
+                                        <span className="text-xs ml-1">↗</span>
+                                    </a>
+                                ))}
+                            </div>
+                        )}
                     </motion.div>
-                </div>
-
-                {/* Features Grid */}
-                <motion.div 
-                    className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                >
-                    <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
-                        {features.map((feature) => (
-                            <motion.div
-                                key={feature.name}
-                                className="flex flex-col"
-                                whileHover={{ scale: 1.05 }}
-                                transition={{ type: "spring", stiffness: 300 }}
-                            >
-                                <dt className="flex items-center gap-x-3 text-xl font-semibold leading-7 text-white">
-                                    <div className={`rounded-lg p-2 ${colorClasses[feature.color]}`}>
-                                        <feature.icon className="h-6 w-6" aria-hidden="true" />
-                                    </div>
-                                    {feature.name}
-                                </dt>
-                                <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-300">
-                                    <p className="flex-auto">{feature.description}</p>
-                                    <p className="mt-6">
-                                        <button className="text-sm font-semibold leading-6 text-accent-purple hover:text-accent-pink transition-colors">
-                                            Learn more <span aria-hidden="true">→</span>
-                                        </button>
-                                    </p>
-                                </dd>
-                            </motion.div>
-                        ))}
-                    </dl>
-                </motion.div>
-
-                {/* Coming Soon Section */}
-                <motion.div 
-                    className="mt-32 sm:mt-40"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.4 }}
-                >
-                    <div className="bg-primary-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-12 hover:border-accent-purple/50 transition-all duration-300">
-                        <h2 className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-purple mb-6">
-                            Coming Soon: Advanced Trading Bots
-                        </h2>
-                        <p className="mx-auto mt-6 max-w-xl text-center text-lg leading-8 text-gray-300">
-                            Our next-generation trading bots will combine AI insights with customizable trading strategies to help you trade more effectively in any market condition.
-                        </p>
-                        <div className="mt-8 flex justify-center">
-                            <button className="px-8 py-3 text-base font-semibold rounded-lg bg-gradient-to-r from-accent-purple to-accent-pink text-white hover:opacity-90 transition-all duration-200 shadow-lg shadow-accent-purple/25">
-                                Join Waitlist
-                            </button>
-                        </div>
-                    </div>
-                </motion.div>
+                ))}
             </div>
-        </PageLayout>
+
+            {/* Coming Soon Platform Section */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full p-8 rounded-lg bg-gradient-to-r from-accent-purple/10 via-accent-pink/10 to-accent-blue/10 border border-accent-purple/20"
+            >
+                <div className="flex items-center mb-4">
+                    <CubeTransparentIcon className="w-12 h-12 text-accent-purple mr-4" />
+                    <div>
+                        <span className="px-3 py-1 text-sm rounded-full bg-accent-purple/20 text-accent-pink">
+                            Coming Soon in Q2
+                        </span>
+                    </div>
+                </div>
+                <h3 className="text-2xl font-semibold text-white mb-3">
+                    InBlock Agentic Platform
+                </h3>
+                <p className="text-gray-300">
+                    Initially launching our AI Agents inhouse, in Q2 InBlock will roll out the InBlock Agentic Platform, 
+                    making available a framework for users to create and customise their own AI Agents using our technology 
+                    and tools, and benefit from an expanded platform of Plugins and APIs.
+                </p>
+            </motion.div>
+        </div>
     );
 } 
