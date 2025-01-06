@@ -18,6 +18,7 @@ export default {
           blue: '#3B82F6',
           green: '#10B981',
           red: '#EF4444',
+          redBright: '#FF1A1A',
         }
       },
       backgroundImage: {
