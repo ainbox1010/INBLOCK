@@ -13,6 +13,9 @@ export default function LandingPageModern() {
     const controls4 = useAnimationControls();
 
     useEffect(() => {
+        // Scroll to top when component mounts
+        window.scrollTo(0, 0);
+        
         const sequence = async () => {
             while (true) {  // Infinite loop
                 // First bullet
@@ -51,8 +54,9 @@ export default function LandingPageModern() {
             <div className="relative z-10">
                 {/* Top Announcement Bar */}
                 <motion.div 
-                    initial={{ y: -100 }}
-                    animate={{ y: 0 }}
+                    initial={{ y: 0, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
                     className="w-full bg-gradient-to-r from-accent-purple/10 via-accent-pink/10 to-accent-blue/10 border-b border-accent-purple/20"
                 >
                     <div className="max-w-7xl mx-auto py-1 px-4">
