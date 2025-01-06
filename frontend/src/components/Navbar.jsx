@@ -8,8 +8,8 @@ const navigation = [
     { name: 'Features', href: '/features' },
     { name: 'Protocol', href: '/protocol' },
     { name: 'Roadmap', href: '/roadmap' },
-    { name: 'Tokenomics', href: '/tokenomics' },
-    { name: 'Blog', href: '/blog' }
+    { name: 'Blog', href: '/blog' },
+    // { name: 'Tokenomics', href: '/tokenomics' },  // Commenting out Tokenomics
 ]
 
 export default function Navbar() {

@@ -13,6 +13,8 @@ import { ThemeProvider } from './contexts/ThemeContext'
 import BlogPage from './pages/BlogPage'
 import TokenomicsPage from './pages/TokenomicsPage'
 import DemoChatWindow from './components/DemoChatWindow'
+import TermsPage from './pages/TermsPage'
+import PrivacyPage from './pages/PrivacyPage'
 
 const router = createBrowserRouter([
     {
@@ -64,6 +66,14 @@ const router = createBrowserRouter([
                 element: <div className="container mx-auto px-4 py-20">
                     <DemoChatWindow />
                 </div>
+            },
+            {
+                path: '/terms',
+                element: <TermsPage />
+            },
+            {
+                path: '/privacy',
+                element: <PrivacyPage />
             }
         ]
     }
