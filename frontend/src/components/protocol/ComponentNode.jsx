@@ -5,19 +5,23 @@ import { motion } from 'framer-motion';
 const ComponentNode = ({ data, isConnectable }) => {
     return (
         <motion.div
-            className="relative p-4 rounded-xl border bg-primary-900/50 backdrop-blur-sm 
-                       hover:border-accent-purple/50 transition-all duration-300"
+            className={`relative p-4 ${data.border || 'rounded-xl'} border bg-primary-900/50 backdrop-blur-sm 
+                       hover:border-accent-purple/50 transition-all duration-300`}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             whileHover={{ scale: 1.02 }}
         >
-            {/* Input Handle */}
-            <Handle
-                type="target"
-                position={Position.Left}
-                isConnectable={isConnectable}
-                className="w-3 h-3 bg-accent-purple/50 border-2 border-accent-purple"
-            />
+            {/* Handles */}
+            {data.handles && data.handles.map(handle => (
+                <Handle
+                    key={handle.id}
+                    type={handle.type}
+                    id={handle.id}
+                    position={handle.position}
+                    isConnectable={isConnectable}
+                    className='w-3 h-3 bg-accent-purple/50 border-2 border-accent-purple'
+                />
+            ))}
 
             {/* Node Content */}
             <div className="flex flex-col gap-2">
@@ -43,20 +47,12 @@ const ComponentNode = ({ data, isConnectable }) => {
 
                 {/* Priority Badge */}
                 {data.priority && (
-                    <span className={`absolute top-2 right-2 px-2 py-1 text-xs rounded-full
+                    <span className={`absolute top-1 right-4 px-1 py-0 text-xs rounded-full text-[6px]
                                    ${getPriorityColor(data.priority)}`}>
                         {data.priority}
                     </span>
                 )}
             </div>
-
-            {/* Output Handle */}
-            <Handle
-                type="source"
-                position={Position.Right}
-                isConnectable={isConnectable}
-                className="w-3 h-3 bg-accent-pink/50 border-2 border-accent-pink"
-            />
         </motion.div>
     );
 };

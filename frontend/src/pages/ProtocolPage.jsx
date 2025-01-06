@@ -3,8 +3,8 @@ import ReactFlow, { Background, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import PageLayout from '../layouts/PageLayout';
 import { useState } from 'react';
-import { getNodesForView } from '../utils/protocol/nodes';
-import { getEdgesForView } from '../utils/protocol/edges';
+import { getNodesForView } from '../utils/protocol/nodes-agent';
+import { getEdgesForView } from '../utils/protocol/edges-agent';
 
 // We'll create these components next
 import ComponentNode from '../components/protocol/ComponentNode';
