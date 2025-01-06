@@ -84,11 +84,6 @@ export default function LandingPageModern() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8 }}
                             >
-                                {/* Stage Indicator */}
-                                <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary-800/50 border border-accent-purple/20 mb-8">
-                                    <span className="text-accent-purple font-semibold">Stage 8 - Buy INBLOCK AI AgentNow</span>
-                                </div>
-
                                 <h1 className="text-5xl font-bold tracking-tight text-white mb-6">
                                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-purple to-accent-pink">
                                         InBlock
@@ -165,20 +160,6 @@ export default function LandingPageModern() {
                                         </span>
                                     </motion.li>
                                 </ul>
-
-                                {/* Price Display */}
-                                <div className="mt-8 p-4 rounded-lg bg-primary-800/50 border border-accent-purple/20 inline-block">
-                                    <div className="grid grid-cols-2 gap-4 text-sm">
-                                        <div>
-                                            <div className="text-gray-400">Current Price</div>
-                                            <div className="text-accent-purple font-bold">$0.00375</div>
-                                        </div>
-                                        <div>
-                                            <div className="text-gray-400">Next Stage</div>
-                                            <div className="text-accent-pink font-bold">$0.00425</div>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <div className="mt-10 flex gap-4 sm:justify-center lg:justify-start">
                                     <Link 
