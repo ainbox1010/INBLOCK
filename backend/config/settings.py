@@ -169,3 +169,9 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 # Add these settings
 CORS_ALLOW_ALL_ORIGINS = True  # For development only
 CORS_ALLOW_CREDENTIALS = True
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
