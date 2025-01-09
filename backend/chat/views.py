@@ -6,11 +6,8 @@ from .models import Conversation, Message
 from .services import ChatService
 from .serializers import ConversationSerializer, MessageSerializer
 from rest_framework.views import APIView
-<<<<<<< HEAD
-=======
 from django.core.cache import cache
 import uuid
->>>>>>> deployment-to-servers
 
 class ChatViewSet(viewsets.ModelViewSet):
     """
@@ -136,8 +133,6 @@ class ChatView(APIView):
 
         return Response({
             "message": response
-<<<<<<< HEAD
-=======
         })
 
 class DemoChatView(APIView):
@@ -198,5 +193,4 @@ class DemoChatView(APIView):
         return Response({
             "message": response,
             "queries_left": self.DEMO_QUERIES_PER_DAY - (queries_used + 1)
->>>>>>> deployment-to-servers
         })
