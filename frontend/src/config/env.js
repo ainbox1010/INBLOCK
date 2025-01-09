@@ -3,7 +3,7 @@ const ENV = {
         apiUrl: 'http://localhost:8000'
     },
     production: {
-        apiUrl: 'https://backend-production-ac14.up.railway.app'  // Paste your Railway domain here
+        apiUrl: 'https://backend-production-ac14.up.railway.app'
     }
 };
 

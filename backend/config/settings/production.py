@@ -20,7 +20,7 @@ DATABASES = {
 # Basic CORS for testing
 CORS_ALLOW_ALL_ORIGINS = False  # More secure
 CORS_ALLOWED_ORIGINS = [
-    'https://inblock.vercel.app',  # Your Vercel frontend domain
+    'https://inblock.vercel.app',  # Your Vercel domain
 ]
 CORS_ALLOW_CREDENTIALS = True
 
