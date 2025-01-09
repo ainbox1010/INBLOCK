@@ -3,7 +3,7 @@ const ENV = {
         apiUrl: 'http://localhost:8000'
     },
     production: {
-        apiUrl: 'https://api.inblock.ai'  // Your production API URL
+        apiUrl: 'https://backend-production-ac14.up.railway.app'
     }
 };
 

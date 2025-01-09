@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
+import api from '../utils/axios'
 import CyborgBlockLogo from './brand/logos/CyborgBlockLogo'
 import config from '../config/env'
 
@@ -21,24 +21,18 @@ export default function DemoChatWindow() {
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
-        const storedCount = localStorage.getItem('demoQueriesLeft')
-        const lastReset = localStorage.getItem('demoQueriesReset')
-        const now = new Date().getTime()
-
-        if (!storedCount || !lastReset || (now - parseInt(lastReset)) > 24 * 60 * 60 * 1000) {
-            setQueriesLeft(5)
-            localStorage.setItem('demoQueriesLeft', '5')
-            localStorage.setItem('demoQueriesReset', now.toString())
-        } else {
-            setQueriesLeft(parseInt(storedCount))
-        }
-    }, [])
-
-    useEffect(() => {
-        if (queriesLeft !== null) {
-            localStorage.setItem('demoQueriesLeft', queriesLeft.toString())
-        }
-    }, [queriesLeft])
+        const fetchQueriesLeft = async () => {
+            try {
+                const response = await api.get('/api/chat/demo/');
+                setQueriesLeft(response.data.queries_left);
+            } catch (error) {
+                setError('Unable to initialize demo chat');
+                setQueriesLeft(0);
+            }
+        };
+        
+        fetchQueriesLeft();
+    }, []);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -63,7 +57,7 @@ export default function DemoChatWindow() {
             setMessages(prev => [...prev, userMessage]);
             setInput('');
 
-            const response = await axios.post(`${config.apiUrl}/api/chat/`, {
+            const response = await api.post('/api/chat/demo/', {
                 message: input,
                 model: 'gpt-3.5-turbo',
                 temperature: 0
@@ -74,7 +68,8 @@ export default function DemoChatWindow() {
                 content: response.data.message
             };
             setMessages(prev => [...prev, assistantMessage]);
-            setQueriesLeft(prev => prev - 1);
+            
+            setQueriesLeft(response.data.queries_left);
 
         } catch (error) {
             console.error('Error details:', error.response || error);

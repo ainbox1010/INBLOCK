@@ -1,0 +1,8 @@
+[build]
+builder = "nixpacks"
+buildCommand = "pip install -r requirements.txt"
+
+[deploy]
+startCommand = "gunicorn config.wsgi:application --log-level debug"
+healthcheckPath = "/"
+healthcheckTimeout = 100 

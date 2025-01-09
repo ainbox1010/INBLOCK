@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import api from '../utils/axios'
+import api from '../utils/api'
 
 export default function AuthenticatedChatWindow() {
     const [messages, setMessages] = useState([])
@@ -33,7 +33,7 @@ export default function AuthenticatedChatWindow() {
             setMessages(prev => [...prev, userMessage])
             setInputMessage('')
 
-            const response = await api.post('/api/chat/send_message/', {
+            const response = await api.sendMessage({
                 message: inputMessage,
                 model: 'gpt-3.5-turbo',
                 temperature: 0
