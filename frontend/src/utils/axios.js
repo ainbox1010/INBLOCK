@@ -1,7 +1,9 @@
 import axios from 'axios';
+import env from '../config/env';  // Import the env configuration
 
+// Use the apiUrl from env config
 const api = axios.create({
-    baseURL: 'http://localhost:8000'
+    baseURL: env.apiUrl  // Instead of hardcoded 'http://localhost:8000'
 });
 
 // Add a request interceptor
