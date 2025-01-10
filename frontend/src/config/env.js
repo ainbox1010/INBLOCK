@@ -7,6 +7,10 @@ const ENV = {
     }
 };
 
-const currentEnv = process.env.NODE_ENV === 'production' ? 'production' : 'development';
+//const currentEnv = process.env.NODE_ENV === 'production' ? 'production' : 'development';
+const currentEnv = 'development';
+// Add debugging
+console.log('Current Environment:', currentEnv);
+console.log('API URL:', ENV[currentEnv].apiUrl);
 
 export default ENV[currentEnv]; 
