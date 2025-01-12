@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import { Disclosure, Menu } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link, useNavigate } from 'react-router-dom'
-import CyborgBlockLogo from './brand/logos/CyborgBlockLogo'
+import IbLogo from '../assets/images/IB_logo1.webp'
 
 const navigation = [
     { name: 'Features', href: '/features' },
@@ -36,7 +36,7 @@ export default function Navbar() {
                             <div className="flex">
                                 <div className="flex flex-shrink-0 items-center">
                                     <Link to="/" className="flex items-center space-x-3 group">
-                                        <CyborgBlockLogo className="h-10 w-10" />
+                                        <img src={IbLogo} alt="InBlock Logo" className="h-10 w-10" />
                                         <span className="text-xl font-bold text-white tracking-wider group-hover:text-accent-purple transition-colors">
                                             INBLOCK
                                         </span>
