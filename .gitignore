@@ -72,3 +72,5 @@ dist-ssr
 *.sln
 *.sw?
 backend/.env.production
+backend/.env.production.env.production
+backend/.env.production
