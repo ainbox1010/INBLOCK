@@ -8,6 +8,9 @@ from .serializers import ConversationSerializer, MessageSerializer
 from rest_framework.views import APIView
 from django.core.cache import cache
 import uuid
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ChatViewSet(viewsets.ModelViewSet):
     """
@@ -117,23 +120,28 @@ class ChatViewSet(viewsets.ModelViewSet):
         return Response(ChatService.get_available_models())
 
 class ChatView(APIView):
+    permission_classes = [IsAuthenticated]
+    
     def post(self, request):
         message = request.data.get('message')
-        model = request.data.get('model', 'gpt-3.5-turbo')
-        temperature = float(request.data.get('temperature', 0))
-
         if not message:
             return Response(
                 {"error": "Message is required"}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        chat_service = ChatService(model_name=model, temperature=temperature)
+        chat_service = ChatService()
         response = chat_service.process_message(message)
 
-        return Response({
-            "message": response
-        })
+        if response.get('success'):
+            return Response({
+                "message": response['content']  # Just send the content
+            })
+        else:
+            return Response(
+                {"error": response.get('error', 'Unknown error occurred')},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 class DemoChatView(APIView):
     """
@@ -163,34 +171,42 @@ class DemoChatView(APIView):
         })
 
     def post(self, request):
-        """Handle demo chat message"""
         cache_key = self._get_cache_key(request)
         queries_used = cache.get(cache_key, 0)
         
+        logger.info(f"Processing demo chat request. Queries used: {queries_used}")
+        
         if queries_used >= self.DEMO_QUERIES_PER_DAY:
+            logger.warning(f"Query limit reached for {cache_key}")
             return Response(
                 {"error": "Daily query limit reached"}, 
                 status=status.HTTP_429_TOO_MANY_REQUESTS
             )
 
         message = request.data.get('message')
+        logger.info(f"Received message: {message}")
+
         if not message:
             return Response(
                 {"error": "Message is required"}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Process message
-        chat_service = ChatService(
-            model_name=request.data.get('model', 'gpt-3.5-turbo'),
-            temperature=float(request.data.get('temperature', 0))
-        )
+        chat_service = ChatService()
         response = chat_service.process_message(message)
+        logger.info(f"ChatService response: {response}")
 
-        # Increment query count
-        cache.set(cache_key, queries_used + 1, self.CACHE_TTL)
-        
-        return Response({
-            "message": response,
-            "queries_left": self.DEMO_QUERIES_PER_DAY - (queries_used + 1)
-        })
+        if response.get('success'):
+            cache.set(cache_key, queries_used + 1, self.CACHE_TTL)
+            logger.info(f"Successful response. Queries remaining: {self.DEMO_QUERIES_PER_DAY - (queries_used + 1)}")
+            
+            return Response({
+                "message": response['content'],
+                "queries_left": self.DEMO_QUERIES_PER_DAY - (queries_used + 1)
+            })
+        else:
+            logger.error(f"Error in chat service: {response.get('error')}")
+            return Response(
+                {"error": response.get('error', 'Unknown error occurred')},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
