@@ -1,5 +1,5 @@
 import logging
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_community.agent_toolkits.load_tools import load_tools
 from langchain_community.callbacks.manager import get_openai_callback
 from langchain.agents import initialize_agent, AgentType
@@ -9,6 +9,8 @@ from typing import Optional, Dict, Any
 import yfinance as yf
 import requests
 from langchain.tools import Tool, tool
+from langchain_community.vectorstores import Pinecone as LangchainPinecone
+from pinecone import Pinecone
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +40,25 @@ class ChatService:
                 streaming=streaming,
                 api_key=settings.OPENAI_API_KEY,
                 request_timeout=30,
+            )
+            
+            # Initialize Pinecone client
+            pc = Pinecone(
+                api_key=settings.PINECONE_API_KEY,
+                environment=settings.PINECONE_ENVIRONMENT
+            )
+            
+            # Initialize embeddings
+            self.embeddings = OpenAIEmbeddings()
+            
+            # Get the index
+            index = pc.Index(settings.PINECONE_INDEX_NAME)
+            
+            # Initialize vector store
+            self.vectorstore = LangchainPinecone(
+                index,
+                self.embeddings.embed_query,
+                "text"
             )
             
             # Create tools using the @tool decorator
@@ -182,8 +203,20 @@ class ChatService:
                         logger.error(f"YFinance error: {str(yf_error)}")
                     return f"Error fetching sentiment from all sources for {symbol}"
 
+            @tool
+            def search_crypto_knowledge(query: str) -> str:
+                """Search for cryptocurrency information in our knowledge base."""
+                try:
+                    docs = self.vectorstore.similarity_search(query, k=3)
+                    if docs:
+                        return "\n".join([f"Source {i+1}: {doc.page_content}" for i, doc in enumerate(docs)])
+                    return "No relevant information found."
+                except Exception as e:
+                    logger.error(f"Error searching knowledge base: {str(e)}")
+                    return "Error accessing knowledge base."
+
             # Initialize agent with tools
-            self.tools = [get_crypto_price, get_market_sentiment]
+            self.tools = [get_crypto_price, get_market_sentiment, search_crypto_knowledge]
             
             self.agent = initialize_agent(
                 tools=self.tools,
@@ -201,8 +234,13 @@ class ChatService:
     def process_message(self, message: str, custom_system_prompt: Optional[str] = None) -> Dict[str, Any]:
         try:
             default_system_prompt = """You are an expert AI agent specializing in cryptocurrency analysis. 
-            Use the get_crypto_price tool when asked about prices. Use the get_market_sentiment tool when asked about market sentiment.
-            Always explain your reasoning and what tools you're using. Always refer to yourself as an InBlock AI Agent."""
+            You have access to several tools:
+            1. get_crypto_price: Use this for current cryptocurrency prices
+            2. get_market_sentiment: Use this for market sentiment analysis
+            3. search_crypto_knowledge: Use this to search our knowledge base for detailed crypto information
+
+            Always explain your reasoning and what tools you're using. When providing information, cite your sources if using the knowledge base.
+            Always refer to yourself as an InBlock AI Agent."""
 
             try:
                 response = self.agent.run(

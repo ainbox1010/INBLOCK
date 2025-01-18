@@ -1,0 +1,7 @@
+Bitcoin (BTC) is the first decentralized cryptocurrency, created in 2009 by an unknown person or group using the pseudonym Satoshi Nakamoto. It operates on a peer-to-peer network without the need for intermediaries.
+
+Key features:
+- Limited supply of 21 million coins
+- Uses proof-of-work consensus mechanism
+- Halving events every 4 years
+- Most widely adopted cryptocurrency 

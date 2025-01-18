@@ -1,0 +1,7 @@
+Ethereum (ETH) is a decentralized, open-source blockchain platform that enables smart contracts and decentralized applications (dApps). Created by Vitalik Buterin in 2015.
+
+Key features:
+- Smart contract platform
+- Proof-of-stake consensus after The Merge
+- ERC-20 token standard
+- Decentralized Finance (DeFi) ecosystem 
