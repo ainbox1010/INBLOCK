@@ -2,9 +2,13 @@
 Django base settings for config project.
 """
 import os
+import logging
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
+
+# Set up logger
+logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
@@ -16,6 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 COINMARKETCAP_API_KEY = os.getenv('COINMARKETCAP_API_KEY')
 COINGECKO_API_KEY = os.getenv('COINGECKO_API_KEY')
+
+# Log API key loading
+if COINMARKETCAP_API_KEY:
+    logger.info(f"Loaded CoinMarketCap API key: {COINMARKETCAP_API_KEY[:8]}...")
+else:
+    logger.warning("CoinMarketCap API key not found!")
 
 # Required Django settings
 ROOT_URLCONF = 'config.urls'
@@ -109,3 +119,6 @@ CACHES = {
 PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
 PINECONE_ENVIRONMENT = os.getenv('PINECONE_ENVIRONMENT', 'gcp-starter')
 PINECONE_INDEX_NAME = os.getenv('PINECONE_INDEX_NAME', 'inblock-crypto') 
+
+# Add this after the COINMARKETCAP_API_KEY setting
+logger.info(f"Loaded CoinMarketCap API key: {COINMARKETCAP_API_KEY[:8]}...") 

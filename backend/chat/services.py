@@ -64,7 +64,7 @@ class ChatService:
             # Create tools using the @tool decorator
             @tool
             def get_crypto_price(symbol: str) -> str:
-                """Get current price and market data for a cryptocurrency. Input should be a cryptocurrency symbol (e.g., BTC, ETH)."""
+                """Get current price and market data for a cryptocurrency."""
                 cache_key = f"crypto_price_{symbol.upper()}"
                 cached_result = cache.get(cache_key)
                 if cached_result:
@@ -73,45 +73,51 @@ class ChatService:
 
                 try:
                     # First try CoinMarketCap
-                    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
+                    url = 'https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest'
                     parameters = {
                         'symbol': symbol.upper(),
                         'convert': 'USD'
                     }
                     headers = {
                         'Accepts': 'application/json',
+                        'Accept': 'application/json',
                         'X-CMC_PRO_API_KEY': settings.COINMARKETCAP_API_KEY,
                     }
 
+                    logger.info(f"Attempting CoinMarketCap API call for {symbol}")
                     response = requests.get(url, headers=headers, params=parameters)
-                    data = response.json()
-
-                    if response.status_code == 200 and data['status']['error_code'] == 0:
-                        crypto_data = data['data'][symbol.upper()]
-                        quote = crypto_data['quote']['USD']
+                    logger.info(f"CoinMarketCap API response status: {response.status_code}")
+                    
+                    try:
+                        data = response.json()
+                        logger.info(f"CoinMarketCap API response data: {data}")
                         
-                        result = (
-                            f"{symbol.upper()} current price: ${quote['price']:.2f}\n"
-                            f"24h change: {quote['percent_change_24h']:.2f}%\n"
-                            f"Market cap: ${quote['market_cap']:,.2f}\n"
-                            f"Volume 24h: ${quote['volume_24h']:,.2f}"
-                        )
-                        cache.set(cache_key, result, self.PRICE_CACHE_TIMEOUT)
-                        return result
-                    else:
-                        # If CoinMarketCap fails, fallback to yfinance
-                        logger.info(f"Falling back to yfinance for {symbol}")
-                        ticker = yf.Ticker(f"{symbol}-USD")
-                        data = ticker.history(period="1d")
-                        if not data.empty:
-                            current_price = data['Close'].iloc[-1]
-                            result = f"{symbol.upper()} current price: ${current_price:.2f} (Data from Yahoo Finance)"
+                        if response.status_code == 200 and data['status']['error_code'] == 0:
+                            crypto_data = data['data'][symbol.upper()][0]
+                            quote = crypto_data['quote']['USD']
+                            
+                            result = (
+                                f"{symbol.upper()} current price: ${quote['price']:.2f}\n"
+                                f"24h change: {quote['percent_change_24h']:.2f}%\n"
+                                f"Market cap: ${quote['market_cap']:,.2f}\n"
+                                f"Volume 24h: ${quote['volume_24h']:,.2f}\n"
+                                f"(Data from CoinMarketCap)"
+                            )
                             cache.set(cache_key, result, self.PRICE_CACHE_TIMEOUT)
                             return result
-                        return f"Could not fetch price for {symbol} from either source"
+                        else:
+                            error_msg = data.get('status', {}).get('error_message', 'Unknown error')
+                            logger.error(f"CoinMarketCap API error: {error_msg}")
+                            raise Exception(f"CoinMarketCap API error: {error_msg}")
+                            
+                    except ValueError as e:
+                        logger.error(f"Failed to parse CoinMarketCap response: {str(e)}")
+                        raise
+                        
                 except Exception as e:
-                    logger.error(f"Price error: {str(e)}")
-                    # Final fallback to yfinance
+                    logger.error(f"Error fetching from CoinMarketCap: {str(e)}")
+                    # Fallback to yfinance
+                    logger.info(f"Falling back to yfinance for {symbol}")
                     try:
                         ticker = yf.Ticker(f"{symbol}-USD")
                         data = ticker.history(period="1d")
