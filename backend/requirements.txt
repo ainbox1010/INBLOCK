@@ -24,9 +24,7 @@ pinecone-client==3.0.2
 langchain-pinecone>=0.0.3
 tiktoken>=0.5.2
 unstructured>=0.16.13
-python-magic>=0.4.27
 # Document loading dependencies
 pdfminer.six>=20221105
 python-docx>=0.8.11
-beautifulsoup4>=4.12.3
 markdown>=3.5.2
