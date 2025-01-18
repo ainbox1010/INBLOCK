@@ -52,13 +52,42 @@ class ChatService:
             def get_market_sentiment(symbol: str) -> str:
                 """Get market sentiment for a cryptocurrency. Input should be a cryptocurrency symbol (e.g., BTC, ETH)."""
                 try:
-                    # Example API endpoint - replace with your preferred data source
-                    api_url = f"https://api.example.com/sentiment/{symbol}"
-                    response = requests.get(api_url)
+                    # Map common symbols to CoinGecko IDs
+                    symbol_to_id = {
+                        "BTC": "bitcoin",
+                        "ETH": "ethereum",
+                        "DOGE": "dogecoin",
+                        "SOL": "solana",
+                        "XRP": "ripple",
+                        # Add more mappings as needed
+                    }
+                    
+                    # Convert symbol to uppercase for consistent mapping
+                    symbol = symbol.upper()
+                    coin_id = symbol_to_id.get(symbol, symbol.lower())
+                    
+                    api_url = f"https://api.coingecko.com/api/v3/simple/price?ids={coin_id}&vs_currencies=usd&include_24hr_change=true&include_market_cap=true"
+                    response = requests.get(
+                        api_url,
+                        headers={"accept": "application/json"}
+                    )
+                    
                     if response.status_code == 200:
-                        return response.json()
-                    return f"Could not fetch sentiment for {symbol}"
+                        data = response.json()
+                        if data.get(coin_id):
+                            price_change = data[coin_id]['usd_24h_change']
+                            market_cap = data[coin_id]['usd_market_cap']
+                            sentiment = "positive" if price_change > 0 else "negative"
+                            return (
+                                f"Market sentiment for {symbol}: "
+                                f"24h price change: {price_change:.2f}% ({sentiment} sentiment). "
+                                f"Market cap: ${market_cap:,.2f}"
+                            )
+                        return f"Could not fetch sentiment data for {symbol} (ID: {coin_id})"
+                    else:
+                        return f"API Error: Status code {response.status_code}"
                 except Exception as e:
+                    logger.error(f"Sentiment error for {symbol}: {str(e)}")
                     return f"Error fetching sentiment: {str(e)}"
 
             # Initialize agent with tools
