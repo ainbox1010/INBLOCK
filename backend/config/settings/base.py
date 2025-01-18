@@ -1,10 +1,21 @@
+"""
+Django base settings for config project.
+"""
 import os
 from pathlib import Path
+from datetime import timedelta
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+# API Keys
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+COINMARKETCAP_API_KEY = os.getenv('COINMARKETCAP_API_KEY')
+COINGECKO_API_KEY = os.getenv('COINGECKO_API_KEY')
 
 # Required Django settings
 ROOT_URLCONF = 'config.urls'

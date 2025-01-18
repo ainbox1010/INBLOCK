@@ -38,57 +38,124 @@ class ChatService:
             # Create tools using the @tool decorator
             @tool
             def get_crypto_price(symbol: str) -> str:
-                """Get the current price of a cryptocurrency. Input should be a cryptocurrency symbol (e.g., BTC, ETH)."""
+                """Get current price and market data for a cryptocurrency. Input should be a cryptocurrency symbol (e.g., BTC, ETH)."""
                 try:
-                    ticker = yf.Ticker(f"{symbol}-USD")
-                    data = ticker.history(period="1d")
-                    if not data.empty:
-                        return f"{symbol} current price: ${data['Close'].iloc[-1]:.2f}"
-                    return f"Could not fetch price for {symbol}"
+                    # First try CoinMarketCap
+                    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
+                    parameters = {
+                        'symbol': symbol.upper(),
+                        'convert': 'USD'
+                    }
+                    headers = {
+                        'Accepts': 'application/json',
+                        'X-CMC_PRO_API_KEY': settings.COINMARKETCAP_API_KEY,
+                    }
+
+                    response = requests.get(url, headers=headers, params=parameters)
+                    data = response.json()
+
+                    if response.status_code == 200 and data['status']['error_code'] == 0:
+                        crypto_data = data['data'][symbol.upper()]
+                        quote = crypto_data['quote']['USD']
+                        
+                        return (
+                            f"{symbol.upper()} current price: ${quote['price']:.2f}\n"
+                            f"24h change: {quote['percent_change_24h']:.2f}%\n"
+                            f"Market cap: ${quote['market_cap']:,.2f}\n"
+                            f"Volume 24h: ${quote['volume_24h']:,.2f}"
+                        )
+                    else:
+                        # If CoinMarketCap fails, fallback to yfinance
+                        logger.info(f"Falling back to yfinance for {symbol}")
+                        ticker = yf.Ticker(f"{symbol}-USD")
+                        data = ticker.history(period="1d")
+                        if not data.empty:
+                            current_price = data['Close'].iloc[-1]
+                            return f"{symbol.upper()} current price: ${current_price:.2f} (Data from Yahoo Finance)"
+                        return f"Could not fetch price for {symbol} from either source"
                 except Exception as e:
-                    return f"Error fetching price: {str(e)}"
+                    logger.error(f"Price error: {str(e)}")
+                    # Final fallback to yfinance
+                    try:
+                        ticker = yf.Ticker(f"{symbol}-USD")
+                        data = ticker.history(period="1d")
+                        if not data.empty:
+                            current_price = data['Close'].iloc[-1]
+                            return f"{symbol.upper()} current price: ${current_price:.2f} (Data from Yahoo Finance)"
+                    except Exception as yf_error:
+                        logger.error(f"YFinance error: {str(yf_error)}")
+                    return f"Error fetching price from all sources for {symbol}"
 
             @tool
             def get_market_sentiment(symbol: str) -> str:
-                """Get market sentiment for a cryptocurrency. Input should be a cryptocurrency symbol (e.g., BTC, ETH)."""
+                """Get detailed market analysis for a cryptocurrency. Input should be a cryptocurrency symbol (e.g., BTC, ETH)."""
                 try:
-                    # Map common symbols to CoinGecko IDs
-                    symbol_to_id = {
-                        "BTC": "bitcoin",
-                        "ETH": "ethereum",
-                        "DOGE": "dogecoin",
-                        "SOL": "solana",
-                        "XRP": "ripple",
-                        # Add more mappings as needed
+                    # First try CoinMarketCap
+                    url = 'https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest'
+                    parameters = {
+                        'symbol': symbol.upper(),
+                        'convert': 'USD'
                     }
-                    
-                    # Convert symbol to uppercase for consistent mapping
-                    symbol = symbol.upper()
-                    coin_id = symbol_to_id.get(symbol, symbol.lower())
-                    
-                    api_url = f"https://api.coingecko.com/api/v3/simple/price?ids={coin_id}&vs_currencies=usd&include_24hr_change=true&include_market_cap=true"
-                    response = requests.get(
-                        api_url,
-                        headers={"accept": "application/json"}
-                    )
-                    
-                    if response.status_code == 200:
-                        data = response.json()
-                        if data.get(coin_id):
-                            price_change = data[coin_id]['usd_24h_change']
-                            market_cap = data[coin_id]['usd_market_cap']
-                            sentiment = "positive" if price_change > 0 else "negative"
-                            return (
-                                f"Market sentiment for {symbol}: "
-                                f"24h price change: {price_change:.2f}% ({sentiment} sentiment). "
-                                f"Market cap: ${market_cap:,.2f}"
-                            )
-                        return f"Could not fetch sentiment data for {symbol} (ID: {coin_id})"
+                    headers = {
+                        'Accepts': 'application/json',
+                        'X-CMC_PRO_API_KEY': settings.COINMARKETCAP_API_KEY,
+                    }
+
+                    response = requests.get(url, headers=headers, params=parameters)
+                    data = response.json()
+
+                    if response.status_code == 200 and data['status']['error_code'] == 0:
+                        crypto_data = data['data'][symbol.upper()][0]
+                        quote = crypto_data['quote']['USD']
+                        
+                        price_change_24h = quote['percent_change_24h']
+                        price_change_7d = quote['percent_change_7d']
+                        volume_change_24h = quote['volume_change_24h']
+                        
+                        sentiment = "bullish" if price_change_24h > 0 and volume_change_24h > 0 else "bearish"
+                        if abs(price_change_24h) < 1:
+                            sentiment = "neutral"
+                        
+                        return (
+                            f"Market analysis for {symbol.upper()}:\n"
+                            f"Sentiment: {sentiment}\n"
+                            f"24h change: {price_change_24h:.2f}%\n"
+                            f"7d change: {price_change_7d:.2f}%\n"
+                            f"Volume change 24h: {volume_change_24h:.2f}%\n"
+                            f"Market dominance: {crypto_data['market_cap_dominance']:.2f}%\n"
+                            f"Market rank: #{crypto_data['cmc_rank']}"
+                        )
                     else:
-                        return f"API Error: Status code {response.status_code}"
+                        # Fallback to yfinance for basic sentiment
+                        logger.info(f"Falling back to yfinance for {symbol} sentiment")
+                        ticker = yf.Ticker(f"{symbol}-USD")
+                        hist = ticker.history(period="7d")
+                        if not hist.empty:
+                            price_change = ((hist['Close'].iloc[-1] - hist['Close'].iloc[0]) / hist['Close'].iloc[0]) * 100
+                            volume_change = ((hist['Volume'].iloc[-1] - hist['Volume'].iloc[0]) / hist['Volume'].iloc[0]) * 100
+                            sentiment = "bullish" if price_change > 0 and volume_change > 0 else "bearish"
+                            if abs(price_change) < 1:
+                                sentiment = "neutral"
+                                
+                            return (
+                                f"Market analysis for {symbol.upper()} (Data from Yahoo Finance):\n"
+                                f"Sentiment: {sentiment}\n"
+                                f"7d price change: {price_change:.2f}%\n"
+                                f"7d volume change: {volume_change:.2f}%"
+                            )
+                        return f"Could not fetch sentiment data for {symbol} from either source"
                 except Exception as e:
-                    logger.error(f"Sentiment error for {symbol}: {str(e)}")
-                    return f"Error fetching sentiment: {str(e)}"
+                    logger.error(f"Sentiment error: {str(e)}")
+                    # Final fallback to yfinance
+                    try:
+                        ticker = yf.Ticker(f"{symbol}-USD")
+                        hist = ticker.history(period="7d")
+                        if not hist.empty:
+                            price_change = ((hist['Close'].iloc[-1] - hist['Close'].iloc[0]) / hist['Close'].iloc[0]) * 100
+                            return f"Basic sentiment for {symbol.upper()}: {'positive' if price_change > 0 else 'negative'} (7d change: {price_change:.2f}%) (Data from Yahoo Finance)"
+                    except Exception as yf_error:
+                        logger.error(f"YFinance error: {str(yf_error)}")
+                    return f"Error fetching sentiment from all sources for {symbol}"
 
             # Initialize agent with tools
             self.tools = [get_crypto_price, get_market_sentiment]
@@ -110,7 +177,7 @@ class ChatService:
         try:
             default_system_prompt = """You are an expert AI agent specializing in cryptocurrency analysis. 
             Use the get_crypto_price tool when asked about prices. Use the get_market_sentiment tool when asked about market sentiment.
-            Always explain your reasoning and what tools you're using."""
+            Always explain your reasoning and what tools you're using. Always refer to yourself as an InBlock AI Agent."""
 
             try:
                 response = self.agent.run(
