@@ -4,6 +4,7 @@ from langchain_community.agent_toolkits.load_tools import load_tools
 from langchain_community.callbacks.manager import get_openai_callback
 from langchain.agents import initialize_agent, AgentType
 from django.conf import settings
+from django.core.cache import cache
 from typing import Optional, Dict, Any
 import yfinance as yf
 import requests
@@ -15,6 +16,10 @@ class ChatService:
     """
     Enhanced chat service using GPT-4 Turbo with configurable settings
     """
+    # Cache timeouts in seconds
+    PRICE_CACHE_TIMEOUT = 60  # 1 minute for prices
+    SENTIMENT_CACHE_TIMEOUT = 300  # 5 minutes for sentiment
+    
     def __init__(
         self,
         model_name: str = "gpt-4-0125-preview",
@@ -39,6 +44,12 @@ class ChatService:
             @tool
             def get_crypto_price(symbol: str) -> str:
                 """Get current price and market data for a cryptocurrency. Input should be a cryptocurrency symbol (e.g., BTC, ETH)."""
+                cache_key = f"crypto_price_{symbol.upper()}"
+                cached_result = cache.get(cache_key)
+                if cached_result:
+                    logger.info(f"Returning cached price for {symbol}")
+                    return f"{cached_result} (Cached)"
+
                 try:
                     # First try CoinMarketCap
                     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
@@ -58,12 +69,14 @@ class ChatService:
                         crypto_data = data['data'][symbol.upper()]
                         quote = crypto_data['quote']['USD']
                         
-                        return (
+                        result = (
                             f"{symbol.upper()} current price: ${quote['price']:.2f}\n"
                             f"24h change: {quote['percent_change_24h']:.2f}%\n"
                             f"Market cap: ${quote['market_cap']:,.2f}\n"
                             f"Volume 24h: ${quote['volume_24h']:,.2f}"
                         )
+                        cache.set(cache_key, result, self.PRICE_CACHE_TIMEOUT)
+                        return result
                     else:
                         # If CoinMarketCap fails, fallback to yfinance
                         logger.info(f"Falling back to yfinance for {symbol}")
@@ -71,7 +84,9 @@ class ChatService:
                         data = ticker.history(period="1d")
                         if not data.empty:
                             current_price = data['Close'].iloc[-1]
-                            return f"{symbol.upper()} current price: ${current_price:.2f} (Data from Yahoo Finance)"
+                            result = f"{symbol.upper()} current price: ${current_price:.2f} (Data from Yahoo Finance)"
+                            cache.set(cache_key, result, self.PRICE_CACHE_TIMEOUT)
+                            return result
                         return f"Could not fetch price for {symbol} from either source"
                 except Exception as e:
                     logger.error(f"Price error: {str(e)}")
@@ -81,7 +96,9 @@ class ChatService:
                         data = ticker.history(period="1d")
                         if not data.empty:
                             current_price = data['Close'].iloc[-1]
-                            return f"{symbol.upper()} current price: ${current_price:.2f} (Data from Yahoo Finance)"
+                            result = f"{symbol.upper()} current price: ${current_price:.2f} (Data from Yahoo Finance)"
+                            cache.set(cache_key, result, self.PRICE_CACHE_TIMEOUT)
+                            return result
                     except Exception as yf_error:
                         logger.error(f"YFinance error: {str(yf_error)}")
                     return f"Error fetching price from all sources for {symbol}"
@@ -89,6 +106,12 @@ class ChatService:
             @tool
             def get_market_sentiment(symbol: str) -> str:
                 """Get detailed market analysis for a cryptocurrency. Input should be a cryptocurrency symbol (e.g., BTC, ETH)."""
+                cache_key = f"crypto_sentiment_{symbol.upper()}"
+                cached_result = cache.get(cache_key)
+                if cached_result:
+                    logger.info(f"Returning cached sentiment for {symbol}")
+                    return f"{cached_result} (Cached)"
+
                 try:
                     # First try CoinMarketCap
                     url = 'https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest'
@@ -116,7 +139,7 @@ class ChatService:
                         if abs(price_change_24h) < 1:
                             sentiment = "neutral"
                         
-                        return (
+                        result = (
                             f"Market analysis for {symbol.upper()}:\n"
                             f"Sentiment: {sentiment}\n"
                             f"24h change: {price_change_24h:.2f}%\n"
@@ -125,6 +148,8 @@ class ChatService:
                             f"Market dominance: {crypto_data['market_cap_dominance']:.2f}%\n"
                             f"Market rank: #{crypto_data['cmc_rank']}"
                         )
+                        cache.set(cache_key, result, self.SENTIMENT_CACHE_TIMEOUT)
+                        return result
                     else:
                         # Fallback to yfinance for basic sentiment
                         logger.info(f"Falling back to yfinance for {symbol} sentiment")

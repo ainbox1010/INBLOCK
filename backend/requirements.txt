@@ -11,7 +11,8 @@ langchain-core>=0.3.25
 langchain==0.3.12
 langchain-openai==0.2.12
 langchain-community>=0.0.39
-django-redis
+django-redis==5.4.0
+redis>=5.0.1
 psycopg2-binary
 gunicorn==21.2.0
 yfinance==0.2.36
