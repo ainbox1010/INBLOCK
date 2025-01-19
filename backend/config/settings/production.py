@@ -2,7 +2,7 @@ from .base import *
 import os
 
 DEBUG = False  # Production should never have debug enabled
-ALLOWED_HOSTS = ['*']  # Update this with your Railway domain later
+ALLOWED_HOSTS = ['backend-production-ac14.up.railway.app']
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # PostgreSQL Database
@@ -18,10 +18,10 @@ DATABASES = {
 }
 
 # CORS settings for Vercel frontend
-CORS_ALLOW_ALL_ORIGINS = True  # Temporarily enable for debugging
+CORS_ALLOW_ALL_ORIGINS = True  # Keep for now while testing
 CORS_ALLOWED_ORIGINS = [
     'https://inblock.vercel.app',
-    'http://localhost:5173',
+    'http://localhost:5173'  # Keep for local development
 ]
 CORS_ALLOW_CREDENTIALS = True
 
