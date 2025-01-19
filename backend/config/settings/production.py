@@ -1,8 +1,16 @@
 from .base import *
 import os
 
-DEBUG = False  # Production should never have debug enabled
-ALLOWED_HOSTS = ['backend-production-ac14.up.railway.app']
+# Temporarily enable debug for troubleshooting
+DEBUG = True
+
+# Allow all hosts temporarily
+ALLOWED_HOSTS = ['*']
+
+# Make sure static files are configured
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # PostgreSQL Database

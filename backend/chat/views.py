@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from django.core.cache import cache
 import uuid
 import logging
+from django.http import JsonResponse
 
 logger = logging.getLogger(__name__)
 
@@ -210,3 +211,6 @@ class DemoChatView(APIView):
                 {"error": response.get('error', 'Unknown error occurred')},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+def health_check(request):
+    return JsonResponse({'status': 'ok'}, status=200)

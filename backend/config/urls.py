@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponse
+from chat.views import health_check
 
 def healthcheck(request):
     return HttpResponse("OK", status=200)
@@ -27,4 +28,5 @@ urlpatterns = [
     path('api/chat/', include('chat.urls')),
     path('api/auth/', include('users.urls')),
     path('', healthcheck, name='healthcheck'),
+    path('health/', health_check, name='health_check'),
 ]

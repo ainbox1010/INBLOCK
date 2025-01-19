@@ -7,7 +7,11 @@ import sys
 # Add the project root to the Python path
 sys.path.insert(0, os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
+# Set Django settings module based on environment
+if os.getenv('RAILWAY_ENVIRONMENT'):
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'config.settings.production'
+else:
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.development')
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
