@@ -1,5 +1,6 @@
 from .base import *
 import os
+from django.core.exceptions import ImproperlyConfigured
 
 # Temporarily enable debug for troubleshooting
 DEBUG = True
@@ -41,4 +42,33 @@ print(f"BASE_DIR: {BASE_DIR}", file=sys.stderr)
 
 # Static files
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Debug Redis connection (safely)
+redis_url = os.getenv("REDIS_URL")
+print("Redis Debug:", file=sys.stderr)
+print(f"Redis URL present: {redis_url is not None}", file=sys.stderr)
+print(f"Environment variables: {list(os.environ.keys())}", file=sys.stderr)
+
+# Redis Cache Configuration for production only
+if not redis_url:
+    raise ImproperlyConfigured(
+        "REDIS_URL environment variable is required in production. "
+        "Check Railway configuration."
+    )
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": redis_url,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "RETRY_ON_TIMEOUT": True,
+            "MAX_CONNECTIONS": 50,
+        }
+    }
+}
+
+# Use Redis for session backend in production
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default' 
