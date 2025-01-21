@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirna
 if os.getenv('RAILWAY_ENVIRONMENT'):
     os.environ['DJANGO_SETTINGS_MODULE'] = 'config.settings.production'
 else:
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.development')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.local')
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
