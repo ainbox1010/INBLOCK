@@ -44,7 +44,7 @@ This document outlines the modular architecture and development steps for the MV
 **Objective**: Direct queries to the appropriate tools and modules.
 - **Functionality**:
   - Route queries to external APIs, vector database, or sentiment analysis module.
-  - Use LangChain’s **ConversationalReActAgent**.
+  - Use LangChain's **ConversationalReActAgent**.
 - **Tools**:
   - **Real-time Market Data Tool**: Fetch data from APIs like CoinGecko.
   - **Sentiment Analysis Tool**: Analyze social media sentiment.
@@ -64,7 +64,7 @@ This document outlines the modular architecture and development steps for the MV
 ### 2.5 Vector Database Integration
 **Objective**: Retrieve and embed data for evaluation.
 - **Database**: Pinecone.
-- **Embedding Generator**: OpenAI’s `text-embedding-ada-002`.
+- **Embedding Generator**: OpenAI's `text-embedding-ada-002`.
 - **Workflow**:
   - Embed proprietary evaluation logic.
   - Retrieve relevant data during agent queries.
@@ -108,10 +108,10 @@ This document outlines the modular architecture and development steps for the MV
 ### 2.9 Context Management
 **Objective**: Maintain short-term and long-term memory for user interactions.
 - **Functionality**:
-  - **Short-Term Memory**: Use LangChain’s ConversationBufferMemory.
+  - **Short-Term Memory**: Use LangChain's ConversationBufferMemory.
   - **Long-Term Memory**: Store session data in PostgreSQL.
 - **Implementation**:
-  - Integrate memory into LangChain’s agent workflow.
+  - Integrate memory into LangChain's agent workflow.
 
 ---
 
@@ -133,7 +133,7 @@ This document outlines the modular architecture and development steps for the MV
    - Configure Pinecone for embeddings.
    - Embed proprietary data using OpenAI.
 3. **Agent Configuration**:
-   - Initialize LangChain’s ConversationalReActAgent.
+   - Initialize LangChain's ConversationalReActAgent.
    - Add tools for market data, sentiment analysis, and vector retrieval.
 4. **Frontend Integration**:
    - Connect chat-based interface to the backend API.
