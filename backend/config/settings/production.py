@@ -1,6 +1,7 @@
 from .base import *
 import os
 from django.core.exceptions import ImproperlyConfigured
+import logging
 
 # Temporarily enable debug for troubleshooting
 DEBUG = True
@@ -50,25 +51,24 @@ print("Redis Debug:", file=sys.stderr)
 print(f"Redis URL present: {redis_url is not None}", file=sys.stderr)
 print(f"Environment variables: {list(os.environ.keys())}", file=sys.stderr)
 
-# Redis Cache Configuration for production only
-if not redis_url:
-    raise ImproperlyConfigured(
-        "REDIS_URL environment variable is required in production. "
-        "Check Railway configuration."
-    )
-
+# Redis Cache Configuration
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": redis_url,
+        "LOCATION": os.getenv('REDIS_URL'),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "RETRY_ON_TIMEOUT": True,
-            "MAX_CONNECTIONS": 50,
         }
     }
 }
 
-# Use Redis for session backend in production
+# Use Redis for session backend
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS = 'default' 
+SESSION_CACHE_ALIAS = 'default'
+
+# Simple Redis connection check
+if os.getenv('REDIS_URL'):
+    logger.info("Redis URL configured successfully")
+else:
+    logger.warning("Redis URL not found in environment variables") 
