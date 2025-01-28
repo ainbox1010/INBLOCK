@@ -159,56 +159,72 @@ class ChatService:
                         quote = crypto_data['quote']['USD']
                         
                         # Calculate sentiment based on price and volume changes
-                        price_change_24h = quote['percent_change_24h']
-                        price_change_7d = quote['percent_change_7d']
-                        volume_change_24h = quote['volume_change_24h']
+                        price_change_24h = quote.get('percent_change_24h', 0)
+                        price_change_7d = quote.get('percent_change_7d', 0)
+                        volume_change_24h = quote.get('volume_change_24h', 0)
                         
                         sentiment = "bullish" if price_change_24h > 0 and volume_change_24h > 0 else "bearish"
                         if abs(price_change_24h) < 1:
                             sentiment = "neutral"
                         
-                        result = (
-                            f"Market analysis for {symbol.upper()}:\n"
-                            f"Sentiment: {sentiment}\n"
-                            f"24h change: {price_change_24h:.2f}%\n"
-                            f"7d change: {price_change_7d:.2f}%\n"
-                            f"Volume change 24h: {volume_change_24h:.2f}%\n"
-                            f"Market dominance: {crypto_data['market_cap_dominance']:.2f}%\n"
-                            f"Market rank: #{crypto_data['cmc_rank']}"
-                        )
-                        cache.set(cache_key, result, self.SENTIMENT_CACHE_TIMEOUT)
-                        return result
+                        # Build result string dynamically based on available data
+                        result = [
+                            f"Market analysis for {symbol.upper()} (Data from CoinMarketCap):",
+                            f"Sentiment: {sentiment}"
+                        ]
+                        
+                        # Add available metrics
+                        if 'percent_change_24h' in quote:
+                            result.append(f"24h change: {price_change_24h:.2f}%")
+                        if 'percent_change_7d' in quote:
+                            result.append(f"7d change: {price_change_7d:.2f}%")
+                        if 'volume_change_24h' in quote:
+                            result.append(f"Volume change 24h: {volume_change_24h:.2f}%")
+                        if 'market_cap_dominance' in crypto_data:
+                            result.append(f"Market dominance: {crypto_data['market_cap_dominance']:.2f}%")
+                        if 'cmc_rank' in crypto_data:
+                            result.append(f"Market rank: #{crypto_data['cmc_rank']}")
+                        
+                        result_str = "\n".join(result)
+                        cache.set(cache_key, result_str, self.SENTIMENT_CACHE_TIMEOUT)
+                        return result_str
+                        
                     else:
-                        # Fallback to yfinance for basic sentiment
-                        logger.info(f"Falling back to yfinance for {symbol} sentiment")
-                        ticker = yf.Ticker(f"{symbol}-USD")
-                        hist = ticker.history(period="7d")
-                        if not hist.empty:
-                            price_change = ((hist['Close'].iloc[-1] - hist['Close'].iloc[0]) / hist['Close'].iloc[0]) * 100
-                            volume_change = ((hist['Volume'].iloc[-1] - hist['Volume'].iloc[0]) / hist['Volume'].iloc[0]) * 100
-                            sentiment = "bullish" if price_change > 0 and volume_change > 0 else "bearish"
-                            if abs(price_change) < 1:
-                                sentiment = "neutral"
-                                
-                            return (
-                                f"Market analysis for {symbol.upper()} (Data from Yahoo Finance):\n"
-                                f"Sentiment: {sentiment}\n"
-                                f"7d price change: {price_change:.2f}%\n"
-                                f"7d volume change: {volume_change:.2f}%"
-                            )
-                        return f"Could not fetch sentiment data for {symbol} from either source"
+                        raise Exception(f"CoinMarketCap API error: {data.get('status', {}).get('error_message', 'Unknown error')}")
+                        
                 except Exception as e:
-                    logger.error(f"Sentiment error: {str(e)}")
-                    # Final fallback to yfinance
+                    logger.error(f"CoinMarketCap error: {str(e)}")
+                    # Fallback to yfinance
+                    logger.info(f"Falling back to yfinance for {symbol} sentiment")
                     try:
                         ticker = yf.Ticker(f"{symbol}-USD")
                         hist = ticker.history(period="7d")
                         if not hist.empty:
+                            # Calculate basic metrics from yfinance data
                             price_change = ((hist['Close'].iloc[-1] - hist['Close'].iloc[0]) / hist['Close'].iloc[0]) * 100
-                            return f"Basic sentiment for {symbol.upper()}: {'positive' if price_change > 0 else 'negative'} (7d change: {price_change:.2f}%) (Data from Yahoo Finance)"
+                            volume_change = ((hist['Volume'].iloc[-1] - hist['Volume'].iloc[0]) / hist['Volume'].iloc[0]) * 100
+                            
+                            # Calculate sentiment using same logic
+                            sentiment = "bullish" if price_change > 0 and volume_change > 0 else "bearish"
+                            if abs(price_change) < 1:
+                                sentiment = "neutral"
+                            
+                            # Build yfinance result
+                            result = [
+                                f"Market analysis for {symbol.upper()} (Data from Yahoo Finance):",
+                                f"Sentiment: {sentiment}",
+                                f"7d price change: {price_change:.2f}%",
+                                f"7d volume change: {volume_change:.2f}%"
+                            ]
+                            
+                            result_str = "\n".join(result)
+                            cache.set(cache_key, result_str, self.SENTIMENT_CACHE_TIMEOUT)
+                            return result_str
+                            
+                        return f"Could not fetch sentiment data for {symbol} from Yahoo Finance"
                     except Exception as yf_error:
                         logger.error(f"YFinance error: {str(yf_error)}")
-                    return f"Error fetching sentiment from all sources for {symbol}"
+                        return f"Error fetching sentiment data for {symbol} from all sources"
 
             @tool
             def search_crypto_knowledge(query: str) -> str:
