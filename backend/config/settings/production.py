@@ -71,4 +71,7 @@ SESSION_CACHE_ALIAS = 'default'
 if os.getenv('REDIS_URL'):
     logger.info("Redis URL configured successfully")
 else:
-    logger.warning("Redis URL not found in environment variables") 
+    logger.warning("Redis URL not found in environment variables")
+
+# Add Gunicorn timeout settings
+GUNICORN_TIMEOUT = 120  # 2 minutes 

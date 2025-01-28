@@ -236,23 +236,28 @@ class ChatService:
                         filter={"source": {"$exists": True}}
                     )
                     if docs:
-                        return "\n".join([
-                            f"Source {i+1} ({doc.metadata.get('source', 'Unknown')}): {doc.page_content}"
-                            for i, doc in enumerate(docs)
-                        ])
+                        # Simplify the response format to avoid parsing issues
+                        results = []
+                        for i, doc in enumerate(docs, 1):
+                            source = doc.metadata.get('source', 'Unknown')
+                            content = doc.page_content.replace('\n\n', ' ').replace('\n', ' ')
+                            results.append(f"Source {i} ({source}): {content}")
+                        return " | ".join(results)
                     return "No relevant information found."
                 except Exception as e:
                     logger.error(f"Error searching knowledge base: {str(e)}")
                     return "Error accessing knowledge base."
 
-            # Initialize agent with tools
+            # Initialize agent with modified configuration
             self.tools = [get_crypto_price, get_market_sentiment, search_crypto_knowledge]
             self.agent = initialize_agent(
                 tools=self.tools,
                 llm=self.llm,
                 agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
                 verbose=True,
-                handle_parsing_errors=True
+                handle_parsing_errors=True,
+                max_iterations=3,  # Limit iterations to prevent loops
+                early_stopping_method="generate"  # Stop gracefully if needed
             )
             
         except Exception as e:
@@ -284,8 +289,6 @@ class ChatService:
         try:
             # Load existing history
             message_history = self._load_history()
-            
-            # Add new message to history
             message_history.append(HumanMessage(content=message))
             
             # Format conversation history
@@ -294,24 +297,25 @@ class ChatService:
                 for msg in message_history[:-1]
             ])
             
-            # Create full prompt with history
-            full_prompt = f"""Previous conversation:
-            {conversation_history}
-            
-            Current message: {message}
-            
-            Remember to use available tools when needed:
-            1. get_crypto_price: For current cryptocurrency prices
-            2. get_market_sentiment: For market sentiment analysis
-            3. search_crypto_knowledge: For searching our knowledge base
-            """
-            
             try:
                 # Try using agent
-                response = self.agent.run(full_prompt)
+                response = self.agent.run(
+                    f"""Previous conversation:
+                    {conversation_history}
+                    
+                    Current message: {message}
+                    
+                    Remember to use available tools when needed:
+                    1. get_crypto_price: For current cryptocurrency prices
+                    2. get_market_sentiment: For market sentiment analysis
+                    3. search_crypto_knowledge: For searching our knowledge base
+                    
+                    If you encounter any issues with the knowledge base, try to provide information 
+                    from other available tools."""
+                )
             except Exception as agent_error:
-                logger.error(f"Agent error: {str(agent_error)}")
-                # Fallback to regular chat
+                logger.error(f"Agent error: {str(agent_error)}", exc_info=True)
+                # Fallback to regular chat but maintain tool access
                 messages = [
                     SystemMessage(content="You are a helpful AI assistant specializing in cryptocurrency."),
                     *message_history
@@ -320,8 +324,6 @@ class ChatService:
             
             # Add response to history
             message_history.append(AIMessage(content=response))
-            
-            # Save updated history
             self._save_history(message_history)
             
             return {
@@ -330,7 +332,7 @@ class ChatService:
             }
             
         except Exception as e:
-            logger.error(f"Error processing message: {str(e)}")
+            logger.error(f"Error processing message: {str(e)}", exc_info=True)
             return {
                 "success": False,
                 "error": str(e)
