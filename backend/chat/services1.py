@@ -1,16 +1,16 @@
 import logging
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_community.agent_toolkits.load_tools import load_tools
+from langchain_community.callbacks.manager import get_openai_callback
 from langchain.agents import initialize_agent, AgentType
 from django.conf import settings
 from django.core.cache import cache
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any
+import yfinance as yf
+import requests
 from langchain.tools import Tool, tool
 from langchain_community.vectorstores import Pinecone as LangchainPinecone
 from pinecone import Pinecone
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, BaseMessage
-import yfinance as yf
-import requests
 
 logger = logging.getLogger(__name__)
 
@@ -27,42 +27,29 @@ class ChatService:
         model_name: str = "gpt-4-0125-preview",
         temperature: float = 0,
         max_tokens: Optional[int] = None,
+        streaming: bool = False
     ):
+        self.model_name = model_name
+        self.temperature = temperature
+        
         try:
-            self.model_name = model_name
-            self.temperature = temperature
-            
             self.llm = ChatOpenAI(
-                temperature=temperature,
-                model_name=model_name,
+                temperature=self.temperature,
+                model_name=self.model_name,
                 max_tokens=max_tokens,
-                api_key=settings.OPENAI_API_KEY
+                streaming=streaming,
+                api_key=settings.OPENAI_API_KEY,
+                request_timeout=30,
             )
             
-            # Initialize tools and memory
-            self._initialize_tools()
-            self.cache_key = "chat_history"
-            
-            logger.info("ChatService initialized successfully")
-            
-        except Exception as e:
-            logger.error(f"Error initializing ChatService: {str(e)}")
-            raise
-
-    def _initialize_tools(self):
-        """Initialize all tools"""
-        try:
-            # Initialize Pinecone
+            # Initialize Pinecone client
             pc = Pinecone(
                 api_key=settings.PINECONE_API_KEY,
                 environment=settings.PINECONE_ENVIRONMENT
             )
             
             # Initialize embeddings
-            self.embeddings = OpenAIEmbeddings(
-                model="text-embedding-ada-002",
-                api_key=settings.OPENAI_API_KEY
-            )
+            self.embeddings = OpenAIEmbeddings()
             
             # Get the index
             index = pc.Index(settings.PINECONE_INDEX_NAME)
@@ -70,11 +57,11 @@ class ChatService:
             # Initialize vector store
             self.vectorstore = LangchainPinecone(
                 index,
-                self.embeddings,
+                self.embeddings.embed_query,
                 "text"
             )
             
-            # Create tools
+            # Create tools using the @tool decorator
             @tool
             def get_crypto_price(symbol: str) -> str:
                 """Get current price and market data for a cryptocurrency."""
@@ -93,31 +80,44 @@ class ChatService:
                     }
                     headers = {
                         'Accepts': 'application/json',
+                        'Accept': 'application/json',
                         'X-CMC_PRO_API_KEY': settings.COINMARKETCAP_API_KEY,
                     }
 
+                    logger.info(f"Attempting CoinMarketCap API call for {symbol}")
                     response = requests.get(url, headers=headers, params=parameters)
-                    data = response.json()
+                    logger.info(f"CoinMarketCap API response status: {response.status_code}")
                     
-                    if response.status_code == 200 and data['status']['error_code'] == 0:
-                        crypto_data = data['data'][symbol.upper()][0]
-                        quote = crypto_data['quote']['USD']
+                    try:
+                        data = response.json()
+                        logger.info(f"CoinMarketCap API response data: {data}")
                         
-                        result = (
-                            f"{symbol.upper()} current price: ${quote['price']:.2f}\n"
-                            f"24h change: {quote['percent_change_24h']:.2f}%\n"
-                            f"Market cap: ${quote['market_cap']:,.2f}\n"
-                            f"Volume 24h: ${quote['volume_24h']:,.2f}\n"
-                            f"(Data from CoinMarketCap)"
-                        )
-                        cache.set(cache_key, result, self.PRICE_CACHE_TIMEOUT)
-                        return result
-                    else:
-                        raise Exception(f"CoinMarketCap API error: {data.get('status', {}).get('error_message', 'Unknown error')}")
-                    
+                        if response.status_code == 200 and data['status']['error_code'] == 0:
+                            crypto_data = data['data'][symbol.upper()][0]
+                            quote = crypto_data['quote']['USD']
+                            
+                            result = (
+                                f"{symbol.upper()} current price: ${quote['price']:.2f}\n"
+                                f"24h change: {quote['percent_change_24h']:.2f}%\n"
+                                f"Market cap: ${quote['market_cap']:,.2f}\n"
+                                f"Volume 24h: ${quote['volume_24h']:,.2f}\n"
+                                f"(Data from CoinMarketCap)"
+                            )
+                            cache.set(cache_key, result, self.PRICE_CACHE_TIMEOUT)
+                            return result
+                        else:
+                            error_msg = data.get('status', {}).get('error_message', 'Unknown error')
+                            logger.error(f"CoinMarketCap API error: {error_msg}")
+                            raise Exception(f"CoinMarketCap API error: {error_msg}")
+                            
+                    except ValueError as e:
+                        logger.error(f"Failed to parse CoinMarketCap response: {str(e)}")
+                        raise
+                        
                 except Exception as e:
                     logger.error(f"Error fetching from CoinMarketCap: {str(e)}")
                     # Fallback to yfinance
+                    logger.info(f"Falling back to yfinance for {symbol}")
                     try:
                         ticker = yf.Ticker(f"{symbol}-USD")
                         data = ticker.history(period="1d")
@@ -132,7 +132,7 @@ class ChatService:
 
             @tool
             def get_market_sentiment(symbol: str) -> str:
-                """Get detailed market analysis for a cryptocurrency."""
+                """Get detailed market analysis for a cryptocurrency. Input should be a cryptocurrency symbol (e.g., BTC, ETH)."""
                 cache_key = f"crypto_sentiment_{symbol.upper()}"
                 cached_result = cache.get(cache_key)
                 if cached_result:
@@ -158,7 +158,6 @@ class ChatService:
                         crypto_data = data['data'][symbol.upper()][0]
                         quote = crypto_data['quote']['USD']
                         
-                        # Calculate sentiment based on price and volume changes
                         price_change_24h = quote['percent_change_24h']
                         price_change_7d = quote['percent_change_7d']
                         volume_change_24h = quote['volume_change_24h']
@@ -214,16 +213,9 @@ class ChatService:
             def search_crypto_knowledge(query: str) -> str:
                 """Search for cryptocurrency information in our knowledge base."""
                 try:
-                    docs = self.vectorstore.similarity_search(
-                        query,
-                        k=3,
-                        filter={"source": {"$exists": True}}
-                    )
+                    docs = self.vectorstore.similarity_search(query, k=3)
                     if docs:
-                        return "\n".join([
-                            f"Source {i+1} ({doc.metadata.get('source', 'Unknown')}): {doc.page_content}"
-                            for i, doc in enumerate(docs)
-                        ])
+                        return "\n".join([f"Source {i+1}: {doc.page_content}" for i, doc in enumerate(docs)])
                     return "No relevant information found."
                 except Exception as e:
                     logger.error(f"Error searching knowledge base: {str(e)}")
@@ -231,6 +223,7 @@ class ChatService:
 
             # Initialize agent with tools
             self.tools = [get_crypto_price, get_market_sentiment, search_crypto_knowledge]
+            
             self.agent = initialize_agent(
                 tools=self.tools,
                 llm=self.llm,
@@ -238,86 +231,53 @@ class ChatService:
                 verbose=True,
                 handle_parsing_errors=True
             )
+            logger.info("Agent initialized successfully")
             
         except Exception as e:
-            logger.error(f"Error initializing tools: {str(e)}")
+            logger.error(f"Error initializing ChatService: {str(e)}")
             raise
 
-    def _load_history(self) -> List[BaseMessage]:
-        """Load message history from cache"""
-        history_data = cache.get(self.cache_key, [])
-        messages = []
-        for msg in history_data:
-            if msg['type'] == 'human':
-                messages.append(HumanMessage(content=msg['content']))
-            elif msg['type'] == 'ai':
-                messages.append(AIMessage(content=msg['content']))
-        return messages
-
-    def _save_history(self, messages: List[BaseMessage]):
-        """Save message history to cache"""
-        history_data = []
-        for msg in messages:
-            if isinstance(msg, HumanMessage):
-                history_data.append({'type': 'human', 'content': msg.content})
-            elif isinstance(msg, AIMessage):
-                history_data.append({'type': 'ai', 'content': msg.content})
-        cache.set(self.cache_key, history_data, timeout=3600)
-
-    def process_message(self, message: str) -> dict:
+    def process_message(self, message: str, custom_system_prompt: Optional[str] = None) -> Dict[str, Any]:
         try:
-            # Load existing history
-            message_history = self._load_history()
-            
-            # Add new message to history
-            message_history.append(HumanMessage(content=message))
-            
-            # Format conversation history
-            conversation_history = "\n".join([
-                f"{'Human' if isinstance(msg, HumanMessage) else 'Assistant'}: {msg.content}"
-                for msg in message_history[:-1]
-            ])
-            
-            # Create full prompt with history
-            full_prompt = f"""Previous conversation:
-            {conversation_history}
-            
-            Current message: {message}
-            
-            Remember to use available tools when needed:
-            1. get_crypto_price: For current cryptocurrency prices
-            2. get_market_sentiment: For market sentiment analysis
-            3. search_crypto_knowledge: For searching our knowledge base
-            """
-            
+            default_system_prompt = """You are an expert AI agent specializing in cryptocurrency analysis. 
+            You have access to several tools:
+            1. get_crypto_price: Use this for current cryptocurrency prices
+            2. get_market_sentiment: Use this for market sentiment analysis
+            3. search_crypto_knowledge: Use this to search our knowledge base for detailed crypto information
+
+            Always explain your reasoning and what tools you're using. When providing information, cite your sources if using the knowledge base.
+            Always refer to yourself as an InBlock AI Agent."""
+
             try:
-                # Try using agent
-                response = self.agent.run(full_prompt)
+                response = self.agent.run(
+                    f"System: {custom_system_prompt or default_system_prompt}\nHuman: {message}"
+                )
+                logger.info(f"Agent response: {response}")
+                return {
+                    "content": response,
+                    "model_used": self.model_name,
+                    "success": True
+                }
             except Exception as agent_error:
                 logger.error(f"Agent error: {str(agent_error)}")
                 # Fallback to regular chat
                 messages = [
-                    SystemMessage(content="You are a helpful AI assistant specializing in cryptocurrency."),
-                    *message_history
+                    {"role": "system", "content": custom_system_prompt or default_system_prompt},
+                    {"role": "user", "content": message}
                 ]
                 response = self.llm.invoke(messages).content
-            
-            # Add response to history
-            message_history.append(AIMessage(content=response))
-            
-            # Save updated history
-            self._save_history(message_history)
-            
-            return {
-                "content": response,
-                "success": True
-            }
-            
+                return {
+                    "content": response,
+                    "model_used": self.model_name,
+                    "success": True
+                }
+
         except Exception as e:
             logger.error(f"Error processing message: {str(e)}")
             return {
-                "success": False,
-                "error": str(e)
+                "content": "An error occurred while processing your request. Please try again.",
+                "error": str(e),
+                "success": False
             }
 
     def get_model_info(self) -> Dict[str, Any]:
