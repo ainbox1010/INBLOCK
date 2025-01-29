@@ -1,0 +1,1343 @@
+﻿Question - are these points technically available to track via APIs 
+
+
+And which APIs to prioritize for iteration 1 of the MVP that we will present to VCs?
+
+
+Yes 🙂
+
+
+
+
+crypto Coin Trading GPT Rule Set
+1. Listing Information
+* Track Status: Verify if the coin is listed (or even pre listed as a placeholder) on key platforms such as CoinMarketCap (CMC) or CoinGecko (CGK). As these platforms will already have done due diligence on the token and / or the token may have powerful / connected backers in the crypto industry.  
+* Notify Traders: The AI agent should flag coins that recently achieved listings. (eventually on X.com, daily etc.)
+TomasV: instructions to engine to query APIs for presence of tokens in listings. 
+Why Listing on CoinMarketCap (CMC) and CoinGecko (CGK) is Crucial for crypto Coins
+1. Credibility and Due Diligence
+* Preliminary Validation: Both CMC and CGK perform basic due diligence before listing a coin. While this is not a full endorsement of the project, it indicates the token meets certain criteria, such as:
+   * Verification of contract address.
+   * Checking for sufficient liquidity and trading activity.
+   * Ensuring the project has a functioning website, whitepaper, and clear information.
+* Reduces Scam Risks: crypto coins listed on these platforms are less likely to be outright scams or rug pulls, as fraudulent projects often fail to meet even these minimum requirements.
+________________
+
+
+2. Increased Visibility and Discoverability
+* Massive User Base: CMC and CGK are the two most visited cryptocurrency data platforms, with millions of daily users worldwide.
+   * crypto coins listed on these platforms instantly gain exposure to this large audience, which includes both retail traders and institutional investors.
+   * Pre-listings (placeholders) generate early buzz and anticipation, potentially driving up interest and trading activity.
+* Centralized Hub for Information: Traders often rely on these platforms for quick access to data like price charts, trading volume, market cap, and circulating supply. If a coin is missing, it risks being overlooked entirely by the market.
+________________
+
+
+3. Legitimacy in the Crypto Ecosystem
+* Perceived Legitimacy: Listing on CMC or CGK signals that a crypto coin has crossed a basic threshold of credibility. Many traders will not even consider investing in a coin unless it's listed on one of these platforms.
+* Attracting New Investors: For crypto coins, hype and community support are critical. A listing provides a level of trust that encourages new participants to join the ecosystem.
+________________
+
+
+4. Tracking Performance and Metrics
+* Comprehensive Data: CMC and CGK provide detailed information about the coin, such as:
+   * Price trends over various timeframes.
+   * Market capitalization and rank.
+   * Daily trading volumes and liquidity sources.
+   * Historical performance.
+   * Links to the project's official site, whitepaper, and social media.
+* Performance Insights: This data is essential for both traders and the coin’s team to monitor market performance, adjust strategies, and attract partnerships or listings on additional platforms.
+________________
+
+
+5. Attracts Influential Backers
+* Powerful and Connected Backers: Being listed on these platforms often implies that the coin may have support from influential entities in the crypto space, such as:
+   * Venture Capital firms (VCs) with a vested interest in the coin’s success.
+   * Established market makers (MMs) ensuring liquidity on exchanges.
+   * Advisors or team members with proven track records in crypto.
+* Signaling Effect: The listing itself can act as a signal to institutional investors and professional traders that the project has gained some level of traction and recognition.
+________________
+
+
+6. Access to Aggregators and Tools
+* Integration with Tools: Listing on CMC and CGK allows the coin to be tracked by countless crypto portfolio management tools, trading bots, and news aggregators that pull data from these platforms.
+* Enhanced Market Accessibility: Traders using platforms like Delta, Blockfolio, or other analytics apps will see the crypto coin integrated seamlessly, encouraging more participation.
+________________
+
+
+7. Social and Market Sentiment Tracking
+* Community Metrics: CMC and CGK often include metrics like social media trends, community interest, and engagement statistics. This visibility helps traders gauge the "hype" surrounding the coin.
+* Market Sentiment Signals: Metrics like the Fear and Greed Index or trending searches on CMC and CGK provide valuable sentiment analysis for crypto coin traders.
+________________
+
+
+8. Facilitates Future Growth Opportunities
+* Gateway to Major Listings: Coins listed on CMC and CGK are more likely to get noticed by major centralized exchanges (CEXs), paving the way for future spot or derivative listings.
+* Partnerships and Ecosystem Development: Projects with visibility on these platforms are better positioned to form partnerships, attract collaborations, and expand their ecosystem.
+________________
+
+
+9. Easier Tracking of Early Stage Projects
+* Pre-listing Advantage: Even pre-listings (placeholders) on these platforms are beneficial as they allow early-stage projects to gain visibility while still in development.
+   * Traders can track a project’s progress and join early if they see potential.
+   * Pre-listings also show that the project is serious about gaining credibility in the broader market.
+________________
+
+
+10. Competitive Advantage in a Crowded Market
+* Breaking Through the Noise: With thousands of crypto coins competing for attention, being listed on CMC and CGK provides a critical edge.
+   * Coins not listed on these platforms often struggle to gain visibility, making it hard to attract new investors or sustain momentum.
+* Community Trust: Active community members often use CMC and CGK as benchmarks for a coin’s credibility. If a coin is listed, it reinforces trust and strengthens the community's engagement.
+________________
+
+
+Conclusion
+For crypto coins, listing on CoinMarketCap and CoinGecko is more than just a status symbol—it’s a strategic milestone that boosts visibility, credibility, and market access. These platforms serve as a gateway for new investors, institutional backers, and broader adoption, making them critical for any crypto coin aiming to succeed in the highly competitive crypto market.
+
+
+Green 
+	Listed in both  CoinMarketCap (CMC) or CoinGecko (CGK).
+	If the crypto coin is listed in CoinMarketCap it means it is run by an experienced team understanding the importance of being visible, ready to invest in marketing and continue development. It also means the listing platform has done some rudimentary due diligence on the project to allow it to be listed there. 
+	Yellow
+	Listed in one of them
+	If the crypto Coin is listed in either CoinMarketCap or Coin Gecko it means it is run by an experienced team understanding the importance of being visible, ready to invest in marketing and continue development. It also means the listing platform has done some rudimentary due diligence on the project to allow it to be listed there. Having one of the two is a good first step in the process and it is a positive sign for the project. (Note the agent should alert by an automated tweet on X.com via the API when the 2nd listing is made for any cryptocoin).   
+	Red
+	Not listed.
+	if Coin is not listed in either CoinMarketCap or Coin Gecko it is an indicator or higher risk. This means that the project is not established enough to achieve a listing, or that it is at too early a stage. It;s important to note that there can be hundreds of new crypto coins launched daily, so the first listing on either CoinMarketcap is CoinGecko is an important milestone. Note the agent should alert by an automated tweet on X.com via the API when the 2nd listing is made for any cryptocoin).  
+	
+
+________________
+
+
+2. Liquidity on DEXs
+* Monitor Liquidity: Analyze liquidity levels of crypto coins across Decentralized Exchanges (DEXs). Higher liquidity means that traders of a particular crypto coin will actually be able to sell tokens and realise profits without crashing the price. 
+* DEX Ranking: Identify top DEX platforms where the coin is most active. Also, tokens that have high liquidity are more likely to be successful later on centralized exchange. 
+* Liquidity Alerts: Notify of sudden increases or drops in liquidity, which can be a positive (increase) or negative (decrease) indictor. 
+(Which APIs to use?) 
+
+
+Why High Liquidity on DEXs is Crucial for crypto Coins
+1. Ease of Buying and Selling
+* High liquidity ensures that traders can buy or sell significant amounts of a crypto coin without causing drastic price swings. This is especially important in the volatile world of crypto coins, where prices can fluctuate rapidly due to hype or panic.
+* It creates a smoother trading experience and reduces the risk of slippage (the difference between the expected price of a trade and the actual price at which it is executed).
+2. Realizing Profits
+* For crypto coin traders, the ability to quickly cash out profits is critical. High liquidity means there’s always enough demand to absorb selling pressure without crashing the price.
+* This is particularly vital for large traders or whales who may need to liquidate significant holdings.
+3. Stability and Market Confidence
+* High liquidity acts as a stabilizing force. It reduces the likelihood of extreme volatility caused by single large trades, which can shake investor confidence.
+* Coins with higher liquidity tend to attract more investors, as they’re seen as less risky and easier to trade.
+4. Attracts Institutional Players and Market Makers
+* Institutional players, venture capitalists (VCs), and market makers are more likely to engage with crypto coins that have strong liquidity, as they require the ability to move large volumes without affecting market prices significantly.
+* This influx of institutional activity often leads to further liquidity improvements and a stronger market presence.
+5. Protection Against Pump-and-Dump Schemes
+* crypto coins with low liquidity are more vulnerable to manipulation, such as pump-and-dump schemes. High liquidity makes it harder for bad actors to artificially inflate or crash the price.
+* This transparency and resistance to manipulation attract more genuine traders and investors.
+6. Better Integration with DeFi Ecosystem
+* Liquidity is also critical for crypto coins to integrate into the broader DeFi ecosystem. High liquidity allows these tokens to be used as collateral, included in yield farming strategies, or paired in liquidity pools for decentralized lending protocols.
+7. Signals Active Community Participation
+* High liquidity on DEXs is often a sign of a vibrant and engaged community. It indicates that a coin has a consistent and active trading volume, which often reflects a strong, committed base of traders and supporters.
+________________
+
+
+Key Metrics to Monitor for Liquidity on DEXs
+1. Liquidity Pools: Check the size of liquidity pools on major DEXs (e.g., Uniswap, PancakeSwap). Larger pools mean higher liquidity.
+2. Trading Volume: Compare daily trading volume against liquidity to assess how actively the pool is being used.
+3. Number of Liquidity Providers (LPs): A higher number of LPs often reflects community confidence and widespread participation.
+4. Slippage Rates: Lower slippage indicates high liquidity and a balanced order book.
+________________
+
+
+In summary, high liquidity on DEXs is a cornerstone of a crypto coin’s stability, usability, and long-term potential. It provides traders with confidence that they can engage in the market efficiently, realize profits when needed, and avoid the risks of sudden price collapses. This is why liquidity is one of the most important metrics for both novice and seasoned crypto coin traders to monitor.
+
+
+
+
+Green 
+	Liquidity is >500k and growing
+	Why High Liquidity on DEXs is Crucial for crypto Coins
+1. Ease of Buying and Selling
+* High liquidity ensures that traders can buy or sell significant amounts of a crypto coin without causing drastic price swings. This is especially important in the volatile world of crypto coins, where prices can fluctuate rapidly due to hype or panic.
+* It creates a smoother trading experience and reduces the risk of slippage (the difference between the expected price of a trade and the actual price at which it is executed).
+2. Realizing Profits
+* For crypto coin traders, the ability to quickly cash out profits is critical. High liquidity means there’s always enough demand to absorb selling pressure without crashing the price.
+* This is particularly vital for large traders or whales who may need to liquidate significant holdings.
+3. Stability and Market Confidence
+* High liquidity acts as a stabilizing force. It reduces the likelihood of extreme volatility caused by single large trades, which can shake investor confidence.
+* Coins with higher liquidity tend to attract more investors, as they’re seen as less risky and easier to trade.
+4. Attracts Institutional Players and Market Makers
+* Institutional players, venture capitalists (VCs), and market makers are more likely to engage with crypto coins that have strong liquidity, as they require the ability to move large volumes without affecting market prices significantly.
+* This influx of institutional activity often leads to further liquidity improvements and a stronger market presence.
+5. Protection Against Pump-and-Dump Schemes
+* crypto coins with low liquidity are more vulnerable to manipulation, such as pump-and-dump schemes. High liquidity makes it harder for bad actors to artificially inflate or crash the price.
+* This transparency and resistance to manipulation attract more genuine traders and investors.
+6. Better Integration with DeFi Ecosystem
+* Liquidity is also critical for crypto coins to integrate into the broader DeFi ecosystem. High liquidity allows these tokens to be used as collateral, included in yield farming strategies, or paired in liquidity pools for decentralized lending protocols.
+7. Signals Active Community Participation
+* High liquidity on DEXs is often a sign of a vibrant and engaged community. It indicates that a coin has a consistent and active trading volume, which often reflects a strong, committed base of traders and supporters.
+________________
+
+
+Key Metrics to Monitor for Liquidity on DEXs
+1. Liquidity Pools: Check the size of liquidity pools on major DEXs (e.g., Uniswap, PancakeSwap). Larger pools mean higher liquidity.
+2. Trading Volume: Compare daily trading volume against liquidity to assess how actively the pool is being used.
+3. Number of Liquidity Providers (LPs): A higher number of LPs often reflects community confidence and widespread participation.
+4. Slippage Rates: Lower slippage indicates high liquidity and a balanced order book.
+________________
+
+
+In summary, high liquidity on DEXs is a cornerstone of a crypto coin’s stability, usability, and long-term potential. It provides traders with confidence that they can engage in the market efficiently, realize profits when needed, and avoid the risks of sudden price collapses. This is why liquidity is one of the most important metrics for both novice and seasoned crypto coin traders to monitor.
+
+
+	Yellow
+	Liquidity is 100k-500k and keeps in this range
+	As above, but each of the positive points is moderated with caution. 
+	Red
+	Liquidity is <100k
+	Why Low Liquidity on DEXs is a Red Flag for crypto Coins
+1. Difficulty in Exiting Positions
+* Low liquidity means there aren’t enough buyers or sellers to match trades at the desired price. Traders trying to sell their crypto coins may face significant slippage or even find it impossible to exit their positions.
+* This can trap traders, especially in moments of market panic, leaving them with coins they can't sell without incurring massive losses.
+________________
+
+
+2. High Slippage and Unpredictable Pricing
+* With low liquidity, even a relatively small trade can cause a significant price drop or spike due to limited market depth.
+* For traders, this means they might pay much more for a purchase or receive much less when selling than expected, making the coin less attractive to trade.
+________________
+
+
+3. Increased Vulnerability to Manipulation
+* Low liquidity makes crypto coins highly susceptible to price manipulation:
+   * Pump-and-Dump Schemes: Manipulators can artificially inflate the price of the coin with minimal capital and then sell off their holdings, crashing the price and leaving unsuspecting investors with losses.
+   * Whale Activity: A single large trade by a whale can swing the price dramatically, introducing volatility that drives away genuine investors.
+________________
+
+
+4. Limited Market Confidence
+* Low liquidity often signals weak market interest or lack of community engagement. Traders may perceive the coin as risky, reducing participation and further compounding the liquidity issue.
+* It also raises doubts about the sustainability of the project, as established and reputable coins tend to attract higher trading volumes and liquidity.
+________________
+
+
+5. Challenges in Attracting Institutional or Professional Investors
+* Venture capitalists (VCs), market makers, and professional traders avoid coins with low liquidity because they can’t trade significant volumes without affecting the price.
+* This lack of institutional interest further isolates the coin and limits its growth potential.
+________________
+
+
+6. Reduced Integration with DeFi Ecosystem
+* Low liquidity restricts a coin’s ability to integrate into decentralized finance (DeFi) applications like lending protocols, yield farming, or automated market maker (AMM) pools.
+* This limits the coin’s utility and broader adoption, creating a vicious cycle of low interest and low liquidity.
+________________
+
+
+7. Higher Risk of Rug Pulls
+* Low liquidity is often a hallmark of rug pull schemes, where developers or insiders remove the liquidity from a pool, making the token essentially worthless.
+* Traders are left unable to sell their holdings, resulting in catastrophic losses.
+________________
+
+
+8. Difficulty in Achieving Growth
+* Without sufficient liquidity, crypto coins struggle to attract new traders or sustain their market presence.
+* Low liquidity discourages active participation and creates a perception of instability, reducing the likelihood of organic growth.
+________________
+
+
+Key Indicators of Low Liquidity Issues
+1. Small Liquidity Pools: Check the size of the liquidity pools on DEXs. A small pool size is a warning sign.
+2. High Price Impact: Attempting even a small trade causes a noticeable price shift.
+3. Low Daily Trading Volume: Minimal activity in the coin’s trading pair reflects low interest.
+4. Concentrated Liquidity Providers: If a few wallets dominate liquidity provision, the coin is at risk of sudden liquidity withdrawal.
+5. Frequent Liquidity Drains: Watch for unexplained decreases in pool liquidity, as this could indicate rug pull behavior.
+________________
+
+
+In conclusion, low liquidity is a warning sign that a crypto coin may lack market interest, stability, and legitimacy. It puts traders at risk of manipulation, poor trade execution, and loss of funds, making it a crucial factor to monitor when evaluating potential investments.
+
+
+	
+
+________________
+
+
+3. Price Trends
+*  Track price trends over 30 days. Identify sharp upward or downward movements.
+* Alerts: Highlight potential buying or selling opportunities based on recent price changes.
+* Check ranges and use some technical analysis 
+Importance of Price Trends and Volatility Analysis for crypto Coins
+1. Price Trends Reflect Market Sentiment
+* Market Hype: crypto coins are often driven by community excitement and social media trends rather than strong fundamentals. Tracking price trends over 30 days can help traders gauge whether the coin is gaining or losing momentum.
+* Confidence Indicator: A steadily increasing price trend often reflects growing community confidence, while a sharp decline could indicate waning interest or underlying issues in the project.
+________________
+
+
+2. Volatility is a Hallmark of crypto Coins
+* High-Risk, High-Reward: crypto coins are known for their extreme price fluctuations. This volatility provides opportunities for significant profits but also carries high risk.
+* Short-Term Trading Opportunities: Traders can capitalize on volatility by identifying price patterns that signal buying or selling opportunities, such as sudden spikes or drops.
+________________
+
+
+3. Identifying Sharp Upward Movements (Bullish Trends)
+* Hype-Driven Rallies: Price spikes in crypto coins are often fueled by sudden surges in social media attention, influencer endorsements, or major announcements (e.g., exchange listings, celebrity tweets).
+* Buy Signal: Sharp upward movements, especially when accompanied by high volume, can indicate strong buying interest. Traders may enter positions to ride the wave of momentum.
+* Caution Against FOMO: While upward trends are attractive, they often precede corrections. Traders must use additional indicators to avoid buying at the peak.
+________________
+
+
+4. Recognizing Sharp Downward Movements (Bearish Trends)
+* Exit Indicators: Sudden price drops could signal a loss of community interest, a sell-off by whales, or negative news (e.g., rug pull concerns, liquidity withdrawal).
+* Opportunities for Re-entry: For experienced traders, downward trends might present buying opportunities if the coin shows signs of recovery, especially if the dip appears exaggerated or temporary.
+* Avoiding Panic Selling: Volatility is common, so not all price drops are cause for alarm. Using other metrics, like volume and wallet activity, helps determine if the drop is a minor correction or a red flag.
+________________
+
+
+5. Importance of a 30-Day Price Trend Analysis
+* Short-Term Patterns: A 30-day period captures short-term trends and momentum, which are crucial in the fast-paced crypto coin market.
+* Baseline for Technical Analysis: Provides enough data for traders to apply technical indicators like moving averages, RSI (Relative Strength Index), or Bollinger Bands.
+* Community Engagement Insight: Sustained price movement over this period often reflects consistent community involvement or sustained interest in the coin.
+________________
+
+
+Technical Analysis Tools to Use
+1. Moving Averages (MA)
+* Purpose: Identifies overall price trends by smoothing out short-term fluctuations.
+* Application:
+   * Short-Term MA (e.g., 10-day): Highlights recent momentum.
+   * Longer-Term MA (e.g., 30-day): Shows broader trend direction.
+* Crossover Strategy: When a short-term MA crosses above a long-term MA, it’s often a bullish signal; when it crosses below, it’s a bearish signal.
+________________
+
+
+2. Relative Strength Index (RSI)
+* Purpose: Measures the speed and change of price movements to determine if a coin is overbought or oversold.
+* Application:
+   * RSI > 70: Coin is likely overbought, signaling a potential reversal or correction.
+   * RSI < 30: Coin is likely oversold, suggesting a potential buying opportunity.
+________________
+
+
+3. Bollinger Bands
+* Purpose: Tracks price volatility and identifies overbought/oversold conditions based on standard deviations.
+* Application:
+   * Price near the upper band: Coin is potentially overbought.
+   * Price near the lower band: Coin may be oversold.
+   * Tight bands: Indicates low volatility, often a precursor to a breakout.
+________________
+
+
+4. Support and Resistance Levels
+* Purpose: Identifies price ranges where a coin has historically struggled to move above (resistance) or below (support).
+* Application:
+   * A breakout above resistance may signal a buying opportunity.
+   * A drop below support may indicate further price decline.
+________________
+
+
+5. Volume Analysis
+* Purpose: Confirms the strength of a price trend.
+* Application:
+   * Price movements with high trading volume are more reliable indicators of market sentiment.
+   * Low volume during price changes may indicate manipulation or weak market conviction.
+________________
+
+
+Alerts for Potential Buying or Selling Opportunities
+* Price Alerts: AI-driven alerts based on predefined thresholds (e.g., a 20% price change in a day) can notify traders of significant movements.
+* Trend Reversal Signals:
+   * Bullish Reversal: A recovery in price after a steep decline, especially near strong support levels.
+   * Bearish Reversal: A price drop following a sharp rally, especially near strong resistance levels.
+* Volatility Alerts: Notifying traders when the coin’s volatility exceeds historical averages, signaling potential breakouts or breakdowns.
+________________
+
+
+Why Price Ranges are Critical
+* Range-Bound Trading: Some crypto coins trade within predictable ranges for extended periods. Identifying these ranges allows traders to:
+   * Buy near support (lower range).
+   * Sell near resistance (upper range).
+* Breakouts and Breakdowns: When a coin moves outside its established range, it often leads to significant price action, providing opportunities for traders to capitalize.
+________________
+
+
+Conclusion
+Analyzing price trends and volatility is critical for crypto coins because these assets often lack the traditional fundamentals that guide investment decisions. By leveraging tools like moving averages, RSI, Bollinger Bands, and volume analysis, traders can better understand market sentiment, spot opportunities, and manage risks in this highly volatile environment. This approach helps maximize profits while avoiding costly mistakes caused by emotional decision-making or unpredictable market movements.
+
+
+
+
+Green 
+	Token Price is Volatile = +/-50% during last 14 days. Current Price is is <30% from TOP Token price during last 14 days. (Here best to provide chart ad show where the price is vs chart
+	  
+
+  
+
+
+
+Green will be a POSITIVE reading on the above text and metrics
+	Yellow
+	Liquidity is 100k-500k and keeps in this range
+	YELLOW will be a somewhat cautions reading of the above text and metrics 
+	Red
+	Liquidity is <100k
+	Red will be a negative reading of the above text and metrics. 
+	
+
+________________
+
+
+4. CEX (Centralised Exchange) Derivatives
+* Track Derivative Listings: Identify which Centralized Exchanges (CEXs) offer derivatives for the crypto coin. This is because a derivative listing is slightly easier to get than a “spot trading” listing, and it is also a sign that the crypto coin may receive a spot listing in future. 
+* Categorize Tiers
+   * Tier 1: Top CEX platforms (Binance, Coinbase, Kraken, Bybit, OKX etc.)
+   * Tier 2: Mid-tier CEXs (Upbit, Bitget, Kucoin, MEXC, gate )
+   * Tier 3: Small or less reliable platforms
+*  You can also use the top 30 exchanges on CoinMarketcap.com to define these tiers as the change over time. 
+Why CEX Listings Are Important for crypto Coins
+1. Increased Accessibility for Traders
+* Wider Audience: Centralized Exchanges (CEXs) have significantly higher user bases compared to Decentralized Exchanges (DEXs). Listing on a CEX provides crypto coins with access to millions of traders globally.
+* Ease of Use: CEX platforms are user-friendly, making it easier for novice traders to participate in the market. Many retail traders prefer using CEXs over DEXs because they don’t require complex wallets or high gas fees.
+* Fiat On-Ramps: Top-tier CEXs often allow fiat deposits and direct crypto purchases, enabling new investors to easily buy crypto coins without navigating the complexities of DEXs.
+________________
+
+
+2. Significance of Derivatives Listings
+* Early Indicator of Growth Potential: A derivative listing on a CEX, such as perpetual futures or options, is often a precursor to a spot trading listing. Exchanges use derivatives to test market demand and liquidity for the token.
+* Attracts Speculators: Derivatives allow traders to speculate on price movements with leverage, increasing trading volume and exposure for the crypto coin.
+* Increased Liquidity: Derivative trading boosts overall market liquidity for the coin, making it more appealing to investors and easier to trade.
+* Ease of Approval: Derivative listings are often easier to obtain than spot listings because they don’t require the same level of regulatory scrutiny or liquidity provisioning.
+________________
+
+
+________________
+
+
+4. Tiered CEX Analysis
+To effectively analyze the importance of a crypto coin’s CEX listings, it’s crucial to categorize exchanges by their influence and reliability.
+Tier 1: Top CEX Platforms
+* Examples: Binance, Coinbase, Kraken, Bybit, OKX, Upbit.
+* Significance:
+   * These exchanges have the highest trading volumes and user bases, making them the most desirable platforms for crypto coin listings.
+   * Listing on a Tier 1 exchange greatly boosts credibility, market exposure, and trading activity.
+   * A Tier 1 spot listing often brings global media attention and a surge in price due to increased demand.
+* Key Metrics:
+   * Daily trading volume.
+   * Global reach and regulatory compliance.
+   * Number of active users.
+Tier 2: Mid-Tier CEX Platforms
+* Examples: KuCoin, Gate.io, MEXC, Bitget.
+* Significance:
+   * These platforms serve as a stepping stone for crypto coins looking to scale. They are easier to access than Tier 1 exchanges but still provide significant exposure and trading volume.
+   * Many Tier 1-listed coins started with listings on Tier 2 exchanges, making these platforms an excellent early indicator of future growth potential.
+* Key Metrics:
+   * Regional focus (e.g., Asian markets via Upbit or Gate.io).
+   * Quality of projects listed.
+Tier 3: Smaller or Less Reliable Platforms
+* Examples: Unknown or less-established exchanges.
+* Significance:
+   * These exchanges often have low trading volumes and questionable security. Listing on these platforms may still generate initial liquidity and activity but poses higher risks of price manipulation or lack of buyer interest.
+   * Often a last resort for new projects unable to meet the requirements of Tier 1 or Tier 2 exchanges.
+* Key Metrics:
+   * Reputation in the crypto community.
+   * History of scams or security breaches.
+Dynamic Tiers
+* As the industry evolves, exchanges move up or down in rank. Using tools like CoinMarketCap’s Top 30 Exchanges List ensures the tiers remain up-to-date with current market conditions.
+________________
+
+
+5. Why CEX Listings Create Momentum
+* Marketing and Awareness: Listings on reputable CEXs come with promotional efforts, such as exchange announcements, email campaigns, and social media posts, which amplify the coin’s visibility.
+* FOMO Effect: A CEX listing, especially on a Tier 1 platform, often triggers Fear of Missing Out (FOMO) among traders, leading to a spike in price and trading volume.
+* Chain Reaction: Once a coin is listed on one major exchange, others often follow suit, as exchanges compete to list trending assets and capture trading fees.
+________________
+
+
+6. Risks of Overlooking CEX Listings
+* Missed Growth Opportunities: Without CEX listings, crypto coins may struggle to attract a larger audience or achieve the trading volume needed to sustain their market position.
+* Liquidity Issues: Lack of CEX exposure can lead to low liquidity, making the coin less attractive to both retail and institutional investors.
+* Reduced Confidence: Traders often view unlisted coins as risky or untrustworthy, leading to reduced demand and a lower market cap.
+________________
+
+
+7. Examples of Successful CEX-Listed crypto Coins
+* Dogecoin (DOGE): Listed on multiple Tier 1 exchanges, contributing to its growth as one of the most recognized crypto coins.
+* Shiba Inu (SHIB): Early listings on Tier 2 exchanges paved the way for eventual Tier 1 listings, skyrocketing its popularity.
+* Floki Inu (FLOKI): Initially listed on smaller exchanges before gaining momentum and securing listings on more prominent platforms.
+________________
+
+
+Conclusion
+CEX listings, both for derivatives, play a pivotal role in the success and growth of crypto coins. They enhance visibility, improve liquidity, and build market trust, while also serving as a strong signal of legitimacy. Understanding the tiered structure of exchanges and monitoring where a crypto coin is listed can help traders gauge its potential for long-term growth and adoption.
+
+
+
+
+
+
+Green 
+	Token listed on Bybit, Binance, Coinbase, Kraken, Kucoin, OKX, Upbit, Bitget, Kraken, HTX
+	Green will be a POSITIVE reading on the above text and metrics
+	Yellow
+	Listed on Gate, MEXC, BingX, Crypto.com
+	YELLOW will be a somewhat cautions reading of the above text and metrics 
+	Red
+	None of any above
+	Red will be a negative reading of the above text and metrics.
+	
+
+________________
+
+
+5. CEX Spot Listings
+* Spot Market Analysis: Monitor availability of spot trading on CEXs, and give greater weight to the ones on higher ranked exchanges as discussed above. 
+* Identify Platforms: Provide a breakdown of CEXs where the coin is listed for spot trading. Provide alerts on new listings (or even rumors of new listings). 
+Why Spot CEX Listings Are Crucial for crypto Coins
+________________
+
+
+1. Legitimacy and Credibility
+* Increased Trust: A spot listing on a centralized exchange (CEX) is a major signal of legitimacy. Exchanges conduct due diligence before listing tokens, vetting their teams, liquidity, and market demand. For crypto coins, which often face skepticism, a spot listing helps establish trust and credibility.
+* Institutional Confidence: Spot listings attract institutional and professional investors who often avoid unlisted or only DEX-available coins due to higher risks. This can lead to a more stable and diversified investor base.
+________________
+
+
+2. Broader Market Access
+* Larger Audience: CEX platforms have millions of active users, making them a gateway for crypto coins to reach a global audience. Unlike decentralized exchanges (DEXs), CEXs are more user-friendly, attracting retail traders who may not be familiar with crypto wallets or decentralized finance.
+* Fiat On-Ramps: Top CEXs provide fiat on-ramps, enabling traders to buy crypto coins directly with traditional currencies like USD, EUR, or JPY. This simplifies the process and broadens the coin’s appeal to mainstream users.
+* Trading Pairs Variety: Spot listings often introduce multiple trading pairs (e.g., USDT, BTC, ETH), improving liquidity and making it easier for traders to access the coin.
+________________
+
+
+3. Improved Liquidity
+* High Liquidity Pools: Spot trading on CEXs significantly boosts liquidity, ensuring traders can buy and sell without causing drastic price swings. Liquidity also reduces slippage and trading costs, making the coin more attractive to both retail and institutional investors.
+* Market Depth: Spot CEX listings bring a larger number of buyers and sellers into the market, creating a deeper order book that stabilizes the coin's price.
+________________
+
+
+4. Price Stability
+* Reduced Volatility: Spot listings on reputable exchanges reduce the price volatility that crypto coins often experience on DEXs or smaller platforms. Increased liquidity and consistent trading activity help stabilize the price.
+* Market Manipulation Protection: Reputable CEXs implement measures to prevent pump-and-dump schemes, reducing the risk of price manipulation and offering a safer trading environment.
+________________
+
+
+5. Enhanced Visibility and Awareness
+* Marketing and Announcements: Spot listings are often accompanied by promotional campaigns from the exchange, including press releases, email notifications, and social media posts. These efforts can significantly boost the coin's visibility and attract new investors.
+* Community Growth: A CEX listing can galvanize a crypto coin’s community, increasing engagement, social media activity, and overall hype around the project.
+________________
+
+
+6. Increased Trading Volume
+* Higher Trading Activity: Spot listings often result in a surge in trading volume, as the coin becomes accessible to a wider range of traders. This increased activity can enhance the coin’s ranking on platforms like CoinMarketCap and CoinGecko, further attracting attention.
+* Volume Metrics for Growth: High trading volume is a key indicator for future adoption and integration into additional exchanges and platforms.
+________________
+
+
+7. Gateway to Other Opportunities
+* Path to Derivative Listings: Many CEXs offer derivative products (e.g., futures, options) for spot-listed coins. Derivative listings further enhance market exposure and liquidity, attracting more sophisticated traders.
+* DeFi Integration: CEX spot listings can lead to partnerships and integration into decentralized finance (DeFi) platforms, enabling use cases such as staking, lending, or yield farming.
+________________
+
+
+8. Tiered CEX Analysis for Spot Listings
+Tier 1: Top CEX Platforms
+* Examples: Binance, Coinbase, Kraken, Bybit, OKX, Upbit.
+* Importance:
+   * Coins listed on these platforms experience the greatest exposure and trading volume.
+   * Listing on a Tier 1 CEX often triggers a significant price rally due to increased demand and FOMO (Fear of Missing Out).
+   * Attracts institutional and retail traders, building market confidence.
+* Barriers to Entry:
+   * Stringent vetting processes.
+   * High liquidity requirements.
+   * Regulatory compliance.
+________________
+
+
+Tier 2: Mid-Tier CEX Platforms
+* Examples: KuCoin, Gate.io, Bitget, MEXC.
+* Importance:
+   * Mid-tier CEXs serve as a stepping stone for crypto coins aiming for Tier 1 listings.
+   * These platforms cater to specific regional markets (e.g., Gate.io and KuCoin are popular in Asia) and have substantial user bases.
+   * Easier to access for newer or smaller projects, providing critical liquidity and trading activity.
+* Opportunities for Growth:
+   * Successful performance on Tier 2 exchanges can pave the way for listings on Tier 1 platforms.
+________________
+
+
+Tier 3: Smaller or Less Reliable Platforms
+* Examples: Small regional or unregulated exchanges.
+* Importance:
+   * Offers initial exposure and liquidity for new projects but comes with higher risks.
+   * Often viewed as a starting point for projects that don’t yet meet Tier 1 or Tier 2 requirements.
+* Risks:
+   * Lack of security or regulatory oversight.
+   * Low trading volume and liquidity, which can lead to price manipulation.
+________________
+
+
+9. Competitive Edge Over Non-Listed Coins
+* Differentiator: A spot listing sets a crypto coin apart from the thousands of other tokens vying for attention in the market. Many traders use CEX availability as a key criterion when deciding where to invest.
+* Community Trust: A spot listing reassures the coin's community that the project is serious, vetted, and committed to long-term growth.
+________________
+
+
+10. Successful Examples of Spot CEX Listings for crypto Coins
+* Dogecoin (DOGE): Early listings on top-tier exchanges like Binance and Coinbase propelled DOGE into mainstream recognition, increasing its trading volume and market cap significantly.
+* Shiba Inu (SHIB): SHIB’s Tier 1 listings drove widespread adoption, pushing it from a niche project to one of the largest crypto coins by market cap.
+* Floki Inu (FLOKI): Listings on mid-tier exchanges helped FLOKI gain initial traction before progressing to more prominent platforms.
+________________
+
+
+11. Risks of Not Being Spot-Listed on CEXs
+* Limited Exposure: Without spot listings, crypto coins are often confined to DEXs or obscure platforms, limiting their potential audience and adoption.
+* Lower Liquidity: Relying solely on DEXs can result in insufficient liquidity, making it difficult for traders to buy or sell significant amounts without slippage.
+* Perception of Risk: Many traders view non-listed tokens as high-risk or even fraudulent, deterring potential investors.
+________________
+
+
+Conclusion
+Spot CEX listings are a critical milestone for crypto coins, offering legitimacy, broader accessibility, improved liquidity, and increased trading volume. They enable crypto coins to reach a global audience, attract institutional interest, and establish themselves as credible players in the competitive crypto market. Spot listings are not just a sign of success but a gateway to further growth opportunities, including derivative products, DeFi integrations, and additional exchange listings. Monitoring which CEXs a coin is listed on and categorizing them by tier helps traders and investors gauge its current market position and future potential.
+
+
+
+
+Green 
+	Token listed on Bybit, Binance, Coinbase, Kraken, Kucoin, OKX, Upbit, Bitget, Kraken, HTX
+	Green will be a POSITIVE reading on the above text and metrics
+	Yellow
+	Listed on Gate, MEXC, BingX, Crypto.com
+	YELLOW will be a somewhat cautions reading of the above text and metrics 
+	Red
+	None of any above
+	Red will be a negative reading of the above text and metrics.
+	
+
+________________
+
+
+6. Daily Volume Tracking
+* Volume Trends: Track and analyze daily trading volumes. A positive and growing trend can be a good indicator about the future of the token.  
+* Volume Spikes: Flag any unusual trading activity. Positive spike can be good, negative spikes are concerning. 
+Why Daily Volume Metrics Are Crucial for Analyzing crypto Coins
+________________
+
+
+Daily trading volume is one of the most important metrics for evaluating crypto coins, providing valuable insights into market activity, investor sentiment, liquidity, and potential risks or opportunities. Here’s why daily volume is critical and how it helps investors and traders:
+________________
+
+
+1. Indicator of Market Interest
+* Volume Reflects Demand: High and growing trading volume indicates that a crypto coin is attracting attention and interest from the market.
+   * Positive Signal: When volume trends upward, it often means the coin has increasing buy-side activity, which can drive price appreciation.
+   * Dying Interest: Declining volume suggests waning interest, which could lead to price stagnation or decline.
+* New Entrants: Spikes in volume often signal new investors entering the market, driven by announcements, listings, or social media hype.
+________________
+
+
+2. Relationship Between Volume and Price
+* Price-Volume Correlation:
+   * Rising Volume + Rising Price: Indicates strong bullish momentum and widespread market interest.
+   * Rising Volume + Falling Price: Suggests heavy selling pressure, often a sign of panic or major sell-offs by whales.
+   * Falling Volume + Rising Price: Indicates weak momentum behind the price increase, potentially signaling a temporary or manipulated rally.
+   * Falling Volume + Falling Price: Confirms bearish sentiment and lack of demand, a warning signal for investors.
+* Breakouts and Trends: High volume typically accompanies breakouts from consolidation phases, signaling the start of a new trend.
+________________
+
+
+3. Liquidity Assessment
+* Volume Drives Liquidity: Higher daily volume ensures better liquidity, allowing traders to buy or sell crypto coins without causing large price swings.
+* Reduced Slippage: With sufficient trading volume, orders can be executed at the expected price, making the market more predictable and stable for investors.
+* Market Depth: Consistent high volume reflects a deeper market, where large trades can be executed without drastically impacting the price.
+________________
+
+
+4. Early Warning for Manipulation
+* Volume Spikes: Sudden, unexplained increases in volume can be a sign of manipulation or pump-and-dump schemes, which are common in crypto coins.
+   * Positive Spike: May indicate an influx of genuine interest, such as after a major exchange listing or news event.
+   * Negative Spike: Could reflect whale sell-offs or liquidity providers withdrawing their funds, often a red flag.
+* Low Volume Risks: Coins with persistently low trading volumes are more vulnerable to price manipulation, as a single large trade can cause dramatic price changes.
+________________
+
+
+5. Identifying Breakouts and Reversals
+* Breakouts: Volume surges often precede or accompany price breakouts from key support or resistance levels. High volume during a breakout confirms the strength of the move, signaling a potential trading opportunity.
+* Trend Reversals: Volume spikes during a price reversal indicate that market participants are actively trading in the new direction, increasing the likelihood of sustained momentum.
+________________
+
+
+6. Sentiment Analysis
+* Market Confidence: Increasing volume indicates growing confidence in the crypto coin’s potential, driven by community support, news, or hype.
+* Social Media Trends: Often, volume correlates with social media activity. Monitoring both together can help assess whether a coin is experiencing organic growth or speculative hype.
+________________
+
+
+7. Identifying Whale Activity
+* Whale Buy/Sell Signals: Large volume spikes may indicate activity by whales (large investors or institutions).
+   * Buying Pressure: A sudden influx of buy orders can drive prices higher and create momentum for traders to follow.
+   * Selling Pressure: Heavy sell-offs by whales can depress prices, creating panic among retail investors and triggering further declines.
+* Wallet Tracking: Combining volume analysis with wallet concentration data helps identify whether volume spikes are driven by whale movements or distributed activity.
+________________
+
+
+8. Entry and Exit Signals for Traders
+* Confirmation of Trends: High volume confirms the validity of a trend, helping traders make informed decisions about entering or exiting positions.
+   * Entry Point: Rising volume after a period of consolidation may signal a good buying opportunity.
+   * Exit Point: Volume spikes with stagnant or declining prices can signal an impending downturn, prompting traders to sell.
+* False Breakouts: Low volume during price breakouts may indicate a lack of conviction, warning traders to avoid entering positions.
+________________
+
+
+9. Detecting FOMO and Speculative Hype
+* Volume Driven by FOMO: Rapid increases in volume often coincide with Fear of Missing Out (FOMO) as traders rush to join a rally.
+   * This can drive prices to unsustainable levels, followed by sharp corrections. Monitoring volume helps traders avoid buying at the peak.
+* Speculative Hype: If volume is increasing without any fundamental news or developments, it may indicate short-term speculation rather than long-term growth potential.
+________________
+
+
+10. Differentiating Organic Growth from Manipulation
+* Organic Growth: Consistent increases in volume over days or weeks reflect genuine adoption and interest in the coin.
+* Pump-and-Dump Schemes: Sudden, extreme volume spikes followed by rapid declines in price are a hallmark of pump-and-dump schemes. Identifying these patterns helps traders avoid falling victim to such scams.
+________________
+
+
+11. Tools and Metrics for Analyzing Volume Trends
+* Moving Average Volume (MAV): Tracks the average trading volume over a specific period, helping identify deviations and trends.
+   * Use cases:
+      * Volume exceeds MAV → Indicates strong market activity and potential buying opportunities.
+      * Volume below MAV → Suggests reduced interest or a cooling market.
+* Volume-to-Market Cap Ratio:
+   * Higher ratios indicate active trading relative to the coin’s valuation, a positive sign for liquidity.
+   * Lower ratios suggest low activity and potential liquidity risks.
+* On-Balance Volume (OBV): Combines price and volume to measure cumulative buying and selling pressure over time.
+   * Rising OBV → Indicates more buyers than sellers, signaling bullish momentum.
+   * Falling OBV → Suggests selling pressure, signaling bearish sentiment.
+________________
+
+
+Conclusion
+Daily volume metrics are vital for understanding the health, stability, and potential of crypto coins. They provide insights into market interest, liquidity, and price trends while helping traders identify manipulation risks and trading opportunities. By tracking volume trends and spikes, investors can make more informed decisions and mitigate risks in the volatile world of crypto coins. High volume with consistent growth is a strong indicator of a coin's potential, while sudden spikes or drops require deeper analysis to uncover the underlying causes.
+
+
+
+
+Green 
+	>1M across all exchanges
+	Green will be a POSITIVE reading on the above text and metrics
+	Yellow
+	200k -1M across all exchanges
+	YELLOW will be a somewhat cautions reading of the above text and metrics 
+	Red
+	<200k
+	Red will be a negative reading of the above text and metrics.
+	
+
+
+
+________________
+
+
+7. Wallet Concentration
+* Wallet Metrics: Analyze wallet concentration and total wallet holders for the coin. Normally a wide distribution of the token among multiple holders is a more healthy sign, as if very few wallets hold a lot of tokens it can be insiders waiting to dump. 
+* Whale Monitoring: Identify top wallets holding a significant percentage of the coin supply and track any moves in their holdings (whales holding is positive, whales selling is obviously negative).
+Why Wallet Concentration is Critical for crypto Coin Traders and Investors
+Wallet concentration analysis provides invaluable insights into the health, stability, and risks associated with a crypto coin. Here's a detailed breakdown of why this metric matters and how traders and investors can use it:
+________________
+
+
+1. Understanding Wallet Distribution
+* Wide Distribution: A healthy crypto coin ecosystem usually has its tokens distributed across a large number of wallets, indicating a decentralized and engaged community.
+   * Why It's Positive: Broad token ownership reduces the likelihood of price manipulation by a few large holders and reflects widespread market confidence.
+   * Encourages Stability: With more participants holding smaller amounts, the token is less likely to experience drastic price swings from the actions of a few wallets.
+* Concentrated Ownership: If a small number of wallets (e.g., the top 20 wallets) hold a significant percentage of the token supply, it creates the risk of sudden and severe sell-offs.
+   * Why It's Negative: Concentration in a few hands makes the coin vulnerable to "whale dumping," where large holders sell their tokens en masse, crashing the price.
+________________
+
+
+2. Whale Monitoring
+* Whales Defined: Large wallets holding a significant percentage of the coin supply (e.g., >1% of the total supply) are typically considered whales. These could be early investors, project insiders, or large speculators.
+* Key Signals from Whales:
+   * Holding Behavior (Positive): If whales are accumulating or maintaining their holdings, it signals confidence in the coin's future, often leading to positive price movements.
+   * Selling Behavior (Negative): If whales begin offloading their tokens, it can flood the market with supply, causing prices to drop. Monitoring whale activity is crucial for spotting potential sell-offs early.
+* Wallet Tracking Tools: Using blockchain explorers and whale-tracking platforms, traders can monitor significant wallet movements, providing actionable insights.
+________________
+
+
+3. Risk Assessment Based on Wallet Concentration
+* The 40-60-60 Rule:
+   * Green Zone (<40%):
+      * Healthy Distribution: If the top 20 wallets (excluding centralized exchange wallets) hold less than 40% of the total supply, it indicates a decentralized token distribution.
+      * Why It's Positive: This minimizes the influence of any single wallet, creating a more stable price environment.
+   * Yellow Zone (40-60%):
+      * Caution Required: If the top 20 wallets hold 40-60% of the supply, the coin is moderately centralized. While this is not inherently negative, it suggests potential risks of whale influence.
+      * Interpretation: Traders should watch for any unusual movements in large wallets, as this range could signal an early-stage project or one with concentrated ownership.
+   * Red Zone (>60%):
+      * High Risk: If the top 20 wallets hold more than 60% of the supply, the coin is highly centralized.
+      * Why It's Negative: This indicates a high risk of insider dumping or price manipulation. The coin's price is heavily dependent on the actions of a few wallets, making it a risky investment.
+________________
+
+
+4. Insider Dump Risks
+* Insider Wallets: Founders, early investors, or development teams often hold significant amounts of the token supply.
+   * Potential for Dumping: If insiders decide to cash out, it can lead to sharp price declines, eroding investor confidence and community trust.
+   * Monitoring Insider Wallets: Identifying wallets associated with the project team and tracking their activity can help predict potential dumps.
+________________
+
+
+5. Community Engagement and Growth
+* Distribution Reflects Engagement: A wide token distribution across many wallets typically indicates an engaged community that believes in the project.
+   * Why It’s Positive: Engaged holders are more likely to hold long-term, reducing sell pressure and promoting organic growth.
+* Total Wallet Holders:
+   * Rising Numbers: A growing number of unique wallets holding the token indicates increasing adoption and interest in the project.
+   * Stagnation or Decline: A flat or declining number of holders could signal waning interest, even if the token price is stable.
+________________
+
+
+6. Tracking Centralized Exchange Wallets
+* Excluded from Concentration Metrics: Wallets belonging to centralized exchanges (CEXs) are excluded because they often hold tokens for thousands of individual users.
+* Volume Insights: High holdings in CEX wallets indicate that the token has significant trading volume and interest on those platforms.
+* Risk of Dumping: Large CEX wallets may still pose risks if whales withdraw their holdings to sell on DEXs.
+________________
+
+
+7. Metrics and Tools for Wallet Concentration Analysis
+* Top Wallet Concentration:
+   * Use tools like Etherscan, BSCScan, or blockchain explorers to analyze the percentage of tokens held by the top wallets.
+* Whale Alert Services:
+   * Platforms like WhaleAlert or on-chain analytics tools can notify traders of large wallet movements.
+* Holder Growth Tracking:
+   * Regularly monitor the total number of unique wallets holding the token to gauge community expansion.
+* CEX vs. Non-CEX Wallets:
+   * Distinguish between centralized exchange wallets and individual wallets to refine your analysis.
+________________
+
+
+8. Example Interpretations for Wallet Concentration
+* Case 1 (Green Zone):
+   * Top 20 Wallets Hold 30%: The coin has a healthy distribution, and risks of whale manipulation or insider dumping are low. This is a positive sign for long-term growth.
+* Case 2 (Yellow Zone):
+   * Top 20 Wallets Hold 50%: Moderate concentration. While not an immediate red flag, traders should be cautious and monitor whale behavior closely.
+* Case 3 (Red Zone):
+   * Top 20 Wallets Hold 75%: The coin is highly centralized, and the risk of large-scale sell-offs or manipulation is significant. This is a major red flag for potential investors.
+________________
+
+
+9. Use Cases for Wallet Concentration Analysis
+* Early-Stage crypto Coins:
+   * In new projects, some concentration is expected due to initial token allocations for teams or early investors.
+   * Key Action: Monitor how token ownership shifts over time. A healthy project will see distribution widen as tokens are sold or allocated to the community.
+* Established crypto Coins:
+   * Established tokens like Dogecoin or Shiba Inu tend to have more decentralized ownership, reflecting their mature ecosystems.
+   * Key Action: Ensure wallet concentration remains stable and watch for sudden accumulation or dumping by top wallets.
+________________
+
+
+Conclusion
+Wallet concentration is a critical metric for evaluating the health, stability, and risks associated with crypto coins. Wide token distribution signals a robust and engaged community, reducing the risk of manipulation and promoting organic growth. Conversely, concentrated ownership creates vulnerabilities to whale dumping and price instability. By using tools to monitor wallet concentration and whale activity, traders can gain valuable insights into a coin's long-term viability and make informed investment decisions. The Green-Yellow-Red framework provides a simple yet effective way to assess risks and act accordingly.
+
+
+Green 
+	TOP20 wallets (withount CEX) holds bellow 40% of Tokens
+	Green will be a POSITIVE reading on the above text and metrics
+	Yellow
+	TOP20 wallets (withount CEX) holds 40-60% of Tokens
+	YELLOW will be a somewhat cautions reading of the above text and metrics 
+	Red
+	TOP20 wallets
+(withount CEX)  >60%
+	Red will be a negative reading of the above text and metrics.
+	
+
+
+
+________________
+
+
+8. Famous Onchain Wallets
+* Track Influential Wallets: Monitor activity from well-known wallets, including:
+   * VCs (Venture Capital wallets)
+   * Market Makers (MM)
+   * Famous KOLs on X.com (crypto twitter) like Ansem, Cobie, Murad, arthur Hayes, 3AC founders etc.  
+   * Other large-scale investors with regular crypto buying activity at scale 
+Why Analyzing Famous Onchain Wallets is Crucial for crypto Coin Traders and Investors
+Analyzing the activity of well-known and influential onchain wallets offers valuable insights into market trends, sentiment, and the potential future movements of crypto coins. These wallets often belong to entities or individuals with significant market influence, deep capital reserves, or insider knowledge. Here’s why tracking these wallets is a game-changer for crypto coin traders and investors:
+________________
+
+
+1. Early Detection of Trends
+* Signal for New Opportunities: Monitoring the activity of venture capitalists (VCs), market makers (MMs), and other influential wallets can provide early signals of potential investment opportunities. These wallets often act as trendsetters, moving into coins before broader market adoption.
+   * Example: If a well-known VC wallet starts accumulating a specific crypto coin, it could indicate confidence in the project, prompting others to follow suit.
+* Spotting Hype Cycles: Influential wallets, especially those belonging to KOLs (Key Opinion Leaders) or whales, often participate early in hype-driven cycles. Recognizing these patterns allows traders to position themselves ahead of the crowd.
+________________
+
+
+2. Understanding Market Sentiment
+* Buying Activity (Bullish Signal):
+   * If famous wallets begin accumulating a particular crypto coin, it reflects growing confidence in its potential.
+   * This can indicate the start of a bullish phase, driven by strong hands entering the market.
+* Selling Activity (Bearish Signal):
+   * Large-scale selling from influential wallets signals a potential loss of confidence in the coin or preparation for a market downturn.
+   * Tracking these sell-offs can help traders exit positions before significant price drops.
+________________
+
+
+3. VC (Venture Capital) Wallets
+* Why They Matter:
+   * Venture capitalists often have early access to project information and partnerships. Their investment decisions are based on thorough due diligence, making their wallet activity a proxy for insider confidence.
+* Key Signals:
+   * Accumulation Phase: Indicates VCs are positioning themselves for long-term growth.
+   * Distribution Phase: Selling by VC wallets often precedes market corrections or indicates the end of a hype cycle.
+* Example:
+   * A wallet tied to a prominent VC firm starts investing in a crypto coin shortly before a major centralized exchange (CEX) listing. Traders following this wallet could capitalize on the expected price surge.
+________________
+
+
+4. Market Makers (MM)
+* Role of Market Makers:
+   * Market makers ensure liquidity and stability for crypto coins on exchanges by buying and selling in large volumes. Their activity can significantly influence price trends.
+* Key Signals:
+   * High Activity: Indicates a push to stabilize or support the coin, often preceding major announcements or listing events.
+   * Sudden Absence: If market maker activity declines, it may signal reduced institutional interest or preparation for a liquidity exit.
+* Why It Matters:
+   * Understanding MM behavior provides insights into the health of a coin’s market. MMs often adjust their strategies based on broader market conditions, making their activity a useful barometer.
+________________
+
+
+5. KOL (Key Opinion Leader) Wallets
+* Influential Figures:
+   * Wallets linked to prominent crypto personalities like Arthur Hayes, Cobie, Ansem, or the 3AC founders (e.g., Su Zhu, Kyle Davies) are often watched closely due to their influence over market sentiment.
+* Impact on crypto Coins:
+   * These personalities frequently share their trades or investment theses on platforms like X.com (formerly Twitter), driving massive market attention to specific coins.
+   * Their buying activity can create hype and attract retail investors, leading to price spikes.
+* Key Signals:
+   * Accumulation: Suggests that these influencers see strong potential in the coin, often sparking a rally.
+   * Selling: Signals a potential correction or loss of confidence, especially if accompanied by negative commentary or reduced social media activity.
+________________
+
+
+6. Regular Large-Scale crypto Buyers
+* Who They Are:
+   * These are wallets associated with individuals or institutions that frequently engage in crypto coin trading at scale. They are often early adopters, taking advantage of high-risk, high-reward opportunities.
+* Why They Matter:
+   * These wallets tend to have experience identifying high-potential crypto coins before broader market participation. Their activity can signal emerging opportunities.
+* Key Signals:
+   * Diversified Accumulation: Indicates confidence in multiple projects, suggesting broader market optimism.
+   * Focused Accumulation: Concentrated buys of a single coin suggest strong belief in its immediate potential.
+________________
+
+
+7. Detecting Coordinated Market Moves
+* Whale and Influencer Coordination:
+   * Famous wallets often coordinate buying or selling activity, amplifying price movements. By tracking multiple influential wallets, traders can spot signs of coordinated pumps or dumps.
+* Example:
+   * Several influential wallets start accumulating the same coin over a short period, signaling a potential organized pump. Recognizing this trend early allows traders to profit before the masses.
+________________
+
+
+8. Tools for Monitoring Famous Wallets
+* Blockchain Explorers:
+   * Tools like Etherscan, BSCScan, and similar platforms allow users to track wallet activity in real-time.
+* Onchain Analytics Platforms:
+   * Services like Nansen, Dune Analytics, or Glassnode provide advanced tracking and analysis of famous wallets, including tagging known VCs, market makers, and influencers.
+* Whale Alert Services:
+   * Platforms like WhaleAlert send notifications for large transactions from known wallets, helping traders react quickly to significant market moves.
+________________
+
+
+9. Risk Mitigation
+* Avoiding Rug Pulls:
+   * If famous wallets start rapidly selling a crypto coin, it could signal a rug pull or planned exit by insiders. Monitoring this activity can help traders exit positions before major losses.
+* Spotting Market Manipulation:
+   * Concentrated buying or selling from multiple influential wallets may indicate manipulation. Recognizing these patterns helps traders avoid being caught in pump-and-dump schemes.
+________________
+
+
+10. Real-World Examples
+* Shiba Inu (SHIB):
+   * Early accumulation by influential wallets, including market makers and VCs, signaled the start of SHIB’s massive rally. Tracking these wallets allowed early traders to capitalize on the growth.
+* Dogecoin (DOGE):
+   * Wallets tied to prominent influencers like Elon Musk showed significant activity before DOGE’s price surges, demonstrating the impact of celebrity and whale participation.
+________________
+
+
+11. Insights for Long-Term vs. Short-Term Investors
+* Short-Term Traders:
+   * Use wallet tracking to identify rapid accumulation or selling, allowing them to time their trades effectively.
+* Long-Term Investors:
+   * Monitor famous wallets for sustained holding patterns, signaling confidence in the coin’s long-term potential.
+________________
+
+
+Conclusion
+Tracking the activity of famous onchain wallets provides unparalleled insights into crypto coin market dynamics. These wallets often act as leading indicators of market sentiment, liquidity, and price trends. By analyzing the behavior of VCs, market makers, KOLs, and large-scale crypto buyers, traders and investors can gain a strategic edge, spotting opportunities and risks before they are reflected in the broader market. Combining wallet analysis with other metrics like volume, price trends, and social media activity enhances decision-making in the volatile crypto coin space.
+
+
+
+
+Green 
+	On Dexscreener we see >20 Whales wallet holding token
+	Green will be a POSITIVE reading on the above text and metrics
+	Yellow
+	On Dex screener we see 10-20 Whales wallets holding token
+	YELLOW will be a somewhat cautions reading of the above text and metrics 
+	Red
+	On Dex screener we see <10Whales wallets holding token
+	Red will be a negative reading of the above text and metrics.
+	
+
+________________
+
+
+9. Social Media Activity
+* Post and Engagement Metrics: Monitor social platforms (e.g., Twitter, Telegram) for:
+   * Posts
+   * Followers
+   * Engagement (likes, retweets, shares)
+* Hype Alerts: Identify trends in community excitement or declining interest.
+* As above, track Famous KOLs on X.com (crypto twitter) like Ansem, Cobie, Murad, arthur and the tokens they are tweeting about 
+
+
+Why Social Media Activity and Engagement Analysis is Crucial for crypto Coin Traders and Investors
+Social media is the lifeblood of crypto coins, driving their visibility, hype, and adoption. Unlike traditional cryptocurrencies that rely on robust use cases or technology, crypto coins thrive on community enthusiasm, viral marketing, and social sentiment. Analyzing social media activity and engagement helps traders and investors gauge a crypto coin’s potential, community health, and future trajectory. Here’s why this is essential:
+________________
+
+
+1. Social Media as the Pulse of crypto Coins
+* Community-Driven Nature:
+   * crypto coins rely on their communities for growth, and social media platforms like Twitter (X.com), Telegram, and Reddit are the primary hubs for these communities.
+   * A highly active social media presence often reflects a vibrant and engaged community, which is critical for crypto coin success.
+* Momentum Indicator:
+   * A sudden surge in social media activity, such as a spike in posts or tweets, often precedes price rallies as new participants join the hype.
+   * Conversely, a decline in engagement may signal waning interest or impending sell-offs.
+________________
+
+
+2. Post and Engagement Metrics
+Key Metrics to Track
+1. Number of Posts:
+   * A high volume of posts or tweets about a crypto coin suggests strong interest and awareness.
+   * Frequent posting from the project’s official accounts and community members indicates an active marketing strategy and engaged supporters.
+2. Followers:
+   * Growth in followers on platforms like Twitter or Telegram reflects increasing interest from new investors.
+   * A stagnant or declining follower count could indicate fading hype or a lack of new entrants.
+3. Engagement (Likes, Retweets, Shares):
+   * High engagement levels on posts indicate that the community is not only present but actively participating and amplifying the coin’s visibility.
+   * Posts with high engagement often reach a wider audience, attracting new investors and traders.
+Why Engagement Matters:
+* Virality: crypto coins often gain popularity through viral posts, which rely on high engagement to spread across platforms.
+* Community Strength: A strong, active community is more likely to hold and promote the coin, reducing selling pressure and fostering price stability.
+* Influence on Price: Studies show that spikes in social media engagement often correlate with increased trading volume and price action for crypto coins.
+________________
+
+
+3. Identifying Hype Cycles
+* Hype Alerts:
+   * Tracking spikes in posts, mentions, and engagement can help traders identify periods of heightened interest, often leading to price rallies.
+   * Examples:
+      * A sudden tweetstorm about a coin may signal an organized promotional effort or the start of a viral trend.
+      * Major announcements or endorsements from influencers can trigger a FOMO-driven buying spree.
+* Declining Interest:
+   * A drop in social media activity can serve as an early warning sign of reduced community interest, which often precedes price declines.
+________________
+
+
+4. Role of Famous KOLs (Key Opinion Leaders)
+* Influential Voices in the Market:
+   * Personalities like Ansem, Cobie, Murad, Arthur Hayes, and others wield significant influence in the crypto space. Their tweets and posts often act as catalysts for crypto coin movements.
+   * When these individuals discuss or endorse a crypto coin, it can lead to an influx of new investors and a rapid price surge.
+* Tracking KOL Activity:
+   * Monitoring the tokens they tweet about provides insight into which coins are gaining traction among influential figures.
+   * Bullish Signal: Multiple KOLs tweeting about the same crypto coin often creates a wave of optimism and increased buying pressure.
+   * Bearish Signal: Negative commentary or reduced activity from KOLs around a coin may indicate declining interest or a warning to exit.
+________________
+
+
+5. Community Sentiment Analysis
+* Gauge Investor Confidence:
+   * Social media activity provides a direct window into how the community feels about a crypto coin. Positive sentiment, measured through engagement and tone, often reflects growing confidence in the project.
+* Spotting Warning Signs:
+   * Sudden shifts in sentiment, such as a surge in complaints, negative comments, or panic posts, can signal trouble, including rug pull fears or impending sell-offs.
+* Emerging Trends:
+   * Social platforms reveal new trends, such as popular hashtags or cryptos, that drive attention to specific coins.
+________________
+
+
+6. Social Media Platforms to Monitor
+1. Twitter (X.com):
+   * Why It Matters: Twitter is the most influential platform for crypto discussions, with real-time updates from KOLs, projects, and traders.
+   * What to Track: Hashtags, mentions, retweets, and influencer activity.
+2. Telegram:
+   * Why It Matters: Telegram groups often serve as hubs for crypto coin communities, providing insights into grassroots movements and announcements.
+   * What to Track: Group size, activity levels, and sentiment within chats.
+3. Reddit:
+   * Why It Matters: Subreddits like r/CryptoMoonShots are popular among retail traders searching for the next big crypto coin.
+   * What to Track: Post frequency, upvotes, and discussion trends.
+4. Discord:
+   * Why It Matters: Many crypto coin projects use Discord for direct community engagement, providing updates and hosting discussions.
+   * What to Track: Server growth, message activity, and announcements.
+5. YouTube/TikTok:
+   * Why It Matters: Video content often amplifies hype, with influencers promoting crypto coins to wide audiences.
+   * What to Track: Views, comments, and influencer recommendations.
+________________
+
+
+7. Coordinated Pump-and-Dump Detection
+* Organized Hype:
+   * Coordinated efforts to pump crypto coins often manifest as synchronized activity across social media platforms. Identifying these patterns early can help traders profit or avoid losses.
+* Warning Signs:
+   * Excessive hype without corresponding fundamentals.
+   * Posts that urge followers to buy quickly or "not miss out."
+________________
+
+
+8. Tools for Social Media Analysis
+* LunarCrush:
+   * Provides real-time insights into social media activity, sentiment, and trends for specific cryptocurrencies.
+* Nansen AI:
+   * Tracks wallet activity and combines it with social sentiment data for a comprehensive analysis.
+* CryptoMood:
+   * Measures social media sentiment and activity levels to identify trends.
+* TweetDeck:
+   * Helps monitor tweets from multiple influencers and hashtags simultaneously.
+________________
+
+
+9. Real-World Examples of Social Media Influence
+* Dogecoin (DOGE):
+   * Tweets from Elon Musk single-handedly drove massive rallies in Dogecoin’s price, highlighting the power of social media and influential figures.
+* Shiba Inu (SHIB):
+   * SHIB’s rise was fueled by coordinated social media campaigns, with frequent mentions on Twitter and Telegram groups.
+* Floki Inu (FLOKI):
+   * FLOKI gained traction through crypto-driven marketing and community engagement across Twitter and Reddit.
+________________
+
+
+10. Insights for Traders and Investors
+* For Traders:
+   * Use social media activity spikes as entry and exit signals. Monitor hashtags, mentions, and engagement to time trades effectively.
+* For Long-Term Investors:
+   * Focus on coins with consistent and sustained community engagement, as this reflects long-term interest and adoption.
+________________
+
+
+Conclusion
+Social media activity and engagement are essential metrics for analyzing crypto coins. They provide real-time insights into community strength, market sentiment, and emerging trends. By monitoring posts, followers, and engagement across platforms, as well as tracking influential KOLs, traders and investors can identify opportunities and risks early. This analysis is especially crucial in the volatile crypto coin market, where social sentiment often drives price action more than traditional fundamentals.
+
+
+
+
+
+
+Green 
+	Posts few times per day on Twitter. 
+>200k Community on Twitter.
+Post Views >5K
+Engagement >1%
+Community sentiment Bullish
+
+
+At least 3 out of those 5 are matched.
+	  
+
+From CMC
+Green will be a POSITIVE reading on the above text and metrics
+	Yellow
+	Posts daily on Twitter. 
+>100k Community on Twitter.
+Post Views >2K
+Engagement >0.5%
+Community sentiment Bullish
+
+
+At least 3 out of those 5 are matched.
+	YELLOW will be a somewhat cautions reading of the above text and metrics 
+	Red
+	Posts less than daily on Twitter. 
+<100k Community on Twitter.
+Post Views <1K
+Engagement <0.5%
+Community sentiment Bearish
+
+
+At least 3 out of those 5 are matched.
+	RED will be a negative reading of the above text and metrics.
+	
+
+________________
+
+
+10. Recent Trends
+* Trend Analysis: Provide a summary of key metrics:
+   * Price movement
+   * Volume trends
+   * Social engagement
+   * Wallet activity
+* Because all of these can provide positive or negative indicators regarding future price movement of a particular crypto coin. 
+
+
+1. Price Movement
+Why It Matters:
+* Tracks Momentum: Price trends help identify whether the coin is in an uptrend, downtrend, or consolidation phase.
+* Market Sentiment: Price movement reflects the overall sentiment of the market, influenced by external factors like news, listings, or social media hype.
+Key Indicators:
+* Positive Indicators:
+   * Sustained upward movement over days or weeks suggests strong bullish momentum.
+   * Sharp price increases backed by volume spikes indicate genuine buying interest rather than manipulation.
+* Negative Indicators:
+   * A declining price trend with low volume suggests fading interest or bearish sentiment.
+   * Sudden price drops without recovery may indicate whale sell-offs or liquidity issues.
+Integration with Other Metrics:
+* Volume Correlation: Rising prices with increasing volume are a strong positive signal, whereas price rises with low volume may indicate weak momentum or manipulation.
+________________
+
+
+2. Volume Trends
+Why It Matters:
+* Liquidity and Interest: Volume indicates the level of trading activity and liquidity in the market.
+* Validation of Price Movements: High volume supports strong price trends, while low volume signals a lack of conviction.
+Key Indicators:
+* Positive Indicators:
+   * Increasing daily trading volume reflects growing interest and liquidity.
+   * Volume surges alongside price movements confirm the strength of the trend.
+* Negative Indicators:
+   * Declining volume over time suggests reduced market activity and fading interest.
+   * Sudden volume spikes without corresponding price movement may indicate manipulation.
+Integration with Wallet and Social Metrics:
+* Volume trends often align with increases in social engagement and wallet activity, indicating broader adoption and interest.
+________________
+
+
+3. Social Engagement
+Why It Matters:
+* Community Strength: crypto coins thrive on social hype, and engagement metrics provide a direct measure of community involvement.
+* Virality Potential: High engagement increases the likelihood of a crypto coin going viral, driving new investors and traders.
+Key Indicators:
+* Positive Indicators:
+   * Rising mentions, hashtags, and engagement (likes, retweets, shares) on platforms like Twitter and Telegram signal increasing community excitement.
+   * High engagement during announcements or events (e.g., CEX listings) reflects genuine interest.
+* Negative Indicators:
+   * Declining activity or a lack of social media presence suggests waning interest or ineffective marketing.
+   * Negative sentiment in community discussions can signal potential risks or declining confidence.
+Integration with Other Metrics:
+* Social engagement often precedes volume and price spikes, making it a leading indicator for crypto coin momentum.
+________________
+
+
+4. Wallet Activity
+Why It Matters:
+* Participation Levels: Wallet activity reflects how engaged holders are with the token. High activity signals a thriving ecosystem.
+* Identifies Whale Behavior: Monitoring wallet activity helps identify large-scale buying or selling, which can impact price significantly.
+Key Indicators:
+* Positive Indicators:
+   * Increasing wallet transactions indicate active participation and interest in the coin.
+   * Wallet activity spikes during price surges or volume increases suggest broader adoption or whale accumulation.
+* Negative Indicators:
+   * Declining wallet activity signals reduced engagement, potentially leading to price stagnation.
+   * Large outflows from top wallets may indicate whale sell-offs or insider exits.
+Integration with Token Holder Data:
+* Combined with token holder trends, wallet activity provides a clearer picture of community distribution and stability.
+________________
+
+
+5. Token Holders
+Why It Matters:
+* Adoption and Distribution: The number of unique wallets holding a token reflects its level of adoption and decentralization.
+* Community Growth: A growing holder base signals increasing interest and confidence in the project.
+Key Indicators:
+* Positive Indicators:
+   * Consistent growth in unique wallet holders indicates strong adoption and community expansion.
+   * A wide distribution of tokens across wallets reduces risks of manipulation by a few large holders.
+* Negative Indicators:
+   * Stagnation or decline in wallet holders suggests fading interest or market exit by participants.
+   * High concentration of tokens in a few wallets increases the risk of whale dumping or price manipulation.
+Integration with Wallet and Volume Metrics:
+* A growing number of token holders often coincides with increases in wallet activity and trading volume, reflecting organic growth.
+________________
+
+
+6. Holistic Trend Analysis
+Combining Metrics for a Comprehensive View:
+When analyzed together, these metrics provide a powerful framework for understanding a crypto coin’s trajectory:
+1. Price Movement:
+   * Validates market sentiment and trend direction.
+2. Volume Trends:
+   * Confirms the strength of price movements and provides liquidity insights.
+3. Social Engagement:
+   * Acts as a leading indicator of market interest and potential hype cycles.
+4. Wallet Activity:
+   * Reflects onchain participation and signals whale behavior.
+5. Token Holders:
+   * Indicates adoption levels and decentralization health.
+Positive Trends:
+* Rising price, volume, social engagement, wallet activity, and token holders signal a strong upward trajectory, providing opportunities for traders and investors.
+Negative Trends:
+* Declines across these metrics suggest waning interest, potential risks, or a bearish phase, prompting caution.
+________________
+
+
+7. Tools for Tracking Trends
+* Price and Volume:
+   * CoinMarketCap, CoinGecko, and TradingView for price and volume charts.
+* Social Engagement:
+   * LunarCrush, CryptoMood, or social media platforms like Twitter and Telegram.
+* Wallet Activity and Token Holders:
+   * Blockchain explorers (e.g., Etherscan, BSCScan) and Nansen for wallet and holder data.
+________________
+
+
+8. Actionable Insights for Traders and Investors
+* Entry Signals:
+   * Look for rising trends across all metrics (price, volume, engagement, activity, holders) to identify potential buying opportunities.
+* Exit Signals:
+   * Monitor for declining metrics or red flags like stagnant wallet growth or reduced engagement, signaling a potential sell-off.
+* Early Warnings:
+   * Large whale movements combined with falling volume or declining social sentiment may indicate an impending price drop.
+________________
+
+
+Conclusion
+Analyzing recent trends through metrics like price movement, volume trends, social engagement, wallet activity, and token holders provides a comprehensive understanding of a crypto coin's market position. These interconnected metrics help traders and investors identify growth opportunities, assess risks, and make informed decisions in the highly dynamic crypto coin market. Combining these indicators into a unified trend analysis framework offers a robust tool for navigating this volatile space effectively.
+4o
+
+
+
+
+Green 
+	>20.000
+
+
+	https://etherscan.io/token/0xcf0c122c6b73ff809c693db761e7baebe62b6a2e
+  
+
+Green will be a POSITIVE reading on the above text and metrics
+	Yellow
+	5.000-20.000
+	YELLOW will be a somewhat cautions reading of the above text and metrics 
+	Red
+	<5.000
+	RED will be a negative reading of the above text and metrics.
+	
+
+
+
+________________
+
+
+11. Supportive Data
+* Key Backers: Highlight major supporters, such as Venture Capitalists (VCs), KOLs , Hedge Funds, institutions, Celebrities and Market Makers (MM), as all of these can create more excitement and hype for 
+* TVL (Total Value Locked): Track TVL metrics for any liquidity pools if applicable. This is however more relevant for DeFi projects, rather than cryptos. (FOR crypto MVP NOT IMPORTANT)
+12. Strong Early Investor base? Does it have tier 1 crypto VCs backing it like: Coinbase Ventures Pantera Capital Binance Labs Polychain Capital Blockchain Capital Paradigm Andreessen Horowitz Digital Currency Group Animoca Brands Multicoin Capital AU21 Capital Dragonfly Capital Sequoia Capital Draper Associates NGC Ventures Boost VC Framework Ventures A16z crypto Fenbushi Capital Shima Capital Management LLC Three Arrows Capital Circle Ventures. (FOR crypto MVP NOT IMPORTANT)
+13. Token Release schedule: Are there large unlocks coming that could cause a dip in price? Did other investors receive tokens at a discount that could cause sell pressure?
+(FOR crypto MVP NOT IMPORTANT)
+14. Team: are the team Doxxed (their identities revealed?) Do they have public LinkedIn profiles? Do they have strong experience in the project domain? All of these factors (although rare for crypto coins) would be positive for the project. (FOR crypto MVP NOT IMPORTANT)
+
+
+More input: InBlock AI Data Sources & DATA 
+https://docs.google.com/spreadsheets/d/1IlI-C9EMz9zly5H0V7jdplQ3vALFaVL-mzuJFhJM43w/edit?gid=1735470693#gid=1735470693
+
+
+
+
+Traffic lights we will not have in V1 of MVP:
+
+
+Propose to use Traffic light similar to this post
+https://x.com/InBlockAI/status/1768671254301581723/photo/1
+  
+
+At the TOP or at the END should be resume with 3 bubbles/Blocks: Green, Yellow, Red. If More Indicators are green -> Green is bigger, if Red - Red and TXT are written inside the Bubbl -> so visually People see which one dominates.
