@@ -3,16 +3,32 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import WaveTerrain from '../components/backgrounds/WaveTerrain';
+import { validateEmail } from '../utils/validation';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [emailError, setEmailError] = useState('');
     const navigate = useNavigate();
+
+    const handleEmailChange = (e) => {
+        const newEmail = e.target.value;
+        setEmail(newEmail);
+        setEmailError(validateEmail(newEmail));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validate email before submission
+        const emailValidationError = validateEmail(email);
+        if (emailValidationError) {
+            setEmailError(emailValidationError);
+            return;
+        }
+
         setError('');
         setIsLoading(true);
 
@@ -77,10 +93,17 @@ export default function LoginPage() {
                                         type="email"
                                         required
                                         value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className="appearance-none relative block w-full px-3 py-2 border border-gray-700 bg-gray-800/50 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple focus:border-transparent"
+                                        onChange={handleEmailChange}
+                                        className={`appearance-none relative block w-full px-3 py-2 border ${
+                                            emailError ? 'border-red-500' : 'border-gray-700'
+                                        } bg-gray-800/50 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple focus:border-transparent`}
                                         placeholder="Email address"
                                     />
+                                    {emailError && (
+                                        <p className="mt-1 text-sm text-red-500">
+                                            {emailError}
+                                        </p>
+                                    )}
                                 </div>
                                 <div>
                                     <label htmlFor="password" className="sr-only">Password</label>

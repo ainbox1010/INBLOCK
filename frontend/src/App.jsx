@@ -15,6 +15,7 @@ import TokenomicsPage from './pages/TokenomicsPage'
 import DemoChatWindow from './components/DemoChatWindow'
 import TermsPage from './pages/TermsPage'
 import PrivacyPage from './pages/PrivacyPage'
+import VerifyEmailPage from './pages/VerifyEmailPage'
 
 const router = createBrowserRouter([
     {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
             {
                 path: '/register',
                 element: <RegisterPage />
+            },
+            {
+                path: '/verify-email',
+                element: <VerifyEmailPage />
             },
             {
                 path: '/chat',

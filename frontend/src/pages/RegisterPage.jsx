@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import WaveTerrain from '../components/backgrounds/WaveTerrain';
+import { validateEmail } from '../utils/validation';
 
 export default function RegisterPage() {
     const [email, setEmail] = useState('');
@@ -10,10 +11,25 @@ export default function RegisterPage() {
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [emailError, setEmailError] = useState('');
     const navigate = useNavigate();
+
+    const handleEmailChange = (e) => {
+        const newEmail = e.target.value;
+        setEmail(newEmail);
+        setEmailError(validateEmail(newEmail));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validate email before submission
+        const emailValidationError = validateEmail(email);
+        if (emailValidationError) {
+            setEmailError(emailValidationError);
+            return;
+        }
+
         setError('');
         setIsLoading(true);
 
@@ -24,17 +40,12 @@ export default function RegisterPage() {
                 password_confirm: passwordConfirm
             });
 
-            // Auto-login after registration
-            const loginResponse = await axios.post('http://localhost:8000/api/auth/login/', {
-                email,
-                password
-            });
-
-            localStorage.setItem('accessToken', loginResponse.data.tokens.access);
-            localStorage.setItem('refreshToken', loginResponse.data.tokens.refresh);
-            localStorage.setItem('user', JSON.stringify(loginResponse.data.user));
-
-            navigate('/chat');
+            // Instead of auto-login, redirect to verification page
+            if (response.data.requires_verification) {
+                navigate('/verify-email', { 
+                    state: { email: email }  // Pass email to show on verification page
+                });
+            }
         } catch (error) {
             setError(error.response?.data?.error || 'Registration failed');
         } finally {
@@ -81,10 +92,17 @@ export default function RegisterPage() {
                                         type="email"
                                         required
                                         value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className="appearance-none relative block w-full px-3 py-2 border border-gray-700 bg-gray-800/50 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple focus:border-transparent"
+                                        onChange={handleEmailChange}
+                                        className={`appearance-none relative block w-full px-3 py-2 border ${
+                                            emailError ? 'border-red-500' : 'border-gray-700'
+                                        } bg-gray-800/50 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-purple focus:border-transparent`}
                                         placeholder="Email address"
                                     />
+                                    {emailError && (
+                                        <p className="mt-1 text-sm text-red-500">
+                                            {emailError}
+                                        </p>
+                                    )}
                                 </div>
                                 <div>
                                     <label htmlFor="password" className="sr-only">Password</label>

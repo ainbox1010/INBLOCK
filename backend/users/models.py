@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 import uuid
 from django.conf import settings
+from datetime import timedelta
+from django.utils import timezone
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -45,3 +47,26 @@ class PasswordResetToken(models.Model):
     class Meta:
         verbose_name = "Password Reset Token"
         verbose_name_plural = "Password Reset Tokens"
+
+class EmailVerification(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    is_used = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f"Email verification for {self.user.email}"
+    
+    def save(self, *args, **kwargs):
+        if not self.expires_at:
+            self.expires_at = timezone.now() + timedelta(hours=24)
+        super().save(*args, **kwargs)
+    
+    @property
+    def is_expired(self):
+        return timezone.now() > self.expires_at
+    
+    class Meta:
+        verbose_name = "Email Verification"
+        verbose_name_plural = "Email Verifications"

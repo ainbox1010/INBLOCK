@@ -14,7 +14,8 @@ from .serializers import (
 )
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import PasswordResetToken
+from .models import PasswordResetToken, EmailVerification
+from .services import send_verification_email
 
 User = get_user_model()
 
@@ -138,38 +139,17 @@ class RegisterView(APIView):
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
-            try:
-                user = serializer.save()
-                refresh = RefreshToken.for_user(user)
-                
-                return Response({
-                    'user': {
-                        'email': user.email,
-                        'id': user.id
-                    },
-                    'tokens': {
-                        'refresh': str(refresh),
-                        'access': str(refresh.access_token),
-                    }
-                }, status=status.HTTP_201_CREATED)
-            except Exception as e:
-                return Response(
-                    {'error': str(e)},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-        
-        # Make error messages more specific
-        errors = serializer.errors
-        if 'email' in errors and 'unique' in str(errors['email'][0]).lower():
-            return Response(
-                {'error': 'This email is already registered'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            user = serializer.save()
             
-        return Response(
-            {'error': serializer.errors},
-            status=status.HTTP_400_BAD_REQUEST
-        )
+            # Send verification email
+            verification = send_verification_email(user)
+            
+            return Response({
+                'message': 'Registration successful. Please check your email for verification.',
+                'user_id': user.id,
+                'requires_verification': True
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
     def post(self, request):
@@ -181,6 +161,13 @@ class LoginView(APIView):
             )
             
             if user:
+                # Check if email is verified
+                if not user.is_email_verified:
+                    return Response(
+                        {'error': 'Please verify your email before logging in'}, 
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+                
                 refresh = RefreshToken.for_user(user)
                 return Response({
                     'user': {
@@ -199,3 +186,55 @@ class LoginView(APIView):
             )
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class VerifyEmailView(APIView):
+    def post(self, request):
+        token = request.data.get('token')
+        code = request.data.get('code')
+        
+        try:
+            # Try to find verification by token or code
+            if token:
+                verification = EmailVerification.objects.get(token=token, is_used=False)
+            else:
+                # If using code, match first 6 chars of token
+                verifications = EmailVerification.objects.filter(is_used=False)
+                verification = next(
+                    v for v in verifications 
+                    if str(v.token)[:6].upper() == code.upper()
+                )
+            
+            if verification.is_expired:
+                return Response(
+                    {'error': 'Verification link has expired'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Mark as verified
+            user = verification.user
+            user.is_email_verified = True
+            user.save()
+            
+            verification.is_used = True
+            verification.save()
+            
+            # Generate tokens for auto-login
+            refresh = RefreshToken.for_user(user)
+            
+            return Response({
+                'message': 'Email verified successfully',
+                'user': {
+                    'email': user.email,
+                    'id': user.id
+                },
+                'tokens': {
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                }
+            })
+            
+        except (EmailVerification.DoesNotExist, StopIteration):
+            return Response(
+                {'error': 'Invalid verification token/code'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
