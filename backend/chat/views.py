@@ -10,8 +10,11 @@ from django.core.cache import cache
 import uuid
 import logging
 from django.http import JsonResponse
+import os
 
 logger = logging.getLogger(__name__)
+
+DEMO_QUERY_LIMIT = int(os.getenv('DEMO_QUERY_LIMIT', '5'))  # Default to 5 if not set
 
 class ChatViewSet(viewsets.ModelViewSet):
     """
