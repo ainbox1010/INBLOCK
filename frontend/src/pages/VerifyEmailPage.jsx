@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import WaveTerrain from '../components/backgrounds/WaveTerrain';
@@ -9,6 +9,7 @@ export default function VerifyEmailPage() {
     const [code, setCode] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isAlreadyVerified, setIsAlreadyVerified] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const email = location.state?.email;
@@ -21,9 +22,22 @@ export default function VerifyEmailPage() {
         }
     }, []);  // Only run once when component mounts
     
+    // Check verification status
+    useEffect(() => {
+        const checkVerification = async () => {
+            try {
+                const response = await axios.get('/api/auth/verification-status/');
+                setIsAlreadyVerified(response.data.is_verified);
+            } catch (err) {
+                console.error('Error checking verification status:', err);
+            }
+        };
+        checkVerification();
+    }, []);
+    
     const verifyEmail = async ({ token, code }) => {
         setIsLoading(true);
-        setError('');  // Clear any previous errors
+        setError('');
         
         try {
             const response = await axios.post('http://localhost:8000/api/auth/verify-email/', {
@@ -31,16 +45,20 @@ export default function VerifyEmailPage() {
                 code
             });
 
+            if (response.data.message === 'already_verified') {
+                setIsAlreadyVerified(true);
+                return;
+            }
+
             // Store tokens and user info
             localStorage.setItem('accessToken', response.data.tokens.access);
             localStorage.setItem('refreshToken', response.data.tokens.refresh);
             localStorage.setItem('user', JSON.stringify(response.data.user));
 
-            // Navigate to chat instead of login
+            // Navigate to chat
             navigate('/chat');
         } catch (error) {
             setError(error.response?.data?.error || 'Verification failed');
-            // If token verification fails, allow manual code entry
             if (token) {
                 setCode('');  // Clear code field for manual entry
             }
@@ -50,30 +68,45 @@ export default function VerifyEmailPage() {
     };
     
     return (
-        <div className="min-h-screen bg-primary-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
-            {/* Background */}
+        <div className="min-h-screen bg-primary-900 relative">
             <div className="fixed inset-0 z-0">
                 <WaveTerrain />
             </div>
             
-            {/* Content */}
-            <div className="max-w-md w-full space-y-8 relative z-10">
+            <div className="relative z-10 container mx-auto px-4 py-16">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
+                    className="max-w-md mx-auto bg-primary-800/50 backdrop-blur-sm rounded-xl p-8 border border-accent-purple/20"
                 >
-                    <div>
-                        <h2 className="mt-6 text-center text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-accent-purple to-accent-pink">
-                            Verify Your Email
-                        </h2>
-                        <p className="mt-2 text-center text-sm text-gray-400">
-                            {email 
-                                ? `We sent a verification code to ${email}`
-                                : 'Please enter your verification code'
-                            }
-                        </p>
-                    </div>
+                    {isAlreadyVerified ? (
+                        <div className="text-center">
+                            <h2 className="text-2xl font-bold text-white mb-4">
+                                Email Already Verified
+                            </h2>
+                            <p className="text-gray-300 mb-6">
+                                Your email has been successfully verified. You can now access InBlock AI.
+                            </p>
+                            <Link 
+                                to="/chat"
+                                className="inline-block px-8 py-3 text-base font-semibold rounded-lg bg-gradient-to-r from-accent-purple to-accent-pink text-white hover:opacity-90"
+                            >
+                                Continue to InBlock AI
+                            </Link>
+                        </div>
+                    ) : (
+                        <div>
+                            <h2 className="mt-6 text-center text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-accent-purple to-accent-pink">
+                                Verify Your Email
+                            </h2>
+                            <p className="mt-2 text-center text-sm text-gray-400">
+                                {email 
+                                    ? `We sent a verification code to ${email}`
+                                    : 'Please enter your verification code'
+                                }
+                            </p>
+                        </div>
+                    )}
 
                     {error && (
                         <div className="mt-4 p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm">

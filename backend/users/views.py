@@ -195,18 +195,34 @@ class VerifyEmailView(APIView):
         try:
             # Try to find verification by token or code
             if token:
-                verification = EmailVerification.objects.get(token=token, is_used=False)
+                verification = EmailVerification.objects.get(token=token)
             else:
                 # If using code, match first 6 chars of token
-                verifications = EmailVerification.objects.filter(is_used=False)
+                verifications = EmailVerification.objects.filter()
                 verification = next(
                     v for v in verifications 
                     if str(v.token)[:6].upper() == code.upper()
                 )
             
+            # Check if user is already verified
+            if verification.user.is_email_verified:
+                return Response({
+                    'message': 'already_verified',
+                    'user': {
+                        'email': verification.user.email,
+                        'id': verification.user.id
+                    }
+                })
+            
             if verification.is_expired:
                 return Response(
                     {'error': 'Verification link has expired'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            if verification.is_used:
+                return Response(
+                    {'error': 'This verification code has already been used'}, 
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
@@ -238,3 +254,11 @@ class VerifyEmailView(APIView):
                 {'error': 'Invalid verification token/code'}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+class VerificationStatusView(APIView):
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return Response({'is_verified': False})
+        return Response({
+            'is_verified': request.user.is_email_verified
+        })

@@ -27,10 +27,10 @@ DATABASES = {
     }
 }
 
-# CORS settings for Vercel frontend
-CORS_ALLOW_ALL_ORIGINS = True  # Keep for now while testing
+# CORS settings for production frontend
 CORS_ALLOWED_ORIGINS = [
     'https://inblock.vercel.app',
+    'https://inblock.ai',
     'http://localhost:5173'  # Keep for local development
 ]
 CORS_ALLOW_CREDENTIALS = True
