@@ -19,20 +19,24 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('PGDATABASE'),
-        'USER': os.getenv('PGUSER'),
+        'NAME': os.getenv('PGDATABASE', 'railway'),
+        'USER': os.getenv('PGUSER', 'postgres'),
         'PASSWORD': os.getenv('PGPASSWORD'),
-        'HOST': os.getenv('PGHOST'),
-        'PORT': os.getenv('PGPORT'),
+        'HOST': os.getenv('PGHOST', 'postgres.railway.internal'),  # Make sure this is correct
+        'PORT': os.getenv('PGPORT', '5432'),
     }
 }
 
-# CORS settings for production frontend
-CORS_ALLOWED_ORIGINS = [
-    'https://inblock.vercel.app',
-    'https://inblock.ai',
-    'http://localhost:5173'  # Keep for local development
-]
+# Temporarily allow all origins
+CORS_ALLOW_ALL_ORIGINS = True
+
+# Comment out specific origins for now
+# CORS_ALLOWED_ORIGINS = [
+#     'https://inblock.vercel.app',
+#     'https://inblock.ai',
+#     'http://localhost:5173'
+# ]
+
 CORS_ALLOW_CREDENTIALS = True
 
 # Debug info
@@ -75,3 +79,9 @@ else:
 
 # Add Gunicorn timeout settings
 GUNICORN_TIMEOUT = 120  # 2 minutes 
+
+# Print debug info
+print("Database settings:", file=sys.stderr)
+print(f"HOST: {os.getenv('PGHOST')}", file=sys.stderr)
+print(f"DB: {os.getenv('PGDATABASE')}", file=sys.stderr)
+print(f"USER: {os.getenv('PGUSER')}", file=sys.stderr) 
