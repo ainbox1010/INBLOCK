@@ -100,4 +100,10 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 # Add debug print for email settings
 print("Email settings:", file=sys.stderr)
 print(f"EMAIL_HOST: {EMAIL_HOST}", file=sys.stderr)
-print(f"EMAIL_HOST_USER: {EMAIL_HOST_USER}", file=sys.stderr) 
+print(f"EMAIL_HOST_USER: {EMAIL_HOST_USER}", file=sys.stderr)
+
+# Frontend URL for email verification
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'https://inblock.vercel.app')
+
+# Add debug print
+print(f"FRONTEND_URL: {FRONTEND_URL}", file=sys.stderr) 

@@ -3,6 +3,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+import sys
 
 User = get_user_model()
 
@@ -18,16 +19,29 @@ class UserLoginResponseSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'token']
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
     password_confirm = serializers.CharField(write_only=True)
-
+    
     class Meta:
         model = User
-        fields = ['email', 'password', 'password_confirm']
-
+        fields = ('email', 'password', 'password_confirm', 'username')
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'username': {'required': False}  # Make username optional
+        }
+    
     def validate(self, data):
+        print("Validating data:", data, file=sys.stderr)  # Debug print
+        
+        # Generate username from email if not provided
+        if not data.get('username'):
+            data['username'] = data['email'].split('@')[0]
+            
+        # Check passwords match
         if data['password'] != data['password_confirm']:
-            raise ValidationError("Passwords don't match")
+            raise serializers.ValidationError({
+                "password": "Passwords don't match"
+            })
+            
         return data
 
     def create(self, validated_data):
