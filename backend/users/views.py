@@ -16,30 +16,42 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .models import PasswordResetToken, EmailVerification
 from .services import send_verification_email
+import sys
 
 User = get_user_model()
 
 class UserRegisterView(APIView):
     def post(self, request):
-        serializer = UserRegistrationSerializer(data=request.data)
-        if serializer.is_valid():
-            user = User.objects.create_user(
-                username=serializer.validated_data['username'],
-                email=serializer.validated_data['email'],
-                password=serializer.validated_data['password']
-            )
-            response_serializer = UserLoginResponseSerializer(user)
-            return Response(
-                {
-                    "message": "User registered successfully.",
-                    "user": response_serializer.data
-                },
-                status=status.HTTP_201_CREATED
-            )
-        return Response(
-            {"error": {"code": "validation_error", "message": serializer.errors}},
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        try:
+            # Add debug logging
+            print("Registration request received:", file=sys.stderr)
+            print(f"Request data: {request.data}", file=sys.stderr)
+            
+            serializer = UserRegistrationSerializer(data=request.data)
+            if serializer.is_valid():
+                print("Serializer valid, creating user...", file=sys.stderr)
+                user = User.objects.create_user(
+                    username=serializer.validated_data['username'],
+                    email=serializer.validated_data['email'],
+                    password=serializer.validated_data['password']
+                )
+                response_serializer = UserLoginResponseSerializer(user)
+                return Response(
+                    {
+                        "message": "User registered successfully.",
+                        "user": response_serializer.data
+                    },
+                    status=status.HTTP_201_CREATED
+                )
+            else:
+                print(f"Serializer errors: {serializer.errors}", file=sys.stderr)
+                return Response(
+                    {"error": {"code": "validation_error", "message": serializer.errors}},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+        except Exception as e:
+            print(f"Registration error: {str(e)}", file=sys.stderr)
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class UserLoginView(APIView):
     def post(self, request):
