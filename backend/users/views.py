@@ -26,6 +26,7 @@ class UserRegisterView(APIView):
             # Add debug logging
             print("Registration request received:", file=sys.stderr)
             print(f"Request data: {request.data}", file=sys.stderr)
+            print(f"Request headers: {request.headers}", file=sys.stderr)
             
             serializer = UserRegistrationSerializer(data=request.data)
             if serializer.is_valid():

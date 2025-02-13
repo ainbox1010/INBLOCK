@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../services/api';
 import { motion } from 'framer-motion';
 import WaveTerrain from '../components/backgrounds/WaveTerrain';
 import { validateEmail } from '../utils/validation';
@@ -34,7 +34,7 @@ export default function RegisterPage() {
         setIsLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:8000/api/auth/register/', {
+            const response = await axios.post('/api/auth/register/', {
                 email,
                 password,
                 password_confirm: passwordConfirm
