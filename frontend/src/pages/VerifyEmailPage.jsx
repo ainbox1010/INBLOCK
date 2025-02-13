@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams, useLocation, Link } from 'react-router-do
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import WaveTerrain from '../components/backgrounds/WaveTerrain';
+import { API_URL } from '../services/api';
 
 export default function VerifyEmailPage() {
     const [searchParams] = useSearchParams();
@@ -40,7 +41,7 @@ export default function VerifyEmailPage() {
         setError('');
         
         try {
-            const response = await axios.post('http://localhost:8000/api/auth/verify-email/', {
+            const response = await axios.post(`${API_URL}/api/auth/verify-email/`, {
                 token,
                 code
             });
