@@ -3,6 +3,7 @@ import os
 from django.core.exceptions import ImproperlyConfigured
 import logging
 import dj_database_url
+import traceback
 
 # Temporarily enable debug for troubleshooting
 DEBUG = True
@@ -106,4 +107,19 @@ print(f"EMAIL_HOST_USER: {EMAIL_HOST_USER}", file=sys.stderr)
 FRONTEND_URL = os.getenv('FRONTEND_URL', 'https://inblock.vercel.app')
 
 # Add debug print
-print(f"FRONTEND_URL: {FRONTEND_URL}", file=sys.stderr) 
+print(f"FRONTEND_URL: {FRONTEND_URL}", file=sys.stderr)
+
+# Add this for detailed error reporting
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+} 

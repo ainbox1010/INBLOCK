@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponse
 from chat.views import health_check
+from users.views import health_check
 
 def healthcheck(request):
     return HttpResponse("OK", status=200)

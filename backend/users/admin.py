@@ -4,23 +4,23 @@ from django.utils.translation import gettext_lazy as _
 from .models import User, PasswordResetToken, EmailVerification
 
 class CustomUserAdmin(UserAdmin):
-    ordering = ['email']
-    list_display = ['email', 'is_staff', 'is_active', 'is_email_verified', 'created_at']
-    search_fields = ['email']
-    readonly_fields = ['created_at']
+    model = User
+    list_display = ('email', 'is_staff', 'is_active', 'is_email_verified', 'date_joined')
+    list_filter = ('is_staff', 'is_active', 'is_email_verified')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Permissions'), {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'is_email_verified', 'groups', 'user_permissions'),
-        }),
-        (_('Important dates'), {'fields': ('last_login', 'created_at')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_email_verified')}),
+        ('Important dates', {'fields': ('date_joined',)}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2'),
-        }),
+            'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active')}
+        ),
     )
+    search_fields = ('email',)
+    ordering = ('email',)
+    readonly_fields = ('date_joined',)
 
 class EmailVerificationAdmin(admin.ModelAdmin):
     list_display = ['user', 'created_at', 'expires_at', 'is_used']

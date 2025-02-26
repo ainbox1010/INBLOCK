@@ -34,20 +34,30 @@ export default function RegisterPage() {
         setIsLoading(true);
 
         try {
-            const response = await axios.post('/api/auth/register/', {
+            // Add debug log
+            console.log('Sending registration data:', {
                 email,
                 password,
                 password_confirm: passwordConfirm
             });
 
-            // Instead of auto-login, redirect to verification page
+            const response = await axios.post('/api/auth/register/', {
+                email,
+                password,
+                password_confirm: passwordConfirm,
+                username: email.split('@')[0]  // Add username
+            });
+
+            console.log('Registration response:', response.data);
+
             if (response.data.requires_verification) {
                 navigate('/verify-email', { 
-                    state: { email: email }  // Pass email to show on verification page
+                    state: { email: email }
                 });
             }
         } catch (error) {
-            setError(error.response?.data?.error || 'Registration failed');
+            console.error('Registration error:', error.response?.data);
+            setError(error.response?.data?.error?.message || 'Registration failed');
         } finally {
             setIsLoading(false);
         }

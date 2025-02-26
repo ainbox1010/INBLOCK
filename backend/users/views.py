@@ -17,30 +17,36 @@ from django.conf import settings
 from .models import PasswordResetToken, EmailVerification
 from .services import send_verification_email
 import sys
+from rest_framework.decorators import api_view
+import traceback
 
 User = get_user_model()
 
 class UserRegisterView(APIView):
     def post(self, request):
         try:
-            # Add debug logging
             print("Registration request received:", file=sys.stderr)
             print(f"Request data: {request.data}", file=sys.stderr)
-            print(f"Request headers: {request.headers}", file=sys.stderr)
             
             serializer = UserRegistrationSerializer(data=request.data)
             if serializer.is_valid():
                 print("Serializer valid, creating user...", file=sys.stderr)
                 user = User.objects.create_user(
-                    username=serializer.validated_data['username'],
                     email=serializer.validated_data['email'],
                     password=serializer.validated_data['password']
                 )
-                response_serializer = UserLoginResponseSerializer(user)
+                
+                # Send verification email
+                verification = send_verification_email(user)
+                
                 return Response(
                     {
-                        "message": "User registered successfully.",
-                        "user": response_serializer.data
+                        "message": "User registered successfully. Please check your email for verification.",
+                        "requires_verification": True,
+                        "user": {
+                            "email": user.email,
+                            "id": user.id
+                        }
                     },
                     status=status.HTTP_201_CREATED
                 )
@@ -51,8 +57,12 @@ class UserRegisterView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
         except Exception as e:
-            print(f"Registration error: {str(e)}", file=sys.stderr)
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            print("Full traceback:", file=sys.stderr)
+            traceback.print_exc()
+            return Response(
+                {"error": str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 class UserLoginView(APIView):
     def post(self, request):
@@ -275,3 +285,13 @@ class VerificationStatusView(APIView):
         return Response({
             'is_verified': request.user.is_email_verified
         })
+
+@api_view(['GET'])
+def health_check(request):
+    try:
+        # Add debug logging
+        print("Health check received", file=sys.stderr)
+        return Response({"status": "ok"})
+    except Exception as e:
+        print(f"Health check error: {str(e)}", file=sys.stderr)
+        return Response({"error": str(e)}, status=500)

@@ -23,19 +23,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ('email', 'password', 'password_confirm', 'username')
+        fields = ('email', 'password', 'password_confirm')
         extra_kwargs = {
-            'password': {'write_only': True},
-            'username': {'required': False}  # Make username optional
+            'password': {'write_only': True}
         }
     
     def validate(self, data):
-        print("Validating data:", data, file=sys.stderr)  # Debug print
+        print("Validating data:", data)  # Debug print
         
-        # Generate username from email if not provided
-        if not data.get('username'):
-            data['username'] = data['email'].split('@')[0]
-            
         # Check passwords match
         if data['password'] != data['password_confirm']:
             raise serializers.ValidationError({
@@ -45,6 +40,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
+        # Remove password_confirm from the data
         validated_data.pop('password_confirm')
         return User.objects.create_user(**validated_data)
 
