@@ -1,44 +1,17 @@
-# Query Counting Implementation TODO
+# AI Agent MVP: CoinGecko API & Graph Display Integration
 
-## 1. Demo User Query Counting
-- [ ] Implement session-based counting in ChatView
-- [ ] Add 5-query limit for demo users
-- [ ] Add remaining queries display in demo chat
-- [ ] Add "upgrade to register" prompt when limit reached
-- [ ] Test demo user query counting
+## Overview
+This document outlines the step-by-step instructions to implement two core features for our AI Agent MVP:
+1. **Backend API Integration**: Create a Django API endpoint that queries CoinGecko for historical crypto price and volume data.
+2. **Frontend Graph Display**: Update the React chat window to display interactive graphs based on the data fetched from the backend.
 
-## 2. Registered User Query Counting
-- [ ] Implement database counting in ChatViewSet
-- [ ] Add 20-query limit for free users
-- [ ] Add remaining queries endpoint
-- [ ] Add query count display in chat interface
-- [ ] Test registered user query counting
+Our stack includes Django (backend), React (frontend), LangChain & OpenAI for AI integration, and we plan to use Pinecone for vector storage in future iterations.
 
-## 3. Subscription System
-- [ ] Set up subscription plans
-  - [ ] Free tier (20 queries/day)
-  - [ ] Premium tier (100 queries/day)
-  - [ ] Enterprise tier (unlimited)
-- [ ] Implement subscription checking in query system
-- [ ] Add subscription status endpoint
-- [ ] Test subscription-based limits
+---
 
-## 4. Frontend Integration
-- [ ] Add query counter display
-- [ ] Show appropriate upgrade prompts
-- [ ] Handle limit-reached scenarios
-- [ ] Add subscription plan selection UI
-- [ ] Test all user scenarios
+## Part 1: Backend API Integration with CoinGecko
 
-## 5. Testing & Documentation
-- [ ] Write unit tests for query counting
-- [ ] Write integration tests
-- [ ] Document query limit system
-- [ ] Add admin documentation
-- [ ] Test edge cases
-
-## 6. Deployment Preparation
-- [ ] Ensure query counting works with PostgreSQL
-- [ ] Prepare Railway.app configuration
-- [ ] Document deployment process
-- [ ] Plan database migration strategy 
+### 1.1 Set Up the Django Endpoint
+- **Create a new Django app** for crypto data retrieval (if not already existing), e.g., `cryptoapi`:
+  ```bash
+  python manage.py startapp cryptoapi

@@ -27,6 +27,11 @@ if COINMARKETCAP_API_KEY:
 else:
     logger.warning("CoinMarketCap API key not found!")
 
+if COINGECKO_API_KEY:
+    logger.info(f"Loaded CoinGecko API key: {COINGECKO_API_KEY[:8]}...")
+else:
+    logger.warning("CoinGecko API key not found!")
+
 # Required Django settings
 ROOT_URLCONF = 'config.urls'
 WSGI_APPLICATION = 'config.wsgi.application'
