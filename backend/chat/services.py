@@ -122,7 +122,7 @@ class ChatService:
                     params = {
                         'ids': coin_id,
                         'vs_currencies': 'usd',
-                        'include_24hr_change': 'true',
+                        'include_24h_change': 'true',
                         'include_market_cap': 'true',
                         'include_24hr_vol': 'true'
                     }
@@ -132,12 +132,26 @@ class ChatService:
                     response.raise_for_status()
                     data = response.json()
                     
+                    # Add debug print
+                    print("\n=== CoinGecko Price Response ===")
+                    print(f"Raw data: {data}")
+                    print("================================\n")
+                    
                     if coin_id in data:
                         coin_data = data[coin_id]
+                        
+                        # Format numbers properly
+                        price = float(coin_data['usd'])
+                        market_cap = float(coin_data.get('usd_market_cap', 0))
+                        change_24h = float(coin_data.get('usd_24h_change', 0))
+                        
+                        # Use appropriate decimal places based on price magnitude
+                        price_format = '{:,.8f}' if price < 1 else '{:,.2f}'
+                        
                         result = (
-                            f"{symbol} current price: ${coin_data['usd']:,.8f}\n"
-                            f"24h change: {coin_data.get('usd_24h_change', 0):,.2f}%\n"
-                            f"Market cap: ${coin_data.get('usd_market_cap', 0):,.2f}\n"
+                            f"{symbol} current price: ${price_format.format(price)}\n"
+                            f"24h change: {change_24h:,.2f}%\n"
+                            f"Market cap: ${market_cap:,.2f}\n"
                             f"(Data from CoinGecko Pro API)"
                         )
                         
@@ -377,24 +391,42 @@ class ChatService:
                 response = requests.get(url, headers=headers)
                 response.raise_for_status()
                 
-                # Create a mapping of symbol -> id
-                # If multiple coins have the same symbol, use the one with higher market cap
+                # Create two mappings: symbol -> id and direct symbol matches
                 coins_list = {}
+                direct_matches = {
+                    'BTC': 'bitcoin',
+                    'ETH': 'ethereum',
+                    'USDT': 'tether',
+                    'BNB': 'binancecoin',
+                    'SOL': 'solana',
+                    'XRP': 'ripple',
+                    'USDC': 'usd-coin',
+                    'ADA': 'cardano',
+                    'AVAX': 'avalanche-2',
+                    'DOGE': 'dogecoin',
+                    'TRX': 'tron',
+                    'LINK': 'chainlink',
+                    'DOT': 'polkadot',
+                    'MATIC': 'matic-network',
+                    'SHIB': 'shiba-inu'
+                }
+                
+                # First add our direct matches
+                coins_list.update(direct_matches)
+                
+                # Then add other coins from the API
                 for coin in response.json():
                     symbol = coin['symbol'].upper()
-                    coin_id = coin['id']
-                    
-                    # If symbol already exists, keep the more "standard" version
-                    # (usually the one without numbers or extra characters)
-                    if symbol not in coins_list or (
-                        len(coin_id) < len(coins_list[symbol]) and 
-                        not any(c.isdigit() for c in coin_id)
-                    ):
-                        coins_list[symbol] = coin_id
+                    # Only add if not already in our direct matches
+                    if symbol not in direct_matches:
+                        coins_list[symbol] = coin['id']
                 
                 # Cache for 1 hour
                 cache.set(cache_key, coins_list, 3600)
                 logger.info(f"Cached {len(coins_list)} coins from CoinGecko")
+                
+                # Debug print
+                print(f"\nMapped BTC to: {coins_list.get('BTC')}")
             
             return coins_list
             
@@ -407,21 +439,38 @@ class ChatService:
             crypto_terms = ['price', 'chart', 'crypto', 'market', 'coin', 'btc', 'eth', 'sol', 'doge', 'shib', 'xrp']
             
             print(f"\nChecking message: {message}")
-            print(f"Contains crypto terms: {[term for term in crypto_terms if term in message.lower()]}")
+            
+            # Load chat history
+            history = self._load_history()
+            
+            # Add current message to history
+            history.append(HumanMessage(content=message))
             
             if any(term in message.lower() for term in crypto_terms):
                 print("Detected crypto-related query!")
                 
-                # Use the agent for crypto queries
-                agent_prompt = f"""You are a cryptocurrency market expert. 
-                First, identify which cryptocurrency is being asked about.
-                Then, use the get_crypto_price tool to fetch its current price.
-                Finally, provide a clear analysis of the data.
+                # Enhanced agent prompt with context
+                agent_prompt = f"""You are a cryptocurrency market expert with access to multiple tools:
+                1. get_crypto_price: Use this ONLY for current price, market cap, and 24h changes
+                2. search_crypto_knowledge: Use this for general information, history, technology, and background
+                3. get_market_sentiment: Use this for market analysis and sentiment
+
+                Previous conversation context:
+                {' '.join([f"{'User: ' if isinstance(msg, HumanMessage) else 'Assistant: '}{msg.content}" for msg in history[-3:]])}
                 
+                For queries like "what is X" or questions about technology/history, use search_crypto_knowledge first.
+                For specific price queries or market data, use get_crypto_price.
+                For market sentiment and analysis, use get_market_sentiment.
+                For follow-up questions, use the context from previous messages to understand which cryptocurrency is being discussed.
+
                 Question: {message}"""
                 
                 # This will show the agent's step-by-step reasoning
                 response = self.agent.run(agent_prompt)
+                
+                # Save the response to history
+                history.append(AIMessage(content=response))
+                self._save_history(history)
                 
                 return {
                     'success': True,
@@ -431,7 +480,7 @@ class ChatService:
             # Regular chat processing for non-crypto queries
             messages = [
                 SystemMessage(content=self.system_prompt),
-                HumanMessage(content=message)
+                *history  # Include all previous messages
             ]
             
             chat = ChatOpenAI(
@@ -441,6 +490,11 @@ class ChatService:
             )
             
             response = chat.invoke(messages).content
+            
+            # Save response to history
+            history.append(AIMessage(content=response))
+            self._save_history(history)
+            
             return {
                 'success': True,
                 'content': response
