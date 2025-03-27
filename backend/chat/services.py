@@ -34,6 +34,11 @@ class ChatService:
             self.model_name = model_name
             self.temperature = temperature
             
+            # Add back the system prompt
+            self.system_prompt = """You are an AI assistant specializing in cryptocurrency and financial markets. 
+            You have access to real-time market data and can provide analysis of cryptocurrency prices and trends. 
+            Be clear, concise, and accurate in your responses."""
+            
             self.llm = ChatOpenAI(
                 temperature=temperature,
                 model_name=model_name,
@@ -45,7 +50,7 @@ class ChatService:
             self._initialize_tools()
             self.cache_key = "chat_history"
             
-            self.COINGECKO_BASE_URL = "https://api.coingecko.com/api/v3"
+            self.COINGECKO_BASE_URL = "https://pro-api.coingecko.com/api/v3"
             
             # Debug print
             print(f"\nInitializing ChatService with CoinGecko API key: {os.getenv('COINGECKO_API_KEY')}\n")
@@ -353,89 +358,105 @@ class ChatService:
 
     def process_message(self, message: str, context: dict = None) -> Dict[str, Any]:
         try:
-            # Common crypto terms
-            crypto_terms = ['price', 'chart', 'crypto', 'market', 'coin']
+            crypto_terms = ['price', 'chart', 'crypto', 'market', 'coin', 'btc', 'eth']
             
-            # Check if message is crypto-related
+            print(f"\nChecking message: {message}")
+            print(f"Contains crypto terms: {[term for term in crypto_terms if term in message.lower()]}")
+            
             if any(term in message.lower() for term in crypto_terms):
-                # Try to identify which crypto they're asking about
-                message_lower = message.lower()
-                
-                # Common mappings for crypto symbols/names
-                crypto_mappings = {
-                    'btc': 'bitcoin',
-                    'eth': 'ethereum',
-                    'sol': 'solana',
-                    'doge': 'dogecoin',
-                    'xrp': 'ripple',
-                    # Add more common mappings
-                }
-                
-                # Try to identify the crypto from the message
-                requested_crypto = None
-                
-                # First check if any full names are in the message
-                for value in crypto_mappings.values():
-                    if value in message_lower:
-                        requested_crypto = value
-                        break
-                
-                # Then check for symbols if no full name found
-                if not requested_crypto:
-                    for symbol, name in crypto_mappings.items():
-                        if symbol in message_lower:
-                            requested_crypto = name
-                            break
-                
-                if requested_crypto:
-                    # Get data for the identified crypto
-                    crypto_data = self.get_coin_history(requested_crypto)
+                print("Detected crypto-related query!")
+                try:
+                    identify_prompt = """
+                    Identify the cryptocurrency being asked about in this message. Return ONLY the CoinGecko ID.
+                    Example outputs: "bitcoin", "ethereum", "solana", "unknown"
+                    Output format: Just the ID, nothing else.
+                    """
                     
-                    if 'error' not in crypto_data and requested_crypto in crypto_data:
-                        price_data = crypto_data[requested_crypto]
-                        current_price = price_data['usd']
-                        market_cap = price_data['usd_market_cap']
-                        price_change = price_data['usd_24h_change']
+                    messages = [
+                        SystemMessage(content=identify_prompt),
+                        HumanMessage(content=message)
+                    ]
+                    
+                    chat = ChatOpenAI(
+                        model_name=self.model_name,
+                        temperature=0,
+                        api_key=settings.OPENAI_API_KEY
+                    )
+                    
+                    crypto_id = chat.invoke(messages).content.strip().lower()
+                    print(f"Identified crypto_id: {crypto_id}")
+                    
+                    if crypto_id and crypto_id != "unknown":
+                        print(f"Fetching data for {crypto_id}")
+                        crypto_data = self.get_coin_history(crypto_id)
+                        print(f"Received crypto data: {crypto_data}")
                         
-                        system_prompt = f"""You are a helpful crypto assistant. Here's the latest {requested_crypto.title()} data:
-                        Current Price: ${current_price:,.2f}
-                        24h Change: {price_change:.2f}%
-                        Market Cap: ${market_cap:,.2f}
-                        
-                        Please provide a clear and concise analysis of this data in your response."""
-                        
-                        messages = [
-                            SystemMessage(content=system_prompt),
-                            HumanMessage(content=message)
-                        ]
-                        
-                        chat = ChatOpenAI(
-                            model_name=self.model_name,
-                            temperature=self.temperature,
-                            api_key=settings.OPENAI_API_KEY
-                        )
-                        
-                        response = chat.invoke(messages).content
-                        
-                        return {
-                            'success': True,
-                            'content': response
-                        }
-                    else:
-                        # If crypto not found, ask for clarification
-                        return {
-                            'success': True,
-                            'content': "I notice you're asking about cryptocurrency prices. Could you specify which cryptocurrency you're interested in?"
-                        }
+                        if 'error' not in crypto_data and crypto_id in crypto_data:
+                            price_data = crypto_data[crypto_id]
+                            current_price = price_data['usd']
+                            market_cap = price_data['usd_market_cap']
+                            price_change = price_data['usd_24h_change']
+                            
+                            system_prompt = f"""You are a real-time crypto market assistant. Use the following CURRENT market data to answer the question:
+
+                            CURRENT {crypto_id.upper()} DATA (from CoinGecko API):
+                            Price: ${current_price:,.2f}
+                            24h Change: {price_change:.2f}%
+                            Market Cap: ${market_cap:,.2f}
+
+                            IMPORTANT INSTRUCTIONS:
+                            1. Use ONLY this current data in your response
+                            2. DO NOT mention any knowledge cutoff dates
+                            3. DO NOT say you can't provide real-time data
+                            4. Provide a clear analysis of the current price and market conditions"""
+                            
+                            analysis_messages = [
+                                SystemMessage(content=system_prompt),
+                                HumanMessage(content=f"What is the current price and status of {crypto_id}?")
+                            ]
+                            
+                            print("Generating analysis...")
+                            response = chat.invoke(analysis_messages).content
+                            print(f"Generated response: {response}")
+                            
+                            return {
+                                'success': True,
+                                'content': response
+                            }
+                        else:
+                            print(f"Error in crypto data: {crypto_data}")
+                            return {
+                                'success': True,
+                                'content': f"I understand you're asking about {crypto_id}, but I couldn't fetch its current price data. Could you try again or ask about a different cryptocurrency?"
+                            }
+                except Exception as inner_e:
+                    print(f"Inner error: {str(inner_e)}")
+                    raise
             
-            # Continue with regular chat processing if not crypto-related
-            return super().process_message(message, context)
+            # Regular chat processing for non-crypto queries
+            messages = [
+                SystemMessage(content=self.system_prompt),
+                HumanMessage(content=message)
+            ]
+            
+            chat = ChatOpenAI(
+                model_name=self.model_name,
+                temperature=self.temperature,
+                api_key=settings.OPENAI_API_KEY
+            )
+            
+            response = chat.invoke(messages).content
+            return {
+                'success': True,
+                'content': response
+            }
             
         except Exception as e:
+            print(f"Outer error: {str(e)}")
             logger.error(f"Error processing message: {str(e)}")
             return {
                 'success': False,
-                'error': str(e)
+                'error': f"Sorry, there was an error processing your message: {str(e)}"
             }
 
     def get_model_info(self) -> Dict[str, Any]:
