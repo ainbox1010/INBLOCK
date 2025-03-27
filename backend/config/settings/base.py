@@ -116,3 +116,14 @@ PINECONE_INDEX_NAME = os.getenv('PINECONE_INDEX_NAME', 'inblock-crypto')
 
 # Add this after the COINMARKETCAP_API_KEY setting
 logger.info(f"Loaded CoinMarketCap API key: {COINMARKETCAP_API_KEY[:8]}...") 
+
+# Redis Cache Configuration
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.getenv('REDIS_URL', 'redis://localhost:6379/1'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+} 

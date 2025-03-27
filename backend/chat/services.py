@@ -48,7 +48,7 @@ class ChatService:
             
             # Initialize tools and memory
             self._initialize_tools()
-            self.cache_key = "chat_history"
+            self.cache_key = None  # Will be set per request
             
             self.COINGECKO_BASE_URL = "https://pro-api.coingecko.com/api/v3"
             
@@ -307,9 +307,16 @@ class ChatService:
             logger.error(f"Error initializing tools: {str(e)}")
             raise
 
-    def _load_history(self) -> List[BaseMessage]:
+    def _get_cache_key(self, context: dict = None) -> str:
+        """Get a unique cache key for the current session"""
+        if context and context.get('conversation_id'):
+            return f"chat_history_{context['conversation_id']}"
+        return "chat_history_default"
+
+    def _load_history(self, context: dict = None) -> List[BaseMessage]:
         """Load message history from cache"""
-        history_data = cache.get(self.cache_key, [])
+        cache_key = self._get_cache_key(context)
+        history_data = cache.get(cache_key, [])
         messages = []
         for msg in history_data:
             if msg['type'] == 'human':
@@ -318,15 +325,16 @@ class ChatService:
                 messages.append(AIMessage(content=msg['content']))
         return messages
 
-    def _save_history(self, messages: List[BaseMessage]):
+    def _save_history(self, messages: List[BaseMessage], context: dict = None):
         """Save message history to cache"""
+        cache_key = self._get_cache_key(context)
         history_data = []
         for msg in messages:
             if isinstance(msg, HumanMessage):
                 history_data.append({'type': 'human', 'content': msg.content})
             elif isinstance(msg, AIMessage):
                 history_data.append({'type': 'ai', 'content': msg.content})
-        cache.set(self.cache_key, history_data, timeout=3600)
+        cache.set(cache_key, history_data, timeout=3600)
 
     def get_coin_history(self, coin_id: str, days: str = '7') -> Dict[str, Any]:
         """
@@ -441,7 +449,7 @@ class ChatService:
             print(f"\nChecking message: {message}")
             
             # Load chat history
-            history = self._load_history()
+            history = self._load_history(context)
             
             # Add current message to history
             history.append(HumanMessage(content=message))
@@ -470,7 +478,7 @@ class ChatService:
                 
                 # Save the response to history
                 history.append(AIMessage(content=response))
-                self._save_history(history)
+                self._save_history(history, context)
                 
                 return {
                     'success': True,
@@ -493,7 +501,7 @@ class ChatService:
             
             # Save response to history
             history.append(AIMessage(content=response))
-            self._save_history(history)
+            self._save_history(history, context)
             
             return {
                 'success': True,
