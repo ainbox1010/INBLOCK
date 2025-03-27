@@ -92,30 +92,27 @@ class ChatService:
             def get_crypto_price(symbol: str) -> str:
                 """Get current price and market data for a cryptocurrency."""
                 try:
-                    # First convert common symbols to CoinGecko IDs
-                    symbol_to_id = {
-                        'BTC': 'bitcoin',
-                        'ETH': 'ethereum',
-                        'DOGE': 'dogecoin',
-                        'SOL': 'solana',
-                        'XRP': 'ripple',
-                        'SHIB': 'shiba-inu',
-                        'ADA': 'cardano',
-                        'AVAX': 'avalanche-2',
-                        'DOT': 'polkadot',
-                        'MATIC': 'matic-network'
-                    }
-                    
                     # Clean up the symbol
                     symbol = symbol.upper().strip()
-                    coin_id = symbol_to_id.get(symbol, symbol.lower())
                     
+                    # Get the coin list
+                    coins_list = self.get_coin_list()
+                    if not coins_list:
+                        return "Unable to fetch supported cryptocurrencies list. Please try again later."
+                    
+                    # Try to find the coin ID
+                    coin_id = coins_list.get(symbol)
+                    if not coin_id:
+                        return f"Could not find a matching cryptocurrency for symbol {symbol}. Please verify the symbol and try again."
+                    
+                    # Check cache
                     cache_key = f"crypto_price_{coin_id}"
                     cached_result = cache.get(cache_key)
                     if cached_result:
                         logger.info(f"Returning cached price for {coin_id}")
                         return f"{cached_result} (Cached)"
-
+                    
+                    # Fetch current price data
                     url = f"{self.COINGECKO_BASE_URL}/simple/price"
                     headers = {
                         'x-cg-pro-api-key': self.COINGECKO_API_KEY,
@@ -138,7 +135,7 @@ class ChatService:
                     if coin_id in data:
                         coin_data = data[coin_id]
                         result = (
-                            f"{symbol} current price: ${coin_data['usd']:,.2f}\n"
+                            f"{symbol} current price: ${coin_data['usd']:,.8f}\n"
                             f"24h change: {coin_data.get('usd_24h_change', 0):,.2f}%\n"
                             f"Market cap: ${coin_data.get('usd_market_cap', 0):,.2f}\n"
                             f"(Data from CoinGecko Pro API)"
@@ -360,20 +357,50 @@ class ChatService:
             print(f"\nCoinGecko Error: {str(e)}\n")
             return {"error": f"Failed to fetch coin data: {str(e)}"}
 
-    def get_coin_list(self) -> list:
-        """Get list of all supported coins"""
+    def get_coin_list(self) -> dict:
+        """
+        Get and cache the full list of supported coins from CoinGecko
+        Returns a dict mapping symbols to CoinGecko IDs
+        """
         try:
-            headers = {'x-cg-demo-api-key': self.COINGECKO_API_KEY} if self.COINGECKO_API_KEY else {}
+            cache_key = "coingecko_coins_list"
+            coins_list = cache.get(cache_key)
             
-            url = f"{self.COINGECKO_BASE_URL}/coins/list"
-            response = requests.get(url, headers=headers)
-            response.raise_for_status()
+            if not coins_list:
+                logger.info("Fetching fresh coin list from CoinGecko")
+                url = f"{self.COINGECKO_BASE_URL}/coins/list"
+                headers = {
+                    'x-cg-pro-api-key': self.COINGECKO_API_KEY,
+                    'Content-Type': 'application/json'
+                }
+                
+                response = requests.get(url, headers=headers)
+                response.raise_for_status()
+                
+                # Create a mapping of symbol -> id
+                # If multiple coins have the same symbol, use the one with higher market cap
+                coins_list = {}
+                for coin in response.json():
+                    symbol = coin['symbol'].upper()
+                    coin_id = coin['id']
+                    
+                    # If symbol already exists, keep the more "standard" version
+                    # (usually the one without numbers or extra characters)
+                    if symbol not in coins_list or (
+                        len(coin_id) < len(coins_list[symbol]) and 
+                        not any(c.isdigit() for c in coin_id)
+                    ):
+                        coins_list[symbol] = coin_id
+                
+                # Cache for 1 hour
+                cache.set(cache_key, coins_list, 3600)
+                logger.info(f"Cached {len(coins_list)} coins from CoinGecko")
             
-            return response.json()
+            return coins_list
             
-        except requests.RequestException as e:
-            logger.error(f"CoinGecko API error: {str(e)}")
-            return []
+        except Exception as e:
+            logger.error(f"Error fetching coin list: {str(e)}")
+            return {}
 
     def process_message(self, message: str, context: dict = None) -> Dict[str, Any]:
         try:
