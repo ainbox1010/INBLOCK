@@ -91,57 +91,71 @@ class ChatService:
             @tool
             def get_crypto_price(symbol: str) -> str:
                 """Get current price and market data for a cryptocurrency."""
-                cache_key = f"crypto_price_{symbol.upper()}"
-                cached_result = cache.get(cache_key)
-                if cached_result:
-                    logger.info(f"Returning cached price for {symbol}")
-                    return f"{cached_result} (Cached)"
-
                 try:
-                    # First try CoinMarketCap
-                    url = 'https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest'
-                    parameters = {
-                        'symbol': symbol.upper(),
-                        'convert': 'USD'
+                    # First convert common symbols to CoinGecko IDs
+                    symbol_to_id = {
+                        'BTC': 'bitcoin',
+                        'ETH': 'ethereum',
+                        'DOGE': 'dogecoin',
+                        'SOL': 'solana',
+                        'XRP': 'ripple',
+                        'SHIB': 'shiba-inu',
+                        'ADA': 'cardano',
+                        'AVAX': 'avalanche-2',
+                        'DOT': 'polkadot',
+                        'MATIC': 'matic-network'
                     }
-                    headers = {
-                        'Accepts': 'application/json',
-                        'X-CMC_PRO_API_KEY': settings.COINMARKETCAP_API_KEY,
-                    }
+                    
+                    # Clean up the symbol
+                    symbol = symbol.upper().strip()
+                    coin_id = symbol_to_id.get(symbol, symbol.lower())
+                    
+                    cache_key = f"crypto_price_{coin_id}"
+                    cached_result = cache.get(cache_key)
+                    if cached_result:
+                        logger.info(f"Returning cached price for {coin_id}")
+                        return f"{cached_result} (Cached)"
 
-                    response = requests.get(url, headers=headers, params=parameters)
+                    url = f"{self.COINGECKO_BASE_URL}/simple/price"
+                    headers = {
+                        'x-cg-pro-api-key': self.COINGECKO_API_KEY,
+                        'Content-Type': 'application/json'
+                    }
+                    
+                    params = {
+                        'ids': coin_id,
+                        'vs_currencies': 'usd',
+                        'include_24hr_change': 'true',
+                        'include_market_cap': 'true',
+                        'include_24hr_vol': 'true'
+                    }
+                    
+                    logger.info(f"Fetching price data for {coin_id} from CoinGecko")
+                    response = requests.get(url, headers=headers, params=params)
+                    response.raise_for_status()
                     data = response.json()
                     
-                    if response.status_code == 200 and data['status']['error_code'] == 0:
-                        crypto_data = data['data'][symbol.upper()][0]
-                        quote = crypto_data['quote']['USD']
-                        
+                    if coin_id in data:
+                        coin_data = data[coin_id]
                         result = (
-                            f"{symbol.upper()} current price: ${quote['price']:.2f}\n"
-                            f"24h change: {quote['percent_change_24h']:.2f}%\n"
-                            f"Market cap: ${quote['market_cap']:,.2f}\n"
-                            f"Volume 24h: ${quote['volume_24h']:,.2f}\n"
-                            f"(Data from CoinMarketCap)"
+                            f"{symbol} current price: ${coin_data['usd']:,.2f}\n"
+                            f"24h change: {coin_data.get('usd_24h_change', 0):,.2f}%\n"
+                            f"Market cap: ${coin_data.get('usd_market_cap', 0):,.2f}\n"
+                            f"(Data from CoinGecko Pro API)"
                         )
+                        
+                        # Cache the result
                         cache.set(cache_key, result, self.PRICE_CACHE_TIMEOUT)
                         return result
                     else:
-                        raise Exception(f"CoinMarketCap API error: {data.get('status', {}).get('error_message', 'Unknown error')}")
+                        raise Exception(f"No data found for {symbol}")
                     
+                except requests.RequestException as e:
+                    logger.error(f"CoinGecko API error for {symbol}: {str(e)}")
+                    return f"Error fetching price data for {symbol}: {str(e)}"
                 except Exception as e:
-                    logger.error(f"Error fetching from CoinMarketCap: {str(e)}")
-                    # Fallback to yfinance
-                    try:
-                        ticker = yf.Ticker(f"{symbol}-USD")
-                        data = ticker.history(period="1d")
-                        if not data.empty:
-                            current_price = data['Close'].iloc[-1]
-                            result = f"{symbol.upper()} current price: ${current_price:.2f} (Data from Yahoo Finance)"
-                            cache.set(cache_key, result, self.PRICE_CACHE_TIMEOUT)
-                            return result
-                    except Exception as yf_error:
-                        logger.error(f"YFinance error: {str(yf_error)}")
-                    return f"Error fetching price from all sources for {symbol}"
+                    logger.error(f"Unexpected error fetching {symbol} price: {str(e)}")
+                    return f"Unexpected error fetching {symbol} price: {str(e)}"
 
             @tool
             def get_market_sentiment(symbol: str) -> str:
@@ -261,16 +275,21 @@ class ChatService:
                     logger.error(f"Error searching knowledge base: {str(e)}")
                     return "Error accessing knowledge base."
 
-            # Initialize agent with modified configuration
-            self.tools = [get_crypto_price, get_market_sentiment, search_crypto_knowledge]
+            # Initialize the tools list with the updated get_crypto_price
+            self.tools = [
+                get_crypto_price,
+                get_market_sentiment,  # We'll update this next
+                search_crypto_knowledge
+            ]
+            
+            # Initialize the agent with our tools
             self.agent = initialize_agent(
                 tools=self.tools,
                 llm=self.llm,
                 agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
                 verbose=True,
                 handle_parsing_errors=True,
-                max_iterations=3,  # Limit iterations to prevent loops
-                early_stopping_method="generate"  # Stop gracefully if needed
+                max_iterations=3
             )
             
         except Exception as e:
@@ -358,12 +377,7 @@ class ChatService:
 
     def process_message(self, message: str, context: dict = None) -> Dict[str, Any]:
         try:
-            crypto_terms = [
-                'price', 'chart', 'crypto', 'market', 'coin',
-                'btc', 'eth', 'sol', 'doge', 'shib', 'xrp', 'ada',
-                'bitcoin', 'ethereum', 'solana', 'dogecoin', 'ripple', 'cardano',
-                'what about', 'how is', 'and', 'what is'
-            ]
+            crypto_terms = ['price', 'chart', 'crypto', 'market', 'coin', 'btc', 'eth', 'sol', 'doge', 'shib', 'xrp']
             
             print(f"\nChecking message: {message}")
             print(f"Contains crypto terms: {[term for term in crypto_terms if term in message.lower()]}")
@@ -371,7 +385,7 @@ class ChatService:
             if any(term in message.lower() for term in crypto_terms):
                 print("Detected crypto-related query!")
                 
-                # Use the agent for crypto queries to see the reasoning
+                # Use the agent for crypto queries
                 agent_prompt = f"""You are a cryptocurrency market expert. 
                 First, identify which cryptocurrency is being asked about.
                 Then, use the get_crypto_price tool to fetch its current price.
@@ -387,7 +401,7 @@ class ChatService:
                     'content': response
                 }
             
-            # For non-crypto queries, use regular chat
+            # Regular chat processing for non-crypto queries
             messages = [
                 SystemMessage(content=self.system_prompt),
                 HumanMessage(content=message)
